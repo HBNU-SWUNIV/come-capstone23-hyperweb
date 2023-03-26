@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<meta charset="UTF-8">
+<html>
+	
+<head>
+	<title>Login Page</title>
+	<style>
+		
+body {
+			background-color: #f2f2f2;
+			font-family: Arial, sans-serif;
+		}
+
+		.container {
+			margin: 0 auto;
+			max-width: 500px;
+			padding-top: 100px;
+		}
+
+		.form-control {
+			background-color: #fff;
+			border: none;
+			border-radius: 3px;
+			box-shadow: 0px 0px 3px #ccc;
+			color: #333;
+			font-size: 16px;
+			height: 50px;
+			margin-bottom: 20px;
+			padding: 0 20px;
+			width: 100%;
+		}
+
+		.btn {
+			background-color: #4285f4;
+			border: none;
+			border-radius: 3px;
+			box-shadow: 0px 0px 3px #ccc;
+			color: #fff;
+			cursor: pointer;
+			font-size: 18px;
+			height: 50px;
+			margin-top: 20px;
+			transition: all 0.3s ease-in-out;
+			width: 100%;
+		}
+
+		.btn:hover {
+			background-color: #3367d6;
+		}
+
+		.btn-github {
+			background-color: #24292e;
+		}
+
+		.btn-naver {
+			background-color: #1EC800;
+		}
+
+		.btn img {
+			height: 24px;
+			margin-right: 10px;
+			vertical-align: middle;
+			width: 24px;
+		}
+
+		
+
+		.btn span {
+			display: inline-block;
+			margin-top: 2px;
+			vertical-align: middle;
+		}
+	</style>
+
+</head>
+<body>
+	
+	<div class="container">
+		<h2>Login</h2>
+		<form>
+			<input type="text" class="form-control" placeholder="Username">
+			<input type="password" class="form-control" placeholder="Password">
+			<button type="submit" class="btn">Login</button>
+			<div class="btn-group">
+				<button type="button" class="btn btn-google">
+					<a href="https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email&client_id=158417874449-agpjacpkke6o5q73voq42f102ad3f309.apps.googleusercontent.com&response_type=code&redirect_uri=http://localhost:8080/login/oauth2/code/google&access_type=offline"/>
+					<span>Login with Google</span>
+				</button>
+				<button type="button" class="btn btn-github">
+					<span>Login with GitHub</span>
+					<a href="https://github.com/login/oauth/authorize?client_id=6c34d9a6903231c5a301&redirect_uri=http://localhost:8080/login/oauth2/code/github"/>
+				</button>
+			</div>
+		</form>
+	</div>
+</body>
+					
