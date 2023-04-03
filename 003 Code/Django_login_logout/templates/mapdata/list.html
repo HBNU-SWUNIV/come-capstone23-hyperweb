@@ -1,0 +1,6 @@
+{% extends "include/base.html" %}
+<ul>
+    {% for map in  mapdata %}
+        <li>{{ map.place }}</li>
+    {% endfor %}
+</ul>

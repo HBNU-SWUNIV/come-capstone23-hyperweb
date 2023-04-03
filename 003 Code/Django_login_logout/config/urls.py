@@ -19,5 +19,6 @@ from django.conf.urls import include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('member/', include('member.urls'))
+    path('member/', include('member.urls')),
+    path('mapdata/', include('mapdata.urls'))
 ]
