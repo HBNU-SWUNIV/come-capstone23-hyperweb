@@ -1,6 +1,11 @@
-from django.shortcuts import render
-from .models import mapdata
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from .models import Mapdata
+from .serializers import MapDataSerializer
 
-def person_list(request):
-    mapdata = mapdata.objects.all()
-    return render(request, 'mapdata/list.html', {'mapdata': mapdata})
+
+@api_view(['GET'])
+def map(request):
+    datas = Mapdata.objects.all()
+    serializer = MapDataSerializer(datas, many=True)
+    return Response(serializer.data)
