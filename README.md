@@ -1,3 +1,7 @@
-# come-capstone23-hyperweb
-come-capstone23-hyperweb created by GitHub Classroom
-로그인 - 로그아웃 - db 코드
+구현기능
+1. 로그인, 로그아웃, 회원가입 기본 기능
+2. 애완동물 동반 장소에 관한 데이터 보여주기 
+
+
+구현해야할 기능
+1. UI 생성 후에 데이터 정리
