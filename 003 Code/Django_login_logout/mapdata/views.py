@@ -1,11 +1,21 @@
-from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from django.shortcuts import render
 from .models import Mapdata
 from .serializers import MapDataSerializer
+import json
 
-
-@api_view(['GET'])
 def map(request):
     datas = Mapdata.objects.all()[:100] # 100개로 제한
     serializer = MapDataSerializer(datas, many=True)
-    return Response(serializer.data)
+    context = {'map_data': serializer.data}
+    return render(request, 'mapdata/list.html', context)
+
+
+def map_list(request, n):
+    datas = Mapdata.objects.all()[n]
+    latlon = {
+        'lat': datas.latitude,
+        'lon': datas.longitude,
+        'place' : datas.place
+    }
+    latlonJson = json.dumps(latlon)
+    return render(request, 'mapdata/mapviewer.html', {'latlonJson': latlonJson})

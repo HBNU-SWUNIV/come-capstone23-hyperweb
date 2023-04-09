@@ -1,6 +1,6 @@
 {% extends "include/base.html" %}
-<ul>
-    {% for map in mapdata}
-        <li>{{ map.place }}</li>
+{% block main_area %}
+    {% for data in map_data %}
+    <p>{{ data }}</p>
     {% endfor %}
-</ul>
+{% endblock %}
