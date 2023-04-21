@@ -15,28 +15,28 @@ class Join1(APIView):
 
     def post(self, request):
         # TODO 회원가입
-        email = request.data.get('email', None)
-        nickname = request.data.get('nickname', None)
-        name = request.data.get('name', None)
-        password = request.data.get('password', None)
+        request.session['email'] = request.data.get('email', None)
+        request.session['nickname']  = request.data.get('nickname', None)
+        request.session['name']  = request.data.get('name', None)
+        request.session['password']  = request.data.get('password', None)
 
-        User.objects.create(email=email,
-                            nickname=nickname,
-                            name=name,
-                            password=make_password(password),
-                            profile_image="default_profile.png")
-
-        return Response(status=200)
+        return render(request, 'user/join2.html')
+    
 class Join2(APIView):
     def get(self, request):
         return render(request, "user/join2.html")
     def post(self, request):
-        return
+        request.session['species'] = request.data.get('species', None)
+        request.session['age']  = request.data.get('age', None)
+        request.session['sex']  = request.data.get('sex', None)
+        request.session['weight']  = request.data.get('weight', None)
+        return render(request, 'user/join3.html')
+    
 class Join3(APIView):    
     def get(self, request):
         return render(request, "user/join3.html")
     def post(self, request):
-        return
+        return render(request, "user/login.html")
     
 class Login(APIView):
     def get(self, request):

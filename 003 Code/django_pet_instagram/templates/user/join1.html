@@ -97,7 +97,7 @@
         
 
         $.ajax({
-            url: "/user/join",
+            url: "/user/join1",
             data: {
                 email : email,
                 password : password,
@@ -106,8 +106,8 @@
             },
             method: "POST",
             success: function (data) {
-                console.log("성공");
-                alert("회원가입 성공했습니다. 로그인해주세요.");
+                console.log("다음화면");
+                alert("1번째 절차 성공");
                 location.replace('/user/join2');
 
             },
