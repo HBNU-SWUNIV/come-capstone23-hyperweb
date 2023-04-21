@@ -25,29 +25,45 @@
         <div style="padding-bottom: 10px"><img style="width: 150px"
                                                src="https://www.instagram.com/static/images/web/mobile_nav_type_logo-2x.png/1b47f9d0e595.png">
         </div>
-        <div style="font-weight: bold; color: gray;padding-bottom: 20px"> 친구들의 사진과 동영상을 보려면 가입하세요.</div>
+        <div style="font-weight: bold; color: gray;padding-bottom: 50px"> 강아지 정보를 입력해주세요.</div>
         <div>
-            <div class="form-floating mb-3">
-                <input type="email" class="form-control" style="font-size: 14px; height: 24px" id="input_email" placeholder="name@example.com">
-                <label for="input_email" style="font-size: 14px;padding: 4px 10px">활동성</label>
+        <div class="form-floating mb-3">
+            <label for="activity" class="form-label" style="font-size: 14px; position: absolute; top: -40px; left: -15px;">활동성</label>
+            <input type="range" class="form-range" id="activity" min="0" max="100" onchange="updateInput()">
+            <div style="display: flex; justify-content: space-between;">
+                <span style="font-size: 12px;">비활동적</span>
+                <span style="font-size: 12px;">활동적</span>
             </div>
         </div>
+        </div>
         <div>
-            <div class="form-floating mb-3">
-                <input type="text" class="form-control" style="font-size: 14px; height: 24px" id="input_name" placeholder="name@example.com">
-                <label for="input_name" style="font-size: 14px;padding: 4px 10px">비만여부(BCS)</label>
+        <!-- HTML 코드 -->
+        <div class="form-floating mb-3">
+            <label for="bcs-slider" style="font-size: 14px; position: absolute; top: -40px; left: -15px;">비만여부(BCS)</label>
+            <div class="slider-container">
+                <input type="range" class="form-range" id="bcs-slider" min="1" max="9">
+                <span class="slider-value" id="sliderValue"></span>
             </div>
+            <div style="display: flex; justify-content: space-between;">
+                <span style="font-size: 12px;">1</span>
+                <span style="font-size: 12px;">9</span>
+            </div>
+            <a href="#" onclick="showBCSImage()" style="font-size: 12px;">BCS에 대한 자세한 내용보기</a>
+        </div>
+  
+  <!-- BCS 이미지 팝업 -->
+  <div id="bcs-modal" class="modal" style="display: none;">
+    <div class="modal-content" style="text-align: center;">
+      <img src="BCS_image.png" style="max-width: 100%; max-height: 100%;">
+    </div>
+  </div>
+  
+  
         </div>
         <div>
             <div class="form-floating mb-3">
                 <input type="text" class="form-control" style="font-size: 14px; height: 24px" id="input_nickname" placeholder="name@example.com">
                 <label for="input_nickname" style="font-size: 14px;padding: 4px 10px">체중 증가/감소</label>
-            </div>
-        </div>
-        <div>
-            <div class="form-floating mb-3">
-                <input type="password" class="form-control" style="font-size: 14px; height: 24px" id="input_password" placeholder="name@example.com">
-                <label for="input_password" style="font-size: 14px;padding: 4px 10px">현재 급여 형태</label>
             </div>
         </div>
         <button id="join_button"  class="btn btn-primary" style="width: 100%"> 가입 </button>
@@ -61,6 +77,31 @@
 
 <!-- Optional JavaScript; choose one of the two! -->
 <script>
+    // JavaScript 코드
+    function updateBCS() {
+        var bcsSlider = document.getElementById("bcs-slider");
+        var bcsValue = bcsSlider.value;
+        var bcsThumb = bcsSlider.querySelector("::-webkit-slider-thumb");
+        bcsThumb.textContent = bcsValue;
+        bcsThumb.style.setProperty("--value", "'" + bcsValue + "'");
+        document.getElementById("input_bcs").value = bcsValue;
+  }
+  
+    
+    function showBCSImage() {
+        var modal = document.getElementById("bcs-modal");
+        modal.style.display = "block";
+    }
+    
+    window.onclick = function(event) {
+        var modal = document.getElementById("bcs-modal");
+        if (event.target == modal) {
+        modal.style.display = "none";
+        }
+    }
+  
+
+
     function updateProgressBar() {
         let progress = 0;
         let totalFields = 4;
