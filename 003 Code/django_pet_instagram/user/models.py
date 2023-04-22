@@ -1,22 +1,52 @@
-from django.contrib.auth.base_user import AbstractBaseUser
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.db import models
+from django.utils import timezone
+from django.contrib.auth.hashers import make_password
 
+class MyUserManager(BaseUserManager):
+    def create_user(self, email, password=None, **extra_fields):
+        if not email:
+            raise ValueError('The Email field must be set')
+        email = self.normalize_email(email)
+        user = self.model(email=email, **extra_fields)
+        user.set_password(password)  # 비밀번호 해싱
+        user.save(using=self._db)
+        return user
 
-# Create your models here.
+    def create_superuser(self, email, password, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+        return self.create_user(email, password, **extra_fields)
+
 class User(AbstractBaseUser):
-    """
-        유저 프로파일 사진
-        유저 닉네임     -> 화면에 표기되는 이름
-        유저 이름       -> 실제 사용자 이름
-        유저 이메일주소 -> 회원가입할때 사용하는 아이디
-        유저 비밀번호 -> 디폴트 쓰자
-    """
-    profile_image = models.TextField()  # 프로필 이미지
-    nickname = models.CharField(max_length=24, unique=True)
-    name = models.CharField(max_length=24)
-    email = models.EmailField(unique=True)
+    email = models.EmailField(unique=True, max_length=254)
+    nickname = models.CharField(max_length=30)
+    name = models.CharField(max_length=30)
+    password = models.CharField(max_length=128)
+    species = models.CharField(max_length=30)
+    age = models.IntegerField()
+    sex = models.CharField(max_length=10)
+    weight = models.CharField(max_length=30)
+    activity = models.CharField(max_length=100)
+    weight_control = models.CharField(max_length=30)
+    bcs = models.IntegerField()
+    cycle = models.CharField(max_length=30, blank=True)
+    improve = models.CharField(max_length=30, blank=True)
+    disease = models.CharField(max_length=30, blank=True)
+    is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
+    date_joined = models.DateTimeField(default=timezone.now)
 
-    USERNAME_FIELD = 'nickname'
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['nickname', 'name', 'species', 'age', 'sex', 'weight', 'activity', 'weight_control', 'bcs']
 
-    class Meta:
-        db_table = "User"
+    objects = MyUserManager()
+
+    def get_full_name(self):
+        return self.name
+
+    def get_short_name(self):
+        return self.nickname
+
+    def __str__(self):
+        return self.email
