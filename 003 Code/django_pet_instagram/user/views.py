@@ -36,12 +36,18 @@ class Join3(APIView):
     def get(self, request):
         return render(request, "user/join3.html")
     def post(self, request):
-        return render(request, "user/login.html")
+        request.session['activity'] = request.data.get('activity', None)
+        request.session['weight_control']  = request.data.get('weight_control', None)
+        request.session['bcs']  = request.data.get('bcs', None)
+        return render(request, "user/join4.html")
     
 class Join4(APIView):    
     def get(self, request):
         return render(request, "user/join4.html")
     def post(self, request):
+        request.session['cycle'] = request.data.get('cycle', None)
+        request.session['improve']  = request.data.get('improve', None)
+        request.session['disease']  = request.data.get('disease', None)
         return render(request, "user/login.html")
 
 class Login(APIView):

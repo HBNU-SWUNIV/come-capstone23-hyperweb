@@ -29,7 +29,7 @@
         <div>
         <div class="form-floating mb-3">
             <label for="activity" class="form-label" style="font-size: 14px; position: absolute; top: -40px; left: -15px;">활동성</label>
-            <input type="range" class="form-range" id="activity" min="0" max="100" onchange="updateInput()" oninput="document.getElementById('value1').innerHTML=this.value;">
+            <input type="range" class="form-range" id="input_activity" min="0" max="100" onchange="updateInput()" oninput="document.getElementById('value1').innerHTML=this.value;">
             <span id="value1"></span>
             <div style="display: flex; justify-content: space-between;">
                 <span style="font-size: 12px;">비활동적</span>
@@ -38,41 +38,27 @@
         </div>
         </div>
         <div>
-        <!-- HTML 코드 -->
-        <div class="form-floating mb-3" style="top: 30px;">
-            <label for="bcs-slider" style="font-size: 14px; position: absolute; top: -40px; left: -15px;">비만여부(BCS)</label>
-            <div class="slider-container">
-                <span id = "slider_value_view">0</span>	
-                <input type="range" class="form-range" id="bcs-slider" min="1" max="9">
-            </div>
-            <div style="display: flex; justify-content: space-between;">
-                <span style="font-size: 12px;">1</span>
-                <span style="font-size: 12px;">9</span>
-            </div>
+        
+        <div class="form-floating mb-3">
+            <input type="number" class="form-control" style="font-size: 14px; height: 24px" id="input_bcs" min="1" max="9">
+            <label for="label_bcs" style="font-size: 14px;padding: 4px 10px">BCS(비만도)</label>
             <a href="/media/BCS_image.png" target="_blank" style="font-size: 12px;" id="BCS_image">BCS에 대한 자세한 내용보기</a>
         </div>
   
-        <!-- 창띄워서 보여주는 코드 (미완) -->
-        <!-- <div id="bcs-modal" class="modal" style="display: none; position: fixed; top: 50%; right: 0; transform: translateY(-50%); z-index: 9999;">
-            <div class="modal-content" style="text-align: right;">
-              <img src="/media/BCS_image.png" style="max-width: 20%; max-height: 20%; float: right;">
-            </div>
-        </div> -->
-          
-          
-          
-  
-  
-  
-  
-  
         </div>
-        <div>
-            <div class="form-floating mb-3" style="padding:20px 20px 0px 0px;">
-                <input type="text" class="form-control" style="font-size: 14px; height: 24px" id="input_nickname" placeholder="name@example.com">
-                <label for="input_nickname" style="font-size: 14px;padding: 24px 30px; left:-20px">체중 증가/감소</label>
-            </div>
+        <div class="form-floating mb-3">
+            <select class="form-control" style="font-size: 14px; height: 24px" id="input_weight_control" onchange="onSelectChangeWeight()">
+              <option value="" selected disabled>체중증감 선택</option>
+              <option value="lose a lot of weight">lose a lot of weight</option>
+              <option value="lose a little weight">lose a little weight</option>
+              <option value="maintain weight">maintain weight</option>
+              <option value="gain a little weight">gain a little weight</option>
+              <option value="gain a lot of weight">gain a lot of weight</option>
+            </select>
+            <label for="weight_control" class="selected-option" id="label_weight_control" style="color: black;">체중증감</label>
         </div>
+                   
+
         <button id="join_button"  class="btn btn-primary" style="width: 100%; margin:10px 0px"> 다음 </button>
     </div>
     <div style="padding: 20px ;text-align: center;border: solid 1px rgba(219, 219, 219, 1); width: 300px; height: 70px; margin-top: 30px; background: white">
@@ -84,6 +70,45 @@
 
 <!-- Optional JavaScript; choose one of the two! -->
 <script>
+    // progress_bar 설정
+    $(document).ready(function() {
+        let progress = 0;
+        let totalFields = 11;
+        let defaultNumber = 8;
+        let completedFields = 0;
+        completedFields = defaultNumber + calculateCompletedFields();
+        progress = (completedFields / totalFields) * 100;
+        $('#progress_bar').css('width', progress + '%').attr('aria-valuenow', progress);
+      });
+    
+      function calculateCompletedFields() {
+        let completedFields = 0;
+        if ($('#input_bcs').val() !== "" && $('#input_bcs').val() != 5) {
+          completedFields++;
+        }
+        if ($('#input_activity').val() !== "" && $('#input_activity').val() != 50) {
+          completedFields++;
+        }
+        if ($('#input_weight_control').val() !== "" && $('#input_weight_control').val() != null) {
+          completedFields ++;
+        }
+        return completedFields;
+      }
+
+      function updateProgressBar() {
+        let progress = 0;
+        let totalFields = 11;
+        let defaultNumber = 8;
+        let completedFields = 0;
+        completedFields = defaultNumber + calculateCompletedFields();
+        progress = (completedFields / totalFields) * 100;
+        $('#progress_bar').css('width', progress + '%').attr('aria-valuenow', progress);
+    }
+
+
+    $('#input_weight_control').on('change', updateProgressBar);
+    $('#input_bcs').on('change', updateProgressBar);
+    $('#input_activity').on('change', updateProgressBar);
 
     // 실시간 값 보여주기
     function ShowSliderValue(sVal)
@@ -91,92 +116,30 @@
         var obValueView = document.getElementById("slider_value_view");
         obValueView.innerHTML = sVal
     }
-
-    var RangeSlider = function(){
-        var range = $('.bcs-slider');
-        
-        range.on('input', function(){		
-            ShowSliderValue(this.value);
-        });
-    };
-
-    RangeSlider();
-
-
-
-    // JavaScript 코드
-    function updateBCS() {
-        var bcsSlider = document.getElementById("bcs-slider");
-        var bcsValue = bcsSlider.value;
-        var bcsThumb = bcsSlider.querySelector("::-webkit-slider-thumb");
-        bcsThumb.textContent = bcsValue;
-        bcsThumb.style.setProperty("--value", "'" + bcsValue + "'");
-        document.getElementById("input_bcs").value = bcsValue;
-  }
-  
-    
-    function showBCSImage() {
-        var modal = document.getElementById("bcs-modal");
-        modal.style.display = "block";
-    }
-    
-    window.onclick = function(event) {
-        var modal = document.getElementById("bcs-modal");
-        if (event.target == modal) {
-        modal.style.display = "none";
-        }
-    }
-  
-
-
-    function updateProgressBar() {
-        let progress = 0;
-        let totalFields = 4;
-        let completedFields = 0;
-
-        if ($('#input_email').val() !== "") {
-            completedFields++;
-        }
-        if ($('#input_name').val() !== "") {
-            completedFields++;
-        }
-        if ($('#input_nickname').val() !== "") {
-            completedFields++;
-        }
-        if ($('#input_password').val() !== "") {
-            completedFields++;
-        }
-
-        progress = (completedFields / totalFields) * 100;
-        $('#progress_bar').css('width', progress + '%').attr('aria-valuenow', progress);
-    }
-
-    $('input').on('input', updateProgressBar);
-
-
+ 
     $('#join_button').click(function () {
 
-        let email = $('#input_email').val();
-        let password = $('#input_password').val();
-        let nickname = $('#input_nickname').val();
-        let name = $('#input_name').val();
-
-        console.log(email, password, nickname, name);
+        let activity = $('#input_activity').val();
+        let bcs = $('#input_bcs').val();
+        let weight_control = $('#input_weight_control').val();
         
+        if (!activity || !bcs || !weight_control) {
+            alert("입력되지 않은 값이 있습니다.");
+            return;
+          }
 
         $.ajax({
             url: "/user/join3",
             data: {
-                email : email,
-                password : password,
-                nickname : nickname,
-                name : name
+                activity : activity,
+                weight_control : weight_control,
+                bcs : bcs
             },
             method: "POST",
             success: function (data) {
                 console.log("성공");
-                alert("회원가입 성공했습니다. 로그인해주세요.");
-                location.replace('/user/join3');
+                alert("필수사항 완료");
+                location.replace('/user/join4');
 
             },
             error: function (request, status, error) {
@@ -187,6 +150,14 @@
             }
         });
     });
+
+    // 리스트 값 변경
+    function onSelectChangeWeight() {
+        var weightSelect = document.getElementById("input_weight_control");
+        var selectedWeight = weightSelect.options[weightSelect.selectedIndex].value;
+        var label = document.getElementById("label_weight_control");
+        label.innerHTML = selectedWeight !== "" ? selectedWeight : "무게";
+    }
 </script>
 
 
