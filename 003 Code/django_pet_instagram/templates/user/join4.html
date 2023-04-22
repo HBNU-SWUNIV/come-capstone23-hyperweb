@@ -25,10 +25,10 @@
         <div style="padding-bottom: 10px"><img style="width: 150px"
                                                src="https://www.instagram.com/static/images/web/mobile_nav_type_logo-2x.png/1b47f9d0e595.png">
         </div>
-        <div style="font-weight: bold; color: gray;padding-bottom: 50px"> 강아지 정보를 입력해주세요.</div>
+        <div style="font-weight: bold; color: gray;padding-bottom: 50px"> t선택 사항을 입력해주세요.</div>
         <div>
         <div class="form-floating mb-3">
-            <label for="activity" class="form-label" style="font-size: 14px; position: absolute; top: -40px; left: -15px;">활동성</label>
+            <label for="activity" class="form-label" style="font-size: 14px; position: absolute; top: -40px; left: -15px;">원하는 사료 주기</label>
             <input type="range" class="form-range" id="activity" min="0" max="100" onchange="updateInput()" oninput="document.getElementById('value1').innerHTML=this.value;">
             <span id="value1"></span>
             <div style="display: flex; justify-content: space-between;">
@@ -40,7 +40,7 @@
         <div>
         <!-- HTML 코드 -->
         <div class="form-floating mb-3" style="top: 30px;">
-            <label for="bcs-slider" style="font-size: 14px; position: absolute; top: -40px; left: -15px;">비만여부(BCS)</label>
+            <label for="bcs-slider" style="font-size: 14px; position: absolute; top: -40px; left: -15px;">원하는 개선 부위</label>
             <div class="slider-container">
                 <span id = "slider_value_view">0</span>	
                 <input type="range" class="form-range" id="bcs-slider" min="1" max="9">
@@ -49,28 +49,14 @@
                 <span style="font-size: 12px;">1</span>
                 <span style="font-size: 12px;">9</span>
             </div>
-            <a href="/media/BCS_image.png" target="_blank" style="font-size: 12px;" id="BCS_image">BCS에 대한 자세한 내용보기</a>
         </div>
   
-        <!-- 창띄워서 보여주는 코드 (미완) -->
-        <!-- <div id="bcs-modal" class="modal" style="display: none; position: fixed; top: 50%; right: 0; transform: translateY(-50%); z-index: 9999;">
-            <div class="modal-content" style="text-align: right;">
-              <img src="/media/BCS_image.png" style="max-width: 20%; max-height: 20%; float: right;">
-            </div>
-        </div> -->
-          
-          
-          
-  
-  
-  
-  
-  
+        
         </div>
         <div>
             <div class="form-floating mb-3" style="padding:20px 20px 0px 0px;">
                 <input type="text" class="form-control" style="font-size: 14px; height: 24px" id="input_nickname" placeholder="name@example.com">
-                <label for="input_nickname" style="font-size: 14px;padding: 24px 30px; left:-20px">체중 증가/감소</label>
+                <label for="input_nickname" style="font-size: 14px;padding: 24px 30px; left:-20px">병력/현재 가지고 있는 질병</label>
             </div>
         </div>
         <button id="join_button"  class="btn btn-primary" style="width: 100%; margin:10px 0px"> 다음 </button>

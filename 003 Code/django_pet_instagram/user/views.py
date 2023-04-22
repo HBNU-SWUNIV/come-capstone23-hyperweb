@@ -38,6 +38,12 @@ class Join3(APIView):
     def post(self, request):
         return render(request, "user/login.html")
     
+class Join4(APIView):    
+    def get(self, request):
+        return render(request, "user/join4.html")
+    def post(self, request):
+        return render(request, "user/login.html")
+
 class Login(APIView):
     def get(self, request):
         return render(request, "user/login.html")
