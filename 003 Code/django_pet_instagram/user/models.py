@@ -2,6 +2,7 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.hashers import make_password
+import hashlib
 
 class MyUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -36,6 +37,7 @@ class User(AbstractBaseUser):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     date_joined = models.DateTimeField(default=timezone.now)
+    profile_image = models.ImageField(upload_to='profile_images', default='/media/default_profile.png')
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['nickname', 'name', 'species', 'age', 'sex', 'weight', 'activity', 'weight_control', 'bcs']
@@ -50,3 +52,4 @@ class User(AbstractBaseUser):
 
     def __str__(self):
         return self.email
+    
