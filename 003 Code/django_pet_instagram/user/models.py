@@ -37,7 +37,7 @@ class User(AbstractBaseUser):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     date_joined = models.DateTimeField(default=timezone.now)
-    profile_image = models.ImageField(upload_to='profile_images', default='/media/default_profile.png')
+    profile_image = models.ImageField(upload_to='profile_images', default='default_profile.png')
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['nickname', 'name', 'species', 'age', 'sex', 'weight', 'activity', 'weight_control', 'bcs']

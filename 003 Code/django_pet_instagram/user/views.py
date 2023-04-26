@@ -8,6 +8,13 @@ from django.contrib.auth.hashers import make_password,check_password
 from Jinstagram.settings import MEDIA_ROOT
 
 
+class Add_dog(APIView):
+    def get(self, request):
+        return
+    def post(self, request):
+        
+        return Response(status=200)
+
 class Join1(APIView):
     def get(self, request):
         return render(request, "user/join1.html")
