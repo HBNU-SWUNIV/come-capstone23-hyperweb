@@ -126,6 +126,15 @@
         <div>
             <b>{{ user.name }}</b>
         </div>
+
+        <div>
+            {% for dog in user.dog_set.all %}
+        <div>
+            <b>{{ dog }}</b>
+        </div>
+        {% endfor %}
+        </div>
+        
     </div>
 </div>
 

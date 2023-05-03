@@ -3,7 +3,7 @@ from uuid import uuid4
 from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .models import User
+from .models import User, Dog
 from django.contrib.auth.hashers import make_password,check_password
 from Jinstagram.settings import MEDIA_ROOT
 
@@ -69,9 +69,18 @@ class Join4(APIView):
         improve = request.session.get('improve')
         disease = request.session.get('disease')
 
-        # 사용자 생성
-        user = User.objects.create_user(email=email, nickname=nickname, name=name, password=password, species=species, age=age, sex=sex, weight=weight, activity=activity, weight_control=weight_control, bcs=bcs, cycle=cycle, improve=improve, disease=disease)
+        # Dog 객체 생성
+        dog = Dog(species=species, age=age, sex=sex, weight=weight, activity=activity, weight_control=weight_control, bcs=bcs, cycle=cycle, improve=improve, disease=disease)
 
+        # 사용자 생성
+        user = User.objects.create_user(email=email, nickname=nickname, name=name, password=password)
+
+        # Dog 객체에 User 객체를 연결합니다.
+        dog.user = user
+
+        # Dog 객체를 저장합니다.
+        dog.save()
+        user.save()
         return render(request, "user/login.html")
 
 class Login(APIView):
@@ -83,7 +92,6 @@ class Login(APIView):
         email = request.data.get('email', None)
         password = request.data.get('password', None)        
         user = User.objects.filter(email=email).first()
-        activity = user.activity
         print( check_password(user.password, password))
         if user is None:
             return Response(status=400, data=dict(message="회원정보가 잘못되었습니다."))

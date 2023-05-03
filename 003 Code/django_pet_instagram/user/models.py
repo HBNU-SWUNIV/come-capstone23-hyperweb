@@ -19,11 +19,8 @@ class MyUserManager(BaseUserManager):
         extra_fields.setdefault('is_superuser', True)
         return self.create_user(email, password, **extra_fields)
 
-class User(AbstractBaseUser):
-    email = models.EmailField(unique=True, max_length=254)
-    nickname = models.CharField(max_length=30)
-    name = models.CharField(max_length=30)
-    password = models.CharField(max_length=128)
+
+class Dog(models.Model):
     species = models.CharField(max_length=30)
     age = models.IntegerField()
     sex = models.CharField(max_length=10)
@@ -34,13 +31,22 @@ class User(AbstractBaseUser):
     cycle = models.CharField(max_length=30, blank=True)
     improve = models.CharField(max_length=30, blank=True)
     disease = models.CharField(max_length=30, blank=True)
+    user = models.ForeignKey('User', on_delete=models.CASCADE, null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.species} - {self.age} - {self.sex}"
+
+class User(AbstractBaseUser):
+    email = models.EmailField(unique=True, max_length=254)
+    nickname = models.CharField(max_length=30)
+    name = models.CharField(max_length=30)
+    password = models.CharField(max_length=128)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     date_joined = models.DateTimeField(default=timezone.now)
     profile_image = models.ImageField(upload_to='profile_images', default='default_profile.png')
-
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['nickname', 'name', 'species', 'age', 'sex', 'weight', 'activity', 'weight_control', 'bcs']
+    REQUIRED_FIELDS = ['nickname', 'name']
 
     objects = MyUserManager()
 
@@ -52,4 +58,8 @@ class User(AbstractBaseUser):
 
     def __str__(self):
         return self.email
+
+    
+
+
     
