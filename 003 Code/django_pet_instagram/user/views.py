@@ -1,16 +1,16 @@
 import os
 from uuid import uuid4
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import User, Dog
 from django.contrib.auth.hashers import make_password,check_password
 from Jinstagram.settings import MEDIA_ROOT
-
+import hashlib
 
 class Add_dog(APIView):
     def get(self, request):
-        return
+        return redirect('join2')
     def post(self, request):
         
         return Response(status=200)
@@ -32,6 +32,8 @@ class Join2(APIView):
     def get(self, request):
         return render(request, "user/join2.html")
     def post(self, request):
+        if not request.session.get('email'):
+            return redirect('login')
         request.session['species'] = request.data.get('species', None)
         request.session['age']  = request.data.get('age', None)
         request.session['sex']  = request.data.get('sex', None)
@@ -42,6 +44,8 @@ class Join3(APIView):
     def get(self, request):
         return render(request, "user/join3.html")
     def post(self, request):
+        if not request.session.get('species'):
+            return redirect('login')
         request.session['activity'] = request.data.get('activity', None)
         request.session['weight_control']  = request.data.get('weight_control', None)
         request.session['bcs']  = request.data.get('bcs', None)
@@ -51,9 +55,33 @@ class Join4(APIView):
     def get(self, request):
         return render(request, "user/join4.html")
     def post(self, request):
+        if not request.session.get('bcs'):
+            return redirect('login')
         request.session['cycle'] = request.data.get('cycle', None)
         request.session['improve']  = request.data.get('improve', None)
         request.session['disease']  = request.data.get('disease', None)
+        
+        
+        if not request.session.get('password'): # 추가 정보 입력일 경우
+            email = request.session.get('email')
+            species = request.session.get('species')
+            age = request.session.get('age')
+            sex = request.session.get('sex')
+            weight = request.session.get('weight')
+            activity = request.session.get('activity')
+            weight_control = request.session.get('weight_control')
+            bcs = request.session.get('bcs')
+            cycle = request.session.get('cycle')
+            improve = request.session.get('improve')
+            disease = request.session.get('disease')
+
+            # Dog 객체 생성
+            dog = Dog(species=species, age=age, sex=sex, weight=weight, activity=activity, weight_control=weight_control, bcs=bcs, cycle=cycle, improve=improve, disease=disease)
+            dog.save()
+            user = User.objects.filter(email=email).first()
+            dog.user = user
+            return Response(status=200) 
+        
         email = request.session.get('email')
         nickname = request.session.get('nickname')
         name = request.session.get('name')
@@ -81,6 +109,7 @@ class Join4(APIView):
         # Dog 객체를 저장합니다.
         dog.save()
         user.save()
+        request.session.flush()
         return render(request, "user/login.html")
 
 class Login(APIView):
@@ -103,12 +132,10 @@ class Login(APIView):
         else:
             return Response(status=400, data=dict(message="로그인 정보가 잘못되었습니다."))
 
-
 class LogOut(APIView):
     def get(self, request):
         request.session.flush()
         return render(request, "user/login.html")
-
 
 class UploadProfile(APIView):
     def post(self, request):
@@ -132,3 +159,15 @@ class UploadProfile(APIView):
         user.save()
 
         return Response(status=200)
+
+
+
+
+def generate_hash(data):
+    sha256 = hashlib.sha256()
+    sha256.update(data.encode('utf-8'))
+    return sha256.hexdigest()
+
+def verify_hash(data, hash_code):
+    calculated_hash = generate_hash(data)
+    return calculated_hash == hash_code
