@@ -61,27 +61,6 @@ class Join4(APIView):
         request.session['improve']  = request.data.get('improve', None)
         request.session['disease']  = request.data.get('disease', None)
         
-        
-        if not request.session.get('password'): # 추가 정보 입력일 경우
-            email = request.session.get('email')
-            species = request.session.get('species')
-            age = request.session.get('age')
-            sex = request.session.get('sex')
-            weight = request.session.get('weight')
-            activity = request.session.get('activity')
-            weight_control = request.session.get('weight_control')
-            bcs = request.session.get('bcs')
-            cycle = request.session.get('cycle')
-            improve = request.session.get('improve')
-            disease = request.session.get('disease')
-
-            # Dog 객체 생성
-            dog = Dog(species=species, age=age, sex=sex, weight=weight, activity=activity, weight_control=weight_control, bcs=bcs, cycle=cycle, improve=improve, disease=disease)
-            dog.save()
-            user = User.objects.filter(email=email).first()
-            dog.user = user
-            return Response(status=200) 
-        
         email = request.session.get('email')
         nickname = request.session.get('nickname')
         name = request.session.get('name')
