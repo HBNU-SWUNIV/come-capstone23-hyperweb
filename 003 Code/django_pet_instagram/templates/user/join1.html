@@ -2,19 +2,22 @@
 <html lang="en">
 <head>
     <style>
-        .progress-bar {
-            width: 100%;
-            height: 20px;
-            position: relative;
-}
+    .progress-bar {
+        width: 100%;
+        height: 20px;
+        position: relative;
+    }
 
-.progress {
-  height: 100%;
-  width: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-}
+    .progress {
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+    #email_error_container {
+        color: red;
+  }
     </style>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -40,9 +43,13 @@
         </div>
         <div style="font-weight: bold; color: gray;padding-bottom: 20px"> 친구들과 얘완견대화를 나누고싶다면 가입하세요.</div>
         <div>
+            
             <div class="form-floating mb-3">
                 <input type="email" class="form-control" style="font-size: 14px; height: 24px" id="input_email" placeholder="name@example.com">
                 <label for="input_email" style="font-size: 14px;padding: 4px 10px">이메일 주소</label>
+                <div id="email_error_container">
+                    <span id="email_error" style="font-size: 12px"></span>
+                </div>
             </div>
         </div>
         <div>
@@ -75,6 +82,22 @@
 <!-- Optional JavaScript; choose one of the two! -->
 <script>
      $(document).ready(function(){
+        $('#input_email').on('input', function() {
+        const email = $(this).val();
+        $.ajax({
+        url: '{% url "check_email" %}',
+        data: { 'email': email },
+        dataType: 'json',
+        success: function(data) {
+            if (data.exists) {
+            $('#email_error').text('이 이메일은 이미 사용 중입니다.');
+            } else {
+            $('#email_error').text('');
+            }
+        }
+        });
+    });
+
         let progress = 0;
         const progressBar = $('.progress');
         progressBar.animate({ width: progress + '%' }, 1000);
@@ -151,8 +174,6 @@
         });
     });
 </script>
-
-
 
 
 <!-- Option 1: Bootstrap Bundle with Popper -->

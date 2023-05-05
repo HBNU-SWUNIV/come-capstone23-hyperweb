@@ -7,6 +7,15 @@ from .models import User, Dog
 from django.contrib.auth.hashers import make_password,check_password
 from Jinstagram.settings import MEDIA_ROOT
 import hashlib
+from django.http import JsonResponse
+
+
+def check_email(request):
+    email = request.GET.get('email')
+    if email:
+        exists = User.objects.filter(email=email).exists()
+        return JsonResponse({'exists': exists})
+    return JsonResponse({'error': '이메일을 제공해 주세요.'})
 
 class Add_dog(APIView):
     def get(self, request):
@@ -17,6 +26,7 @@ class Add_dog(APIView):
 
 class Join1(APIView):
     def get(self, request):
+        request.session.flush()
         return render(request, "user/join1.html")
 
     def post(self, request):
@@ -30,10 +40,11 @@ class Join1(APIView):
     
 class Join2(APIView):
     def get(self, request):
-        return render(request, "user/join2.html")
-    def post(self, request):
         if not request.session.get('email'):
             return redirect('login')
+        return render(request, "user/join2.html")
+    
+    def post(self, request):
         request.session['species'] = request.data.get('species', None)
         request.session['age']  = request.data.get('age', None)
         request.session['sex']  = request.data.get('sex', None)
@@ -42,10 +53,11 @@ class Join2(APIView):
     
 class Join3(APIView):    
     def get(self, request):
-        return render(request, "user/join3.html")
-    def post(self, request):
         if not request.session.get('species'):
             return redirect('login')
+        return render(request, "user/join3.html")
+    
+    def post(self, request):   
         request.session['activity'] = request.data.get('activity', None)
         request.session['weight_control']  = request.data.get('weight_control', None)
         request.session['bcs']  = request.data.get('bcs', None)
@@ -53,10 +65,11 @@ class Join3(APIView):
     
 class Join4(APIView):    
     def get(self, request):
-        return render(request, "user/join4.html")
-    def post(self, request):
         if not request.session.get('bcs'):
             return redirect('login')
+        return render(request, "user/join4.html")
+    
+    def post(self, request):
         request.session['cycle'] = request.data.get('cycle', None)
         request.session['improve']  = request.data.get('improve', None)
         request.session['disease']  = request.data.get('disease', None)
@@ -100,7 +113,6 @@ class Login(APIView):
         email = request.data.get('email', None)
         password = request.data.get('password', None)        
         user = User.objects.filter(email=email).first()
-        print( check_password(user.password, password))
         if user is None:
             return Response(status=400, data=dict(message="회원정보가 잘못되었습니다."))
 
