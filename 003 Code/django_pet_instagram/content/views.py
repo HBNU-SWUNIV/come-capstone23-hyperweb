@@ -7,6 +7,47 @@ from user.models import User
 import os
 from Jinstagram.settings import MEDIA_ROOT
 
+from django.http import HttpResponse
+from user.models import Dog 
+
+
+def submit_pet_info(request):
+    if request.method == 'POST':
+        # 데이터 가져오기
+        species = request.POST['breed']
+        age = request.POST['age']
+        sex = request.POST['gender']
+        weight = request.POST['weight']
+        activity = request.POST['activityLevel']
+        bcs = request.POST['bcs']
+        weight_control = request.POST['weightChange']
+        cycle = request.POST['cycle']
+        improve = request.POST.get('desiredImprovement', '')
+        disease = request.POST.get('medicalHistory', '')
+
+        email = request.session.get('email', None)
+        user = User.objects.filter(email=email).first()
+        # 새로운 Dog 객체 생성 및 저장
+        dog = Dog(
+            species=species,
+            age=age,
+            sex=sex,
+            weight=weight,
+            activity=activity,
+            bcs=bcs,
+            weight_control=weight_control,
+            cycle=cycle,
+            improve=improve,
+            disease=disease,
+        )
+        dog.user = user
+        dog.save()
+
+        return HttpResponse("제출완료")
+
+
+def input_page(request):
+    return render(request, 'content/input.html')
 
 class Main(APIView):
     def get(self, request):

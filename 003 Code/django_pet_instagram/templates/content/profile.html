@@ -66,6 +66,68 @@
             position: relative;
             padding: 10px;
         }
+
+body, html {
+    margin: 0;
+    height: 100%;
+}
+
+
+.list-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    position: static;
+    left: 0;
+    top: 0;
+    width: 300px;
+    text-align: center;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-right:20px;
+}
+
+.feature-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    margin-right: 140px;
+}
+
+.feature-item {
+    cursor: pointer;
+    background-color: #f5f5f5;
+    padding-left:100px;
+    padding-right: 100px;
+    padding-bottom: 30px;
+    padding-top: 30px;
+    margin-bottom: 5px;
+    border-radius: 10px;
+}
+
+.feature-item:last-child {
+    margin-bottom: 0;
+}
+
+.feature-item:hover {
+    background-color: #e0e0e0;
+}
+
+#wrapper{
+  height: auto;
+  min-height: 100%;
+  padding-bottom: 30px;
+}
+
+footer{
+  height: 30px;
+  position : relative;
+  transform : translateY(-100%);
+}
+
+#contentFrame{
+    width: 100%;
+}
     </style>
 </head>
 <body>
@@ -101,7 +163,7 @@
 </nav>
 
 
-<div style="display: flex; flex-direction: row;text-align: center; justify-content: center;padding-top: 60px; background-color:#FAFAFA">
+<div style="display: flex; flex-direction: row;text-align: center; justify-content: center;padding-top: 60px; background-color:#FAFAFA" id="upperDiv">
     <div style="padding: 20px 60px">
         <div class="box" style="width: 175px; height: 175px;">
 
@@ -110,7 +172,7 @@
 
         </div>
     </div>
-    <div style="text-align: left">
+    <div style="text-align: left" >
         <div style="display: flex; flex-direction: row; margin: 20px 0">
             <div style="font-size: 26px; margin-right: 40px">
                 {{ user.nickname }}
@@ -121,9 +183,11 @@
         </div>
 
         <div style="margin-bottom: 20px">
-            게시물 내 게시물건수  팔로워 111 팔로잉 111
+            유저에 대한 정보 기입
         </div>
-        <div>
+
+        <!--    데이터 보여주는 코드
+            <div>
             <b>{{ user.name }}</b>
         </div>
 
@@ -134,19 +198,40 @@
         </div>
         {% endfor %}
         </div>
+        -->
         
     </div>
 </div>
 
-<div style="border-top: solid 2px rgba(50,50,50,0.1); width: 100%">
-
-    <div style="display: flex; flex-direction: row; justify-content: center; align-items: center; margin: 20px">
-        <div id="button_feed_list" style="cursor: pointer;margin: 0 30px;display: flex; flex-direction: row;align-items: center"><span class="material-icons-outlined">grid_on</span>내 게시물</div>
-        <div id="button_feed_like_list" style="cursor: pointer;margin: 0 30px;display: flex; flex-direction: row;align-items: center"><span class="material-icons-outlined">favorite_border</span>좋아요</div>
-        <div id="button_feed_bookmark_list" style="cursor: pointer;margin: 0 30px;display: flex; flex-direction: row;align-items: center"><span class="material-icons-outlined">bookmark_border</span>북마크</div>
-    </div>
-
+<!-- 맨 왼쪽-->
+<div class="list-container" id="wrapper">
+    <ul class="feature-list">
+        <li class="feature-item">애완견 추가기능</li>
+        <li class="feature-item">정보 수정 기능</li>
+        <li class="feature-item">기능3</li>
+        <li class="feature-item">기능4</li>
+    </ul>
+    <iframe id="contentFrame" src="input_page" width="1000px" height="1000px" frameborder="0" allowfullscreen></iframe>
 </div>
+
+
+<footer style="border-top: solid 2px rgba(50,50,50,0.1); width: 100%">
+
+    <div style="display: flex; flex-direction: row; justify-content: center; align-items: flex-end; margin: 20px; height: 10vh;">
+        <div id="button_feed_list" style="cursor: pointer; margin: 0 30px; align-items: center">
+            <span class="material-icons-outlined">grid_on</span>내 게시물
+        </div>
+        <div id="button_feed_like_list" style="cursor: pointer; margin: 0 30px; align-items: center">
+            <span class="material-icons-outlined">favorite_border</span>좋아요
+        </div>
+        <div id="button_feed_bookmark_list" style="cursor: pointer; margin: 0 30px; align-items: center">
+            <span class="material-icons-outlined">bookmark_border</span>북마크
+        </div>
+    </div>
+    
+    
+
+</footer>
 
 <div id="feed_list" style="width: 100%; min-width: 1000px; display: flex; align-items: center;justify-content: center">
     <div style="display: flex; flex-direction: row; flex-wrap: wrap; width: 1000px; justify-content: center">

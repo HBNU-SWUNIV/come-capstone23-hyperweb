@@ -38,7 +38,8 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    #'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'Jinstagram.middleware.XFrameOptionsMiddleware',  # 사용자 정의 미들웨어 추가 Iframe사용을 위해~
 ]
 
 ROOT_URLCONF = 'Jinstagram.urls'

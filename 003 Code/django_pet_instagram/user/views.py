@@ -151,14 +151,3 @@ class UploadProfile(APIView):
 
         return Response(status=200)
 
-
-
-
-def generate_hash(data):
-    sha256 = hashlib.sha256()
-    sha256.update(data.encode('utf-8'))
-    return sha256.hexdigest()
-
-def verify_hash(data, hash_code):
-    calculated_hash = generate_hash(data)
-    return calculated_hash == hash_code

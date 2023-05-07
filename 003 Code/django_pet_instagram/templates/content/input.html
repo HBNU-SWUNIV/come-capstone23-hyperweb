@@ -1,28 +1,26 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pet Information Form</title>
     <style>
-        .progress-bar {
+        form {
+            display: flex;
+            flex-direction: column;
             width: 100%;
-            height: 20px;
-            position: relative;
-}
-
-        .progress {
-        height: 100%;
-        width: 100%;
-        position: absolute;
-        top: 0;
-        left: 0;
         }
 
-       #container {
-            position: relative;
-            display: inline-block;
+        label {
+            margin-bottom: 5px;
+        }
+
+        input, select {
+            margin-bottom: 15px;
         }
         .suggestions {
             list-style-type: none;
-            padding: 0;
+            top:50px;
             margin-top: 5px;
             border: 1px solid #ccc;
             border-radius: 5px;
@@ -52,73 +50,72 @@
 
     <!-- Jquery -->
     <script src="http://code.jquery.com/jquery-latest.min.js"></script>
-    
-    <title>회원 가입</title>
 </head>
-<body style="background: #FAFAFA">
-    <div style="display: flex; flex-direction: column; align-items: center; width: 100%">
-        <div style="width: 300px; height: 20px; margin-top: 10px;">
-            <div class="progress" style="background-color: blue;">
-                <div id="progress_bar" class="progress-bar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-            </div>
-        </div>
-    <div style="padding: 20px ;text-align: center;border: solid 1px rgba(219, 219, 219, 1); width: 300px; height: 400px; margin-top: 30px; background: white">
-        <div style="padding-bottom: 10px"><img style="width: 150px"
-                                               src="/media/main_image.png">
-        </div>
-        <div style="font-weight: bold; color: gray;padding-bottom: 20px"> 강아지 정보를 입력해주세요.</div>
-        <div>
-            <div class="form-floating mb-3">
-                <input type="text" class="form-control" id="input_species" placeholder="견종을 입력해주세요" style="font-size: 14px; height: 24px" oninput="filterWords()">
-                <label for="input_age" style="font-size: 14px;padding: 4px 10px">견종</label>
-                <ul id="suggestions" class="suggestions"></ul>
-            </div>
-        </div>
-        <div>
-            <div class="form-floating mb-3">
-                <input type="number" class="form-control" style="font-size: 14px; height: 24px" id="input_age" min="1" max="20">
-                <label for="input_age" style="font-size: 14px;padding: 4px 10px">연령</label>
-            </div>
-        </div>
-        <div>
-            <div class="form-floating mb-3">
-                <select class="form-control" style="font-size: 14px; height: 24px" id="input_sex" onchange="onSelectChangeSex()">
-                    <option value="" selected disabled>성별 선택</option>
-                    <option value="수컷">암 컷</option>
-                    <option value="암컷">수 컷</option>
-                    <option value="중성">중 성</option>
-                </select>
-                <label for="label_sex" class="selected-option" id="label_sex" style="color: black;">성별</label>
-            </div>
-        </div>
-        <div>
-            <div class="form-floating mb-3">
-                <input type="text" class="form-control" id="input_weight" placeholder="무게를 입력해주세요" style="font-size: 14px; height: 24px">
-                <label for="label_weight" class="selected-option" style="font-size: 14px;padding: 4px 10px; color: black;">무게(KG)</label>
-            </div>
-        </div>
-        <button id="join2_button"  class="btn btn-primary" style="width: 100%"> 다음 </button>
-    </div>
-    <div style="padding: 20px ;text-align: center;border: solid 1px rgba(219, 219, 219, 1); width: 300px; height: 70px; margin-top: 30px; background: white">
-        <div> 계정이 있으신가요? <a href="login">로그인</a></div>
-    </div>
-</div>
+<body>
+    <form action="{% url 'submit_pet_info' %}" method="post">
+        {% csrf_token %}
+        <label>견 종</label> 
+        <input type="text" id="input_bread" name="breed" oninput="filterWords()" style="font-size: 14px; height: 24px">
+        <ul id="suggestions" class="suggestions"></ul>
 
+        <label for="age">연령</label>
+        <input type="number" id="age" name="age">
 
+        <label for="gender">성별</label>
+        <select id="gender" name="gender">
+            <option value="수컷">암 컷</option>
+            <option value="암컷">수 컷</option>
+            <option value="중성">중 성</option>
+        </select>
 
-<!-- Optional JavaScript; choose one of the two! -->
+        <label for="age">무게(KG)</label>
+        <input type="number" id="weight" name="weight">
+
+        <label for="activityLevel">활동성</label>
+        <input type="range" id="activityLevel" name="activityLevel" min="1" max="100" onchange="updateInput()" oninput="document.getElementById('value1').innerHTML=this.value;">
+        <span id="value1"></span>
+        <label for="bcs">BCS</label>
+        <input type="number" id="bcs" name="bcs" min="1" max="9">
+        <a href="/media/BCS_image.png" target="_blank" style="font-size: 12px;" id="BCS_image">BCS에 대한 자세한 내용보기</a>
+
+        <label for="weightChange">체중 증감</label>
+        <select id="weightChange" name="weightChange">
+            <option value="" selected disabled>체중증감 선택</option>
+            <option value="lose a lot of weight">lose a lot of weight</option>
+            <option value="lose a little weight">lose a little weight</option>
+            <option value="maintain weight">maintain weight</option>
+            <option value="gain a little weight">gain a little weight</option>
+            <option value="gain a lot of weight">gain a lot of weight</option>
+        </select>
+
+        <label for="cycle">주기</label>
+        <select id="cycle" name="cycle">
+            <option value="1주일 기준">1주일 기준</option>
+            <option value="1달 기준">1달 기준</option>
+            <option value="1년 기준">1년 기준</option>
+        </select>
+        <label>선택 사항</label>
+        <label for="desiredImprovement">원하는 개선 부위</label>
+        <input type="text" id="desiredImprovement" name="desiredImprovement">
+
+        <label for="medicalHistory">병력/현재 가지고 있는 질병</label>
+        <input type="text" id="medicalHistory" name="medicalHistory">
+        <button type="submit">제출</button>
+    </form>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script>
-        const words = [
+    const words = [
             'Afador','Affenhuahua','Affenpinscher','Afghan Hound','Airedale Terrier','Akbash','Akita','Akita Chow','Akita Pit','Akita Shepherd','Alaskan Klee Kai','Alaskan Malamute','American Bulldog','American English Coonhound','American Eskimo Dog','American Foxhound','American Hairless Terrier','American Leopard Hound','American Pit Bull Terrier','American Pugabull','American Staffordshire Terrier',-'American Water Spaniel','Anatolian Shepherd Dog','Appenzeller Sennenhunde','Auggie','Aussiedoodle','Aussiepom','Australian Cattle Dog','Australian Kelpie','Australian Retriever','Australian Shepherd','Australian Shepherd Husky','Australian Shepherd Lab Mix',-'Australian Shepherd Pit Bull Mix',-'Australian Stumpy Tail Cattle Dog',-'Australian Terrier','Azawakh','Barbet','Basenji','Bassador','Basset Fauve de Bretagne','Basset Hound','Basset Retriever','Bavarian Mountain Scent Hound',-'Beabull','Beagle','Beaglier','Bearded Collie','Bedlington Terrier','Belgian Laekenois','Belgian Malinois','Belgian Sheepdog','Belgian Tervuren','Bergamasco Sheepdog','Berger Picard','Bernese Mountain Dog','Bichon Frise','Biewer Terrier','Black and Tan Coonhound','Black Mouth Cur','Black Russian Terrier','Bloodhound','Blue Lacy','Bluetick Coonhound','Bocker','Boerboel','Boglen Terrier','Bohemian Shepherd','Bolognese','Borador','Border Collie','Border Sheepdog','Border Terrier','Bordoodle','Borzoi','BoShih','Bossie','Boston Boxer','Boston Terrier','Boston Terrier Pekingese Mix',-'Bouvier des Flandres','Boxador','Boxer','Boxerdoodle','Boxmatian','Boxweiler','Boykin Spaniel','Bracco Italiano','Braque du Bourbonnais','Briard','Brittany','Broholmer','Brussels Griffon','Bugg','Bull Arab','Bull-Pei','Bull Terrier','Bullador','Bullboxer Pit','Bulldog','Bullmastiff','Bullmatian','Cairn Terrier','Canaan Dog','Cane Corso','Cardigan Welsh Corgi','Carolina Dog','Catahoula Bulldog','Catahoula Leopard Dog','Caucasian Shepherd Dog','Cav-a-Jack','Cavachon','Cavador','Cavalier King Charles Spaniel',-'Cavapoo','Central Asian Shepherd Dog','Cesky Terrier','Chabrador','Cheagle','Chesapeake Bay Retriever','Chi Chi','Chi-Poo','Chigi','Chihuahua','Chilier','Chinese Crested','Chinese Shar-Pei','Chinook','Chion','Chipin','Chiweenie','Chorkie','Chow Chow','Chow Shepherd','Chug','Chusky','Cirneco dell?섷tna','Clumber Spaniel','Cockalier','Cocker Spaniel','Collie','Corgi Inu','Corgidor','Corman Shepherd','Coton de Tulear','Croatian Sheepdog','Curly-Coated Retriever','Dachsador','Dachshund','Dalmatian','Dandie Dinmont Terrier','Daniff','Danish-Swedish Farmdog','Deutscher Wachtelhund','Doberdor','Doberman Pinscher','Docker','Dogo Argentino','Dogue de Bordeaux','Dorgi','Dorkie','Doxiepoo','Doxle','Drentsche Patrijshond','Drever','Dutch Shepherd','English Cocker Spaniel','English Foxhound','English Setter','English Springer Spaniel','English Toy Spaniel','Entlebucher Mountain Dog','Estrela Mountain Dog','Eurasier','Field Spaniel','Fila Brasileiro','Finnish Lapphund','Finnish Spitz','Flat-Coated Retriever','Wire Fox Terrier','French Bulldog','French Bullhuahua','French Spaniel','Frenchton','Frengle','German Longhaired Pointer','German Pinscher','German Shepherd Dog','German Shepherd Pit Bull','German Shepherd Rottweiler Mix',-'German Sheprador','German Shorthaired Pointer','German Spitz','German Wirehaired Pointer','Giant Schnauzer','Glen of Imaal Terrier','Goberian','Goldador','Golden Cocker Retriever','Golden Mountain Dog','Golden Retriever','Golden Retriever Corgi','Golden Shepherd','Goldendoodle','Gollie','Gordon Setter','Great Dane','Great Pyrenees','Greater Swiss Mountain Dog','Greyador','Greyhound','Hamiltonstovare','Hanoverian Scenthound','Harrier','Havanese','Havapoo','Hokkaido','Horgi','Hovawart','Huskita','Huskydoodle','Ibizan Hound','Icelandic Sheepdog','Irish Red And White Setter','Irish Setter','Irish Terrier','Irish Water Spaniel','Irish Wolfhound','Italian Greyhound','Jack-A-Poo','Jack Chi','Jack Russell Terrier','Jackshund','Japanese Chin','Japanese Spitz','Korean Jindo Dog','Kai Ken','Karelian Bear Dog','Keeshond','Kerry Blue Terrier','King Shepherd','Kishu Ken','Komondor','Kooikerhondje','Kuvasz','Kyi-Leo','Lab Pointer','Labernese','Labmaraner','Labrabull','Labradane','Labradoodle','Labrador Retriever','Labrastaff','Labsky','Lagotto Romagnolo','Lakeland Terrier','Lancashire Heeler','Leonberger','Lhasa Apso','Lhasapoo','Lowchen','Maltese','Maltipoo','Manchester Terrier','Maremma Sheepdog','Mastador','Mastiff','Miniature Pinscher','Miniature Schnauzer','Morkie','Mountain Cur','Mountain Feist','Mudi','Neapolitan Mastiff','Newfoundland','Norfolk Terrier','Northern Inuit Dog','Norwegian Buhund','Norwegian Elkhound','Norwegian Lundehund','Norwich Terrier','Nova Scotia Duck Tolling Retriever',-'Old English Sheepdog','Otterhound','Papillon','Papipoo','Patterdale Terrier','Peekapoo','Pekingese','Pembroke Welsh Corgi','Petit Basset Griffon Vend챕en',-'Pharaoh Hound','Pitsky','Plott','Pocket Beagle','Pointer','Polish Lowland Sheepdog','Pomapoo','Pomchi','Pomeagle','Pomeranian','Pomsky','Poochon','Poodle(Miniature)','Poodle(Standard)','Poodle(Toy)','Portuguese Podengo Pequeno','Portuguese Pointer','Portuguese Sheepdog','Portuguese Water Dog','Pudelpointer','Pug','Pugalier','Puggle','Puginese','Puli','Pyredoodle','Pyrenean Mastiff','Pyrenean Shepherd','Rat Terrier','Redbone Coonhound','Rhodesian Ridgeback','Rottador','Rottle','Rottweiler','Saint Berdoodle','Saint Bernard','Saluki','Samoyed','Samusky','Schipperke','Schnoodle','Scottish Deerhound','Scottish Terrier','Sealyham Terrier','Sheepadoodle','Shepsky','Shetland Sheepdog','Shiba Inu','Shichon','Shih-Poo','Shih Tzu','Shikoku','Shiloh Shepherd','Shiranian','Shollie','Shorkie','Siberian Husky','Silken Windhound','Silky Terrier','Skye Terrier','Sloughi','Small Munsterlander Pointer',-'Soft Coated Wheaten Terrier',-'Spanish Mastiff','Spinone Italiano','Springador','Stabyhoun','Staffordshire Bull Terrier','Staffy Bull Bullmastiff','Standard Schnauzer','Sussex Spaniel','Swedish Lapphund','Swedish Vallhund','Taiwan Dog','Terripoo','Texas Heeler','Thai Ridgeback','Tibetan Mastiff','Tibetan Spaniel','Tibetan Terrier','Toy Fox Terrier','Transylvanian Hound','Treeing Tennessee Brindle','Treeing Walker Coonhound','Valley Bulldog','Vizsla','Weimaraner','Welsh Springer Spaniel','Welsh Terrier','West Highland White Terrier',-'Westiepoo','Whippet','Whoodle','Wirehaired Pointing Griffon',-'Xoloitzcuintli(Toy)','Xoloitzcuintli(Miniature)','Xoloitzcuintli(Standard)','Yakutian Laika','Yorkipoo','Yorkshire Terrier'
         ];
 
         function filterWords() {
-            const input = document.getElementById('input_species');
+            const input = document.getElementById('input_bread');
             const filter = input.value.toUpperCase();
             const suggestions = document.getElementById('suggestions');
 
             suggestions.innerHTML = '';
-
+            console.log(filter)
             if (filter === '') {
                 suggestions.style.display = 'none';
             } else {
@@ -136,124 +133,23 @@
                 }
             }
         }
-
-
-
-
-    // load시 실행 함수
-    $(document).ready(function() {
-        let progress = 0;
-        let totalFields = 11;
-        let defaultNumber = 4;
-        let completedFields = 0;
-        completedFields = defaultNumber + calculateCompletedFields();
+    $(document).ready(function(){
         
-        progress = (completedFields / totalFields) * 100;
-        const progressBar = $('.progress');
-        progressBar.animate({ width: progress + '%' }, 1000);
 
-
-      });
-    
-      function calculateCompletedFields() {
-        let completedFields = 0;
-        if ($('#input_species').val() !== "" && $('#input_species').val() != null) {
-          completedFields++;
-        }
-        if ($('#input_age').val() !== "" && $('#input_age').val() != null) {
-          completedFields++;
-        }
-        if ($('#input_sex').val() !== "" && $('#input_sex').val() != null) {
-          completedFields ++;
-        }
-        if ($('#input_weight').val() !== "" && $('#input_weight').val() != null) {
-            completedFields++;
-          }
-        return completedFields;
-      }
-      
-    function onSelectChangeWeight() {
-            var weightSelect = document.getElementById("input_weight");
-            var selectedWeight = weightSelect.options[weightSelect.selectedIndex].value;
-            var label = document.getElementById("label_weight");
-            label.innerHTML = selectedWeight !== "" ? selectedWeight : "무게";
-        }
-
-    function onSelectChangeSpecies() {
-            var speciesSelect = document.getElementById("input_species");
-            var selectedSpecies = speciesSelect.options[speciesSelect.selectedIndex].value;
-            var label = document.getElementById("label_species");
-            label.innerHTML = selectedSpecies !== "" ? selectedSpecies : "종";
-        }
-
-    function onSelectChangeSex() {
-        var sexSelect = document.getElementById("input_sex");
-        var selectedSex = sexSelect.options[sexSelect.selectedIndex].value;
-        var label = document.getElementById("label_sex");
-        label.innerHTML = selectedSex !== "" ? selectedSex : "성별";
-    }
-    function updateProgressBar() {
-        let progress = 0;
-        let totalFields = 11;
-        let defaultNumber = 4;
-        let completedFields = 0;
-        completedFields = defaultNumber + calculateCompletedFields();
-
-        progress = (completedFields / totalFields) * 100;
-        const progressBar = $('.progress');
-        progressBar.animate({ width: progress + '%' }, 1000);
-        // $('#progress_bar').css('width', progress + '%').attr('aria-valuenow', progress);
-    }
-
-    $('input').on('input', updateProgressBar);
-    $('#input_species').on('change', updateProgressBar);
-    $('#input_sex').on('change', updateProgressBar);
-    $('#input_weight').on('change', updateProgressBar);
-
-
-    $('#join2_button').click(function () {
-
-        let species = $('#input_species').val();
-        let age = $('#input_age').val();
-        let sex = $('#input_sex').val();
-        let weight = $('#input_weight').val();
-
-        if (!species || !age || !sex || !weight) {
-            alert("입력되지 않은 값이 있습니다.");
-            return;
-          }
-
-        $.ajax({
-            url: "/user/join2",
-            data: {
-                species : species,
-                age : age,
-                sex : sex,
-                weight : weight
-            },
-            method: "POST",
-            success: function (data) {
-                console.log("성공");
-                alert("2번째 절차 성공");
-                location.replace('/user/join3');
-
-            },
-            error: function (request, status, error) {
-                console.log("에러");
-            },
-            complete: function () {
-                console.log("완료");
+        $("form").submit(function(event){
+            var empty_fields = [];
+            $("input[type='text'], input[type='number'], select").each(function(){
+                if ($(this).val() == "" && $(this).attr("name") != "desiredImprovement" && $(this).attr("name") != "medicalHistory" && $(this).attr("name") != "cycle") {
+                    empty_fields.push($(this).prev("label").text());
+                }
+            });
+            if (empty_fields.length > 0) {
+                event.preventDefault();
+                alert("다음 필드를 입력하세요: " + empty_fields.join(", "));
             }
         });
     });
 </script>
 
-
-
-
-<!-- Option 1: Bootstrap Bundle with Popper -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
-        crossorigin="anonymous"></script>
-</body>
 </html>
+
