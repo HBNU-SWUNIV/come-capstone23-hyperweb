@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pet Information Form</title>
     <style>
-        form {
+        /*
+         form {
             display: flex;
             flex-direction: column;
             width: 100%;
@@ -18,6 +19,7 @@
         input, select {
             margin-bottom: 15px;
         }
+        */
         .suggestions {
             list-style-type: none;
             top:50px;
@@ -54,32 +56,41 @@
 <body>
     <form action="{% url 'submit_pet_info' %}" method="post">
         {% csrf_token %}
+        <div class="form-group">
         <label>견 종</label> 
-        <input type="text" id="input_bread" name="breed" oninput="filterWords()" style="font-size: 14px; height: 24px">
+        <input type="text" class="form-control" id="input_bread" name="breed" oninput="filterWords()" style="font-size: 14px; height: 24px">
         <ul id="suggestions" class="suggestions"></ul>
+        </div>
 
+        <div class="form-group">
         <label for="age">연령</label>
-        <input type="number" id="age" name="age">
+        <input type="number" class="form-control" id="age" name="age">
+        </div>
 
+        <div class="form-group">
         <label for="gender">성별</label>
-        <select id="gender" name="gender">
+        <select class="form-control" id="gender" name="gender">
             <option value="수컷">암 컷</option>
             <option value="암컷">수 컷</option>
             <option value="중성">중 성</option>
         </select>
+        </div>
 
+        <div class="form-group">
         <label for="age">무게(KG)</label>
-        <input type="number" id="weight" name="weight">
+        <input type="number" class="form-control" id="weight" name="weight">
+        </div>
 
+        <div class="form-group">
         <label for="activityLevel">활동성</label>
-        <input type="range" id="activityLevel" name="activityLevel" min="1" max="100" onchange="updateInput()" oninput="document.getElementById('value1').innerHTML=this.value;">
+        <input type="range" class="form-control" id="activityLevel" name="activityLevel" min="1" max="100" onchange="updateInput()" oninput="document.getElementById('value1').innerHTML=this.value;">
         <span id="value1"></span>
         <label for="bcs">BCS</label>
-        <input type="number" id="bcs" name="bcs" min="1" max="9">
+        <input type="number" class="form-control" id="bcs" name="bcs" min="1" max="9">
         <a href="/media/BCS_image.png" target="_blank" style="font-size: 12px;" id="BCS_image">BCS에 대한 자세한 내용보기</a>
-
+        </div>
         <label for="weightChange">체중 증감</label>
-        <select id="weightChange" name="weightChange">
+        <select class="form-control" id="weightChange" name="weightChange">
             <option value="" selected disabled>체중증감 선택</option>
             <option value="lose a lot of weight">lose a lot of weight</option>
             <option value="lose a little weight">lose a little weight</option>
@@ -89,17 +100,17 @@
         </select>
 
         <label for="cycle">주기</label>
-        <select id="cycle" name="cycle">
+        <select class="form-control" id="cycle" name="cycle">
             <option value="1주일 기준">1주일 기준</option>
             <option value="1달 기준">1달 기준</option>
             <option value="1년 기준">1년 기준</option>
         </select>
         <label>선택 사항</label>
         <label for="desiredImprovement">원하는 개선 부위</label>
-        <input type="text" id="desiredImprovement" name="desiredImprovement">
+        <textarea class="form-control" class="form-control" id="desiredImprovement" name="desiredImprovement"></textarea>
 
         <label for="medicalHistory">병력/현재 가지고 있는 질병</label>
-        <input type="text" id="medicalHistory" name="medicalHistory">
+        <textarea class="form-control" class="form-control" id="medicalHistory" name="medicalHistory"></textarea>
         <button type="submit">제출</button>
     </form>
 </body>
