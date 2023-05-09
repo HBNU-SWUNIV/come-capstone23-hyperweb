@@ -11,6 +11,7 @@ from django.http import HttpResponse
 from user.models import Dog 
 
 
+
 def submit_pet_info(request):
     if request.method == 'POST':
         # 데이터 가져오기
@@ -44,7 +45,6 @@ def submit_pet_info(request):
         dog.save()
 
         return HttpResponse("제출완료")
-
 
 def input_page(request):
     return render(request, 'content/input.html')
@@ -124,6 +124,11 @@ class Profile(APIView):
         if user is None:
             return render(request, "user/login.html")
 
+
+        user = User.objects.get(email=email)
+        dogs = Dog.objects.filter(user=user)
+        
+        # return render(request, 'your_app/dogs.html', context)
         feed_list = Feed.objects.filter(email=email)
         like_list = list(Like.objects.filter(email=email, is_like=True).values_list('feed_id', flat=True))
         like_feed_list = Feed.objects.filter(id__in=like_list)
@@ -132,7 +137,7 @@ class Profile(APIView):
         return render(request, 'content/profile.html', context=dict(feed_list=feed_list,
                                                                     like_feed_list=like_feed_list,
                                                                     bookmark_feed_list=bookmark_feed_list,
-                                                                    user=user))
+                                                                    user=user, dogs=dogs))
 
 
 class UploadReply(APIView):

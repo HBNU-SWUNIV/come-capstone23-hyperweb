@@ -216,7 +216,7 @@
     <iframe id="contentFrame" class="embed-responsive-item" src="input_page" width="1000px" height="1000px" frameborder="0" allowfullscreen></iframe>
 </div> {% endcomment %}
 <div class="row">
-    <div class="col-4" style="position: fixed;width:200px">
+    <div class="col-4" style="position: fixed;width:200px; margin-left:10px">
       <div id="list-example" class="list-group">
         <a class="list-group-item list-group-item-action" href="#list-item-1">애완견 확인</a>
         <a class="list-group-item list-group-item-action" href="#list-item-2">애완견 추가</a>
@@ -225,27 +225,92 @@
     </div>
     <div class="col-8" style="margin-left:200px">
       <div data-bs-spy="scroll" data-bs-target="#list-example" data-bs-smooth-scroll="true" class="scrollspy-example" tabindex="0">
-        <h4 id="list-item-1">Item 1</h4>
-        <p>
-            A</br>
-            B</br>
-            C</br>
-            D</br>
-            E</br>
-            F</br>
-            G</br>
-        </p>
-        <h4 id="list-item-2">Item 2</h4>
-        <p>
-            A</br>
-            B</br>
-            C</br>
-            D</br>
-            E</br>
-            F</br>
-            G</br>
-        </p>
-        <h4 id="list-item-3">Item 3</h4>
+        <h4 id="list-item-1"></br></br></br>애완견 확인</h4>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Species</th>
+                    <th>Age</th>
+                    <th>Sex</th>
+                    <!-- 필요한 경우 다른 필드 추가 -->
+                </tr>
+            </thead>
+            <tbody>
+                {% for dog in dogs %}
+                    <tr>
+                        <td>{{ dog.species }}</td>
+                        <td>{{ dog.age }}</td>
+                        <td>{{ dog.sex }}</td>
+                        <!-- 필요한 경우 다른 필드 추가 -->
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        </br></br></br>
+
+        <h4 id="list-item-2"></br></br></br>애완견 추가</h4>
+        <form action="{% url 'submit_pet_info' %}" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+            <label>견 종</label> 
+            <input type="text" class="form-control" id="input_bread" name="breed" oninput="filterWords()" style="font-size: 14px; height: 24px">
+            <ul id="suggestions" class="suggestions"></ul>
+            </div>
+    
+            <div class="form-group">
+            <label for="age">연령</label>
+            <input type="number" class="form-control" id="age" name="age">
+            </div>
+    
+            <div class="form-group">
+            <label for="gender">성별</label>
+            <select class="form-control" id="gender" name="gender">
+                <option value="수컷">암 컷</option>
+                <option value="암컷">수 컷</option>
+                <option value="중성">중 성</option>
+            </select>
+            </div>
+    
+            <div class="form-group">
+            <label for="age">무게(KG)</label>
+            <input type="number" class="form-control" id="weight" name="weight">
+            </div>
+    
+            <div class="form-group">
+            <label for="activityLevel">활동성</label>
+            <input type="range" class="form-control" id="activityLevel" name="activityLevel" min="1" max="100" onchange="updateInput()" oninput="document.getElementById('value1').innerHTML=this.value;">
+            <span id="value1"></span>
+            <label for="bcs">BCS</label>
+            <input type="number" class="form-control" id="bcs" name="bcs" min="1" max="9">
+            <a href="/media/BCS_image.png" target="_blank" style="font-size: 12px;" id="BCS_image">BCS에 대한 자세한 내용보기</a>
+            </div>
+            <label for="weightChange">체중 증감</label>
+            <select class="form-control" id="weightChange" name="weightChange">
+                <option value="" selected disabled>체중증감 선택</option>
+                <option value="lose a lot of weight">lose a lot of weight</option>
+                <option value="lose a little weight">lose a little weight</option>
+                <option value="maintain weight">maintain weight</option>
+                <option value="gain a little weight">gain a little weight</option>
+                <option value="gain a lot of weight">gain a lot of weight</option>
+            </select>
+    
+            <label for="cycle">주기</label>
+            <select class="form-control" id="cycle" name="cycle">
+                <option value="1주일 기준">1주일 기준</option>
+                <option value="1달 기준">1달 기준</option>
+                <option value="1년 기준">1년 기준</option>
+            </select>
+            <label>선택 사항</label>
+            <label for="desiredImprovement">원하는 개선 부위</label>
+            <textarea class="form-control" class="form-control" id="desiredImprovement" name="desiredImprovement"></textarea>
+    
+            <label for="medicalHistory">병력/현재 가지고 있는 질병</label>
+            <textarea class="form-control" class="form-control" id="medicalHistory" name="medicalHistory"></textarea>
+            <button type="submit">제출</button>
+        </form>
+        </br></br></br>
+
+        <h4 id="list-item-3"></br></br></br>사용자 정보 수정</h4>
         <p>
             A</br>
             B</br>
