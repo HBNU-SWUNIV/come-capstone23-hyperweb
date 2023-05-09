@@ -6,12 +6,12 @@ from .models import Feed, Reply, Like, Bookmark
 from user.models import User
 import os
 from Jinstagram.settings import MEDIA_ROOT
-
-from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponse, HttpResponseRedirect
 from user.models import Dog 
 
 
-
+@csrf_exempt
 def submit_pet_info(request):
     if request.method == 'POST':
         # 데이터 가져오기
@@ -44,7 +44,7 @@ def submit_pet_info(request):
         dog.user = user
         dog.save()
 
-        return HttpResponse("제출완료")
+        return HttpResponseRedirect('../profile')
 
 def input_page(request):
     return render(request, 'content/input.html')

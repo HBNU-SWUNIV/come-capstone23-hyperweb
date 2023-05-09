@@ -7,9 +7,8 @@ urlpatterns = [
     path('reply', UploadReply.as_view()),
     path('like', ToggleLike.as_view()),
     path('bookmark', ToggleBookmark.as_view()),
-    path('profile', Profile.as_view()),
+    path('profile', Profile.as_view(), name="profile"),
     path('main', Main.as_view()),
-    path('input_page/', views.input_page, name='input_page'),
     path('submit_pet_info/', views.submit_pet_info, name='submit_pet_info'),
 ]
 
