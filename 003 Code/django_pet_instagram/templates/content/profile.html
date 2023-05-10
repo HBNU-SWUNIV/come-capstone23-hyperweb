@@ -206,34 +206,10 @@
         <div style="margin-bottom: 20px">
             유저에 대한 정보 기입
         </div>
-
-        <!--    데이터 보여주는 코드
-            <div>
-            <b>{{ user.name }}</b>
-        </div>
-
-        <div>
-            {% for dog in user.dog_set.all %}
-        <div>
-            <b>{{ dog }}</b>
-        </div>
-        {% endfor %}
-        </div>
-        -->
         
     </div>
 </div>
 
-<!-- 기본 구성 화면(중간) -->
-{% comment %} <div class="embed-responsive embed-responsive-21by9" id="wrapper">
-    <ul class="embed-responsive-item">
-        <li class="feature-item">애완견 추가기능</li>
-        <li class="feature-item">정보 수정 기능</li>
-        <li class="feature-item">기능3</li>
-        <li class="feature-item">기능4</li>
-    </ul>
-    <iframe id="contentFrame" class="embed-responsive-item" src="input_page" width="1000px" height="1000px" frameborder="0" allowfullscreen></iframe>
-</div> {% endcomment %}
 <div class="row">
     <div class="col-4" style="position: fixed;width:200px; margin-left:10px">
       <div id="list-example" class="list-group">
@@ -244,7 +220,7 @@
     </div>
     <div class="col-8" style="margin-left:300px">
       <div data-bs-spy="scroll" data-bs-target="#list-example" data-bs-smooth-scroll="true" class="scrollspy-example" tabindex="0">
-        <h4 id="list-item-1"></br></br></br>애완견 확인</h4>
+        <h4 id="list-item-1"></br></br></br>애완견 확인</br></br></br></h4>
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -275,7 +251,7 @@
         </table>
         </br></br></br>
 
-        <h4 id="list-item-2"></br></br></br>애완견 추가</h4>
+        <h4 id="list-item-2"></br></br></br>애완견 추가</br></br></br></h4>
         <form class="row g-3 needs-validation" method="post" action="{% url 'submit_pet_info' %}" novalidate>
             {% csrf_token %}
 
@@ -284,9 +260,6 @@
                 <div class="col-sm-10" style="position: relative;"> 
                     <input type="text" class="form-control" id="input_bread" name="breed" oninput="filterWords()" placeholder="(ex)Afador" required>
                     <ul id="suggestions" class="suggestions" style="position: absolute; top:20px"></ul>
-                </div>
-                <div class="valid-feedback">
-                    Looks good!
                 </div>
             </div>
             
@@ -381,22 +354,48 @@
         </form>
         </br></br></br>
 
-        <h4 id="list-item-3"></br></br></br>사용자 정보 수정</h4>
-        <p>
-            A</br>
-            B</br>
-            C</br>
-            D</br>
-            E</br>
-            F</br>
-            G</br>
-        </p>
+        <h4 id="list-item-3"></br></br></br>사용자 정보 수정</br></br></br></h4>
+        <form class="row g-3 needs-validation" method="post" action="{% url 'submit_pet_info' %}" novalidate>
+            {% csrf_token %}
+            <div class="row mb-3">
+                <label for="user_nickname" class="col-sm-2 col-form-label">닉네임</label>
+                <div class="col-sm-10"> 
+                    <input type="text" class="form-control" id="user_nickname" name="user_nickname" value={{ user.nickname }}>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label for="user_name" class="col-sm-2 col-form-label" value="">이름</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="user_name" name="user_name" value={{ user.name }}>
+                </div>
+              </div>
+              
+              <div class="row mb-3">
+                <label for="user_email" class="col-sm-2 col-form-label">이메일</label>
+                <div class="col-sm-10">
+                  <input type="email" class="form-control" id="user_email" name="user_email" value={{ user.email }}>
+                </div>
+              </div>
+              
+              <div class="row mb-3">
+                <label for="user_company" class="col-sm-2 col-form-label">회사</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="user_company" name="user_company" placeholder="다니시는 회사를 작성해주세요.">
+                </div>
+              </div>
+              
+              <div class="row mb-3">
+                <label for="user_location" class="col-sm-2 col-form-label">지역</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="user_location" name="user_location" placeholder="거주중인 위치를 작성해주세요.">
+                </div>
+              </div>              
+        </form>
       </div>
     </div>
   </div>
 
-<footer style="border-top: solid 2px rgba(50,50,50,0.1); width: 100%">
-
+<footer>
     <div style="display: flex; flex-direction: row; justify-content: center; align-items: flex-end; margin: 20px; height: 10vh;">
         <div id="button_feed_list" style="cursor: pointer; margin: 0 30px; align-items: center">
             <span class="material-icons-outlined">grid_on</span>내 게시물
@@ -408,9 +407,6 @@
             <span class="material-icons-outlined">bookmark_border</span>북마크
         </div>
     </div>
-    
-    
-
 </footer>
 
 <div id="feed_list" style="width: 100%; min-width: 1000px; display: flex; align-items: center;justify-content: center">
