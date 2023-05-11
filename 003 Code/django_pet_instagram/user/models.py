@@ -45,6 +45,8 @@ class User(AbstractBaseUser):
     is_staff = models.BooleanField(default=False)
     date_joined = models.DateTimeField(default=timezone.now)
     profile_image = models.ImageField(upload_to='profile_images', default='default_profile.png')
+    location = models.CharField(default="", max_length=30, blank=True)
+    company = models.CharField(default="", max_length=30, blank=True)
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['nickname', 'name']
 

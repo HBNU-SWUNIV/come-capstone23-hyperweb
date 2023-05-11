@@ -10,6 +10,15 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, HttpResponseRedirect
 from user.models import Dog 
 
+@csrf_exempt
+def submit_user_info(request):
+    if request.method == 'POST':
+        email = request.session.get('email', None)
+        user = User.objects.filter(email=email).first()
+        user.company = request.POST['user_company']
+        user.location = request.POST['user_location']
+        user.save()
+        return HttpResponseRedirect('../profile')
 
 @csrf_exempt
 def submit_pet_info(request):

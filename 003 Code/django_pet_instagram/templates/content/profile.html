@@ -21,6 +21,9 @@
     <title>Hello, world!</title>
 
     <style>
+        th,td{
+            text-align:center;
+        }
         .suggestions {
             list-style-type: none;
             margin-top: 10px;
@@ -224,19 +227,21 @@
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>종</th>
-                    <th>나이</th>
-                    <th>성별</th>
-                    <th>몸무게(KG)</th>
-                    <th>활동성</th>
-                    <th>원하는 몸무게</th>
-                    <th>BCS</th>
+                    <th scope="col">#</th>
+                    <th scope="col">종</th>
+                    <th scope="col">나이</th>
+                    <th scope="col">성별</th>
+                    <th scope="col">몸무게(KG)</th>
+                    <th scope="col">활동성</th>
+                    <th scope="col">원하는 몸무게</th>
+                    <th scope="col">BCS</th>
                     <!-- 필요한 경우 다른 필드 추가 -->
                 </tr>
             </thead>
             <tbody>
                 {% for dog in dogs %}
                     <tr>
+                        <td>{{ forloop.counter }}</td>
                         <td>{{ dog.species }}</td>
                         <td>{{ dog.age }}</td>
                         <td>{{ dog.sex }}</td>
@@ -355,8 +360,14 @@
         </br></br></br>
 
         <h4 id="list-item-3"></br></br></br>사용자 정보 수정</br></br></br></h4>
-        <form class="row g-3 needs-validation" method="post" action="{% url 'submit_pet_info' %}" novalidate>
+        <form class="row g-3 needs-validation" method="post" action="{% url 'submit_user_info' %}">
             {% csrf_token %}
+            <div class="row mb-3">
+                <label for="user_email" class="col-sm-2 col-form-label">이메일</label>
+                <div class="col-sm-10">
+                  <input type="email" class="form-control" id="user_email" name="user_email" value={{ user.email }} disabled>
+                </div>
+              </div>
             <div class="row mb-3">
                 <label for="user_nickname" class="col-sm-2 col-form-label">닉네임</label>
                 <div class="col-sm-10"> 
@@ -371,30 +382,24 @@
               </div>
               
               <div class="row mb-3">
-                <label for="user_email" class="col-sm-2 col-form-label">이메일</label>
-                <div class="col-sm-10">
-                  <input type="email" class="form-control" id="user_email" name="user_email" value={{ user.email }}>
-                </div>
-              </div>
-              
-              <div class="row mb-3">
                 <label for="user_company" class="col-sm-2 col-form-label">회사</label>
                 <div class="col-sm-10">
-                  <input type="text" class="form-control" id="user_company" name="user_company" placeholder="다니시는 회사를 작성해주세요.">
+                  <input type="text" class="form-control" id="user_company" name="user_company" placeholder="다니시는 회사를 작성해주세요." value={{ user.company }}>
                 </div>
               </div>
               
               <div class="row mb-3">
                 <label for="user_location" class="col-sm-2 col-form-label">지역</label>
                 <div class="col-sm-10">
-                  <input type="text" class="form-control" id="user_location" name="user_location" placeholder="거주중인 위치를 작성해주세요.">
+                  <input type="text" class="form-control" id="user_location" name="user_location" placeholder="거주중인 위치를 작성해주세요." value={{ user.location }}>
                 </div>
-              </div>              
+              </div>
+              <button type="submit" class="btn btn-primary">사용자 정보 수정</button>              
         </form>
       </div>
     </div>
   </div>
-
+  <br/><br/><br/><br/><br/><br/>
 <footer>
     <div style="display: flex; flex-direction: row; justify-content: center; align-items: flex-end; margin: 20px; height: 10vh;">
         <div id="button_feed_list" style="cursor: pointer; margin: 0 30px; align-items: center">
