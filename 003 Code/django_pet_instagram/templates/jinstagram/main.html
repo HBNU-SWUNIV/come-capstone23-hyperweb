@@ -27,7 +27,30 @@
     <title>Hello, world!</title>
 
     <style>
-
+        /** 노트북 설정 **/
+        @media only screen and (min-width: 1000px) and (max-width: 1400px){
+            .swiper-slide_image_list_value {
+                width : 50px;
+                length : 50px;
+                margin-top: 20px;
+                margin-bottom: 20px;
+                border-radius: 70%;
+            }
+        }
+        body {
+            overflow-x: hidden;
+          }
+        
+        #wrapper{
+            height: auto;
+            min-height: 100%;
+            padding-bottom: 100px;
+        }
+        footer{
+            height: 100px;
+            position : relative;
+            transform : translateY(-100%);
+        }
         .swiper-container {overflow: visible;}
         .swiper-slide-active,
         .swiper-slide-active + .swiper-slide,
@@ -35,11 +58,13 @@
         .swiper-slide-active + .swiper-slide + .swiper-slide + .swiper-slide {opacity:1}
 
         .swiper-slide_image_list_value{
+            width : 70px;
+            length : 70px;
             margin-top: 30px;
             margin-bottom: 30px;
             border-radius: 70%;
         }
-
+        
         .box {
             width: 150px;
             height: 150px;
@@ -89,345 +114,261 @@
     </style>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light" style="position: fixed;width: 100%; z-index: 999">
-    <div class="container-fluid" style="justify-content: space-between;flex-wrap: nowrap; min-width: 1000px">
-        <a class="navbar-brand" href="main"><img style="width: 100px"
-                                                 src="/media/main_image.png">
-        </a>
-        <input class="form-control me-2" style="width: 400px" type="search" placeholder="Search" aria-label="Search">
-        <div style="display: flex">
-            <a href="main" style="color: black"><span class="material-icons"
-                                                      style="padding-right: 10px"> home</span></a>
-            <span id="nav_bar_add_box" class="material-icons-outlined" style="padding-right: 10px">add_box</span>
+<div id='wrapper'>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" style="position: fixed;width: 100%; z-index: 999">
+        <div class="container-fluid" style="justify-content: space-between;flex-wrap: nowrap; min-width: 1000px">
+            <a class="navbar-brand" href="main"><img style="width: 100px"
+                                                    src="/media/main_image.png">
+            </a>
+            <input class="form-control me-2" style="width: 400px" type="search" placeholder="Search" aria-label="Search">
+            <div style="display: flex">
+                <a href="main" style="color: black"><span class="material-icons"
+                                                        style="padding-right: 10px"> home</span></a>
+                <span id="nav_bar_add_box" class="material-icons-outlined" style="padding-right: 10px">add_box</span>
 
-            <div class="dropdown">
-                <a href="#" role="button" id="dropdownMenuLink"
-                   data-bs-toggle="dropdown" aria-expanded="false">
-                    <div class="box" style="width: 25px; height: 25px">
+                <div class="dropdown">
+                    <a href="#" role="button" id="dropdownMenuLink"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                        <div class="box" style="width: 25px; height: 25px">
 
-                        <img class="profile"
-                             src="{% get_media_prefix %}{{ user.profile_image }}">
+                            <img class="profile"
+                                src="{% get_media_prefix %}{{ user.profile_image }}">
 
-                    </div>
-                </a>
+                        </div>
+                    </a>
 
-                <ul class="dropdown-menu" style="left:-158px" aria-labelledby="dropdownMenuLink">
-                    <li><a class="dropdown-item" href="/content/profile">프로필</a></li>
-                    <li>
-                        <hr class="dropdown-divider">
-                    </li>
-                    </li>
-                    <li><a class="dropdown-item" href="/user/logout">로그아웃</a></li>
-                </ul>
+                    <ul class="dropdown-menu" style="left:-158px" aria-labelledby="dropdownMenuLink">
+                        <li><a class="dropdown-item" href="/content/profile">프로필</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        </li>
+                        <li><a class="dropdown-item" href="/user/logout">로그아웃</a></li>
+                    </ul>
+                </div>
             </div>
         </div>
+    </nav>
+
+
+    <div style="display: flex; flex-direction: row;text-align: center; justify-content: center;padding-top: 60px; background-color:#FAFAFA">
     </div>
-</nav>
 
-
-<div style="display: flex; flex-direction: row;text-align: center; justify-content: center;padding-top: 60px; background-color:#FAFAFA">
-    <!-- <div style="width: 500px;min-width: 500px;margin-right: 300px"> -->
-        <!-- 여기서부터 피드박스 -->
-        <!-- {% for feed in feeds %}
-            <div class="feed_box">
-                <div style="display: flex;flex-direction: row; align-items: center; margin: 20px">
-                    <div class="box" style="width: 35px; height: 35px">
-                        <img class="profile"
-                             src="{% get_media_prefix %}{{ feed.profile_image }}">
-                    </div>
+    <div class="swiper-container">
+        <div class="swiper-wrapper">
+            {% for i in range_30 %}
+            <div class="swiper-slide" style="display: flex;justify-content: center;">
+                <div class="swiper-slide_image_list_value">
                     <div>
-                        {{ feed.nickname }}
-                    </div>
-                </div>
-
-                <div><img style="width: 100%"
-                          src="{% get_media_prefix %}{{ feed.image }}">
-                </div>
-                <div style="margin: 0 20px;display: flex; flex-direction: row; justify-content: space-between">
-                    <div>
-                        <span id="favorite_{{ feed.id }}" feed_id="{{ feed.id }}"
-                              class="favorite material-icons-outlined"
-                              style="color: red;cursor: pointer">{% if feed.is_liked %}
-                            favorite{% else %}favorite_border{% endif %}</span>
-                    </div>
-                    <div>
-                        <span id="bookmark_{{ feed.id }}" feed_id="{{ feed.id }}" class="bookmark material-icons-outlined" style="cursor: pointer">
-                            {% if feed.is_marked %}
-                            bookmark
-                            {% else %}
-                            bookmark_border
-                            {% endif %}
-                        </span>
-
-                    </div>
-                </div>
-                <div style="margin: 0 20px;text-align: left;font-size: 14px"> 춘식이 <b>외 {{ feed.like_count }}명</b>이
-                    좋아합니다.
-                </div>
-                <div style="margin: 0 20px;text-align: left;font-size: 16px">
-                    <b>{{ feed.nickname }}</b> {{ feed.content }}
-                </div>
-                <div id="reply_list_{{ feed.id }}">
-                    {% for reply in feed.reply_list %}
-                        <div style="margin: 0 20px;text-align: left;font-size: 14px">
-                            <b>{{ reply.nickname }}</b> {{ reply.reply_content }}</div>
-                    {% endfor %}
-                </div>
-
-
-                <div style="display:flex;flex-direction: row;align-items: center; border-top: solid 1px gray ">
-                    <input id="reply_{{ feed.id }}" type="text" class="form-control"
-                           style="box-shadow: none; border: none; outline: none"
-                           placeholder="댓글 달기..">
-                    <div feed_id="{{ feed.id }}" class="upload_reply"
-                         style="width: 50px;color: cornflowerblue; font-weight: bold">
-                        게시
+                        <img class="profile" style="border-radius: 50%;" src="/media/default_profile.png">
+                        <label style="width: 100%; text-align: center;">친구{{i}}</label>
                     </div>
                 </div>
             </div>
-        {% endfor %}
-    </div> -->
-</div>
-<!-- 예제(추천 또는 친구) -->
+            {% endfor %}
+        </div>
+        <div class="swiper-pagination"></div>
+        <div class="swiper-button-next" style="margin-left:20px"></div>
+        <div class="swiper-button-prev"></div>
+    </div>
 
-<!-- 
-<div id='user_image_list' style=" display: flex;">
-    <button id="swiper_user_prev">
-        <svg xmlns="http://www.w3.org/2000/svg" width="30px" height="130px" fill="currentColor" class="bi bi-chevron-compact-left" viewBox="0 0 16 16">
-            <path fill-rule="evenodd" d="M9.224 1.553a.5.5 0 0 1 .223.67L6.56 8l2.888 5.776a.5.5 0 1 1-.894.448l-3-6a.5.5 0 0 1 0-.448l3-6a.5.5 0 0 1 .67-.223z"/>
-          </svg>
-    </button>
-
-    <div class="swiper-wrapper">
-    {% for i in range_10 %}
-        <div class="swiper-slide_image_list_value" style="width: 70px;height: 70px;">
+    <div style="">
+        <div style="display: flex;flex-direction: row; align-items: center; margin: 20px">
+            <div class="box" style="width: 70px; height: 70px">
+                <img class="profile"
+                    src="{% get_media_prefix %}{{ user.profile_image }}">
+            </div>
+            <div style="margin-left: 10px; text-align: left">
+                <div style="font-weight: bold">
+                    {{ user.nickname }}
+                </div>
+                <div style="color: gray">
+                    {{ user.name }}
+                </div>
+            </div>
+        </div>
+        <div style="display: flex;flex-direction: row; justify-content: space-between">
+            <div style="font-weight: bold; color: gray">
+                회원님을 위한 추천
+            </div>
             <div>
-                <img class="profile" style="border-radius: 50%;" src="/media/default_profile.png">
-                <label style="width: 100%; text-align: center;">user{{i}}</label>
+                <a href="#" style="font-weight: bold;color: black;text-decoration: none">모두보기</a>
             </div>
         </div>
-    {% endfor %}
+        <div style="display: flex;flex-direction: row;justify-content: space-between; align-items: center;">
+            <div style="display: flex; flex-direction: row">
+                <div class="box" style="width: 35px; height: 35px">
+                    <img class="profile"
+                        src="http://file3.instiz.net/data/file3/2021/05/31/e/b/8/eb8d9ad2d779ca2a0b7acc2b67694a23.png">
+                </div>
+                <div style="margin-left: 10px; text-align: left">
+                    <div style="font-weight: bold;font-size: 14px">
+                        친구 1
+                    </div>
+                    <div style="color: gray;font-size: 14px">
+                        친구 1 내용
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <a href="#" style="font-size: 14px;font-weight: bold;text-decoration: none">팔로우</a>
+            </div>
+        </div>
+        <div style="display: flex;flex-direction: row;justify-content: space-between; align-items: center;">
+            <div style="display: flex; flex-direction: row">
+                <div class="box" style="width: 35px; height: 35px">
+                    <img class="profile"
+                        src="http://file3.instiz.net/data/file3/2021/05/31/e/b/8/eb8d9ad2d779ca2a0b7acc2b67694a23.png">
+                </div>
+                <div style="margin-left: 10px; text-align: left">
+                    <div style="font-weight: bold;font-size: 14px">
+                        친구 2
+                    </div>
+                    <div style="color: gray;font-size: 14px">
+                        친구 2 내용
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <a href="#" style="font-size: 14px;font-weight: bold;text-decoration: none">팔로우</a>
+            </div>
+        </div>
+        <div style="display: flex;flex-direction: row;justify-content: space-between; align-items: center;">
+            <div style="display: flex; flex-direction: row">
+                <div class="box" style="width: 35px; height: 35px">
+                    <img class="profile"
+                        src="http://file3.instiz.net/data/file3/2021/05/31/e/b/8/eb8d9ad2d779ca2a0b7acc2b67694a23.png">
+                </div>
+                <div style="margin-left: 10px; text-align: left">
+                    <div style="font-weight: bold;font-size: 14px">
+                        친구 3
+                    </div>
+                    <div style="color: gray;font-size: 14px">
+                        친구 3 내용
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <a href="#" style="font-size: 14px;font-weight: bold;text-decoration: none">팔로우</a>
+            </div>
+        </div>
+        <div style="display: flex;flex-direction: row;justify-content: space-between; align-items: center;">
+            <div style="display: flex; flex-direction: row">
+                <div class="box" style="width: 35px; height: 35px">
+                    <img class="profile"
+                        src="http://file3.instiz.net/data/file3/2021/05/31/e/b/8/eb8d9ad2d779ca2a0b7acc2b67694a23.png">
+                </div>
+                <div style="margin-left: 10px; text-align: left">
+                    <div style="font-weight: bold;font-size: 14px">
+                        친구 4
+                    </div>
+                    <div style="color: gray;font-size: 14px">
+                        친구 4 내용
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <a href="#" style="font-size: 14px;font-weight: bold;text-decoration: none">팔로우</a>
+            </div>
+        </div>
+        <div style="display: flex;flex-direction: row;justify-content: space-between; align-items: center;">
+            <div style="display: flex; flex-direction: row">
+                <div class="box" style="width: 35px; height: 35px">
+                    <img class="profile"
+                        src="http://file3.instiz.net/data/file3/2021/05/31/e/b/8/eb8d9ad2d779ca2a0b7acc2b67694a23.png">
+                </div>
+                <div style="margin-left: 10px; text-align: left">
+                    <div style="font-weight: bold;font-size: 14px">
+                        친구 5
+                    </div>
+                    <div style="color: gray;font-size: 14px">
+                        친구 5 내용
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <a href="#" style="font-size: 14px;font-weight: bold;text-decoration: none">팔로우</a>
+            </div>
+        </div>
+
+        <div style="margin-top: 40px;font-size: 12px;color: gray; text-align: left"> 소개 도움말 홍보센터 API <br> 개인정보처리방침 약관 위치
+            인기 계정 해시태그 언어
+        </div>
+        <div style="margin-top: 20px;font-size: 12px;color: gray; text-align: left"> Friend Meal</div>
+
     </div>
-    <button id="swiper_user_next">
-        <svg xmlns="http://www.w3.org/2000/svg" width="30px" height="130px" fill="currentColor" class="bi bi-chevron-compact-right" viewBox="0 0 16 16">
-            <path fill-rule="evenodd" d="M6.776 1.553a.5.5 0 0 1 .671.223l3 6a.5.5 0 0 1 0 .448l-3 6a.5.5 0 1 1-.894-.448L9.44 8 6.553 2.224a.5.5 0 0 1 .223-.671z"/>
-          </svg>
-    </button>
-</div> -->
-<div class="swiper-container">
-    <div class="swiper-wrapper">
-        {% for i in range_30 %}
-        <div class="swiper-slide" style="display: flex;justify-content: center;">
-            <div class="swiper-slide_image_list_value" style="width: 70px;height: 70px;">
+    <!-- 첫번째 모달 -->
+    <div id="first_modal" class="modal_overlay">
+        <div class="modal_window">
+            <div style="display: flex; flex-direction: row; justify-content: space-between">
+                <div style="width: 40px; background: gray">
+
+                </div>
                 <div>
-                    <img class="profile" style="border-radius: 50%;" src="/media/default_profile.png">
-                    <label style="width: 100%; text-align: center;">친구{{i}}</label>
+                    새 이미지 업로드
+                </div>
+                <div style="width: 40px; background: gray">
+                    <span class="modal_close material-icons-outlined">close</span>
                 </div>
             </div>
-        </div>
-        {% endfor %}
-    </div>
-    <div class="swiper-pagination"></div>
-    <div class="swiper-button-next" style="margin-left:20px"></div>
-    <div class="swiper-button-prev"></div>
-</div>
 
-<div style="width: 400px; height: 1000px; position: fixed; right: 100px; z-index: 0">
-    <div style="display: flex;flex-direction: row; align-items: center; margin: 20px">
-        <div class="box" style="width: 70px; height: 70px">
-            <img class="profile"
-                 src="{% get_media_prefix %}{{ user.profile_image }}">
-        </div>
-        <div style="margin-left: 10px; text-align: left">
-            <div style="font-weight: bold">
-                {{ user.nickname }}
-            </div>
-            <div style="color: gray">
-                {{ user.name }}
+            <div class="img_upload_space" style="border-top: solid 1px gray;width: 778px; height: 540px;margin-top: 10px">
+
             </div>
         </div>
     </div>
-    <div style="display: flex;flex-direction: row; justify-content: space-between">
-        <div style="font-weight: bold; color: gray">
-            회원님을 위한 추천
-        </div>
-        <div>
-            <a href="#" style="font-weight: bold;color: black;text-decoration: none">모두보기</a>
-        </div>
-    </div>
-    <div style="display: flex;flex-direction: row;justify-content: space-between; align-items: center;">
-        <div style="display: flex; flex-direction: row">
-            <div class="box" style="width: 35px; height: 35px">
-                <img class="profile"
-                     src="http://file3.instiz.net/data/file3/2021/05/31/e/b/8/eb8d9ad2d779ca2a0b7acc2b67694a23.png">
-            </div>
-            <div style="margin-left: 10px; text-align: left">
-                <div style="font-weight: bold;font-size: 14px">
-                    친구 1
+
+    <!-- 두번째 모달 -->
+    <div id="second_modal" class="modal_overlay">
+        <div class="modal_window">
+            <div style="display: flex; flex-direction: row; justify-content: space-between">
+                <div style="width: 40px; background: gray">
+
                 </div>
-                <div style="color: gray;font-size: 14px">
-                    친구 1 내용
-                </div>
-            </div>
-        </div>
-
-        <div>
-            <a href="#" style="font-size: 14px;font-weight: bold;text-decoration: none">팔로우</a>
-        </div>
-    </div>
-    <div style="display: flex;flex-direction: row;justify-content: space-between; align-items: center;">
-        <div style="display: flex; flex-direction: row">
-            <div class="box" style="width: 35px; height: 35px">
-                <img class="profile"
-                     src="http://file3.instiz.net/data/file3/2021/05/31/e/b/8/eb8d9ad2d779ca2a0b7acc2b67694a23.png">
-            </div>
-            <div style="margin-left: 10px; text-align: left">
-                <div style="font-weight: bold;font-size: 14px">
-                    친구 2
-                </div>
-                <div style="color: gray;font-size: 14px">
-                    친구 2 내용
-                </div>
-            </div>
-        </div>
-
-        <div>
-            <a href="#" style="font-size: 14px;font-weight: bold;text-decoration: none">팔로우</a>
-        </div>
-    </div>
-    <div style="display: flex;flex-direction: row;justify-content: space-between; align-items: center;">
-        <div style="display: flex; flex-direction: row">
-            <div class="box" style="width: 35px; height: 35px">
-                <img class="profile"
-                     src="http://file3.instiz.net/data/file3/2021/05/31/e/b/8/eb8d9ad2d779ca2a0b7acc2b67694a23.png">
-            </div>
-            <div style="margin-left: 10px; text-align: left">
-                <div style="font-weight: bold;font-size: 14px">
-                    친구 3
-                </div>
-                <div style="color: gray;font-size: 14px">
-                    친구 3 내용
-                </div>
-            </div>
-        </div>
-
-        <div>
-            <a href="#" style="font-size: 14px;font-weight: bold;text-decoration: none">팔로우</a>
-        </div>
-    </div>
-    <div style="display: flex;flex-direction: row;justify-content: space-between; align-items: center;">
-        <div style="display: flex; flex-direction: row">
-            <div class="box" style="width: 35px; height: 35px">
-                <img class="profile"
-                     src="http://file3.instiz.net/data/file3/2021/05/31/e/b/8/eb8d9ad2d779ca2a0b7acc2b67694a23.png">
-            </div>
-            <div style="margin-left: 10px; text-align: left">
-                <div style="font-weight: bold;font-size: 14px">
-                    친구 4
-                </div>
-                <div style="color: gray;font-size: 14px">
-                    친구 4 내용
-                </div>
-            </div>
-        </div>
-
-        <div>
-            <a href="#" style="font-size: 14px;font-weight: bold;text-decoration: none">팔로우</a>
-        </div>
-    </div>
-    <div style="display: flex;flex-direction: row;justify-content: space-between; align-items: center;">
-        <div style="display: flex; flex-direction: row">
-            <div class="box" style="width: 35px; height: 35px">
-                <img class="profile"
-                     src="http://file3.instiz.net/data/file3/2021/05/31/e/b/8/eb8d9ad2d779ca2a0b7acc2b67694a23.png">
-            </div>
-            <div style="margin-left: 10px; text-align: left">
-                <div style="font-weight: bold;font-size: 14px">
-                    친구 5
-                </div>
-                <div style="color: gray;font-size: 14px">
-                    친구 5 내용
-                </div>
-            </div>
-        </div>
-
-        <div>
-            <a href="#" style="font-size: 14px;font-weight: bold;text-decoration: none">팔로우</a>
-        </div>
-    </div>
-
-    <div style="margin-top: 40px;font-size: 12px;color: gray; text-align: left"> 소개 도움말 홍보센터 API <br> 개인정보처리방침 약관 위치
-        인기 계정 해시태그 언어
-    </div>
-    <div style="margin-top: 20px;font-size: 12px;color: gray; text-align: left"> Friend Meal</div>
-
-</div>
-<!-- 첫번째 모달 -->
-<div id="first_modal" class="modal_overlay">
-    <div class="modal_window">
-        <div style="display: flex; flex-direction: row; justify-content: space-between">
-            <div style="width: 40px; background: gray">
-
-            </div>
-            <div>
-                새 이미지 업로드
-            </div>
-            <div style="width: 40px; background: gray">
-                <span class="modal_close material-icons-outlined">close</span>
-            </div>
-        </div>
-
-        <div class="img_upload_space" style="border-top: solid 1px gray;width: 778px; height: 540px;margin-top: 10px">
-
-        </div>
-    </div>
-</div>
-
-<!-- 두번째 모달 -->
-<div id="second_modal" class="modal_overlay">
-    <div class="modal_window">
-        <div style="display: flex; flex-direction: row; justify-content: space-between">
-            <div style="width: 40px; background: gray">
-
-            </div>
-            <div>
-                새 이미지 업로드
-            </div>
-            <div style="width: 40px; background: gray">
-                <span class="modal_close material-icons-outlined">close</span>
-            </div>
-        </div>
-
-        <div style="border-top: solid 1px gray;display: flex; flex-direction: row;margin-top: 10px">
-            <div class="img_upload_space" style="width: 500px; height: 540px;">
-
-            </div>
-            <div style="border-left: solid 1px gray">
                 <div>
-                    <textarea id="input_feed_content" class="form-control" style="width: 276px; height: 400px"
-                              id="exampleFormControlTextarea1" rows="5"></textarea>
+                    새 이미지 업로드
                 </div>
-                <button id="feed_create_button" type="button" class="btn btn-primary" style="width: 100%">
-                    공유하기
-                </button>
+                <div style="width: 40px; background: gray">
+                    <span class="modal_close material-icons-outlined">close</span>
+                </div>
+            </div>
+
+            <div style="border-top: solid 1px gray;display: flex; flex-direction: row;margin-top: 10px">
+                <div class="img_upload_space" style="width: 500px; height: 540px;">
+
+                </div>
+                <div style="border-left: solid 1px gray">
+                    <div>
+                        <textarea id="input_feed_content" class="form-control" style="width: 276px; height: 400px"
+                                id="exampleFormControlTextarea1" rows="5"></textarea>
+                    </div>
+                    <button id="feed_create_button" type="button" class="btn btn-primary" style="width: 100%">
+                        공유하기
+                    </button>
+                </div>
+
             </div>
 
         </div>
-
+    </div>
+    <div style="height:1000px">
     </div>
 </div>
 
-
-<div class="container" style="position: fixed; bottom:0px;margin-left:15%">
     <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
-      <div class="col-md-4 d-flex align-items-center">
+    <div class="col-md-4 d-flex align-items-center">
         <a href="/" class="mb-3 me-2 mb-md-0 text-muted text-decoration-none lh-1">
-          <svg class="bi" width="30" height="24"><use xlink:href="#bootstrap"></use></svg>
+        <svg class="bi" width="30" height="24"><use xlink:href="#bootstrap"></use></svg>
         </a>
         <span class="mb-3 mb-md-0 text-muted">© 2023 Frind Meal, Inc</span>
-      </div>
-  
-      <ul class="nav col-md-4 justify-content-end list-unstyled d-flex">
+    </div>
+
+    <ul class="nav col-md-4 justify-content-end list-unstyled d-flex">
         <li class="ms-3"><a class="text-muted" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px" fill="currentColor" class="bi bi-facebook" viewBox="0 0 16 16">
             <path d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951z"/>
         <use xlink:href="#twitter"></use></svg></a></li>
@@ -436,10 +377,10 @@
         <use xlink:href="#instagram"></use></svg></a></li>
         <li class="ms-3"><a class="text-muted" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px" fill="currentColor" class="bi bi-github" viewBox="0 0 16 16">
             <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
-          <use xlink:href="#facebook"></use></svg></a></li>
-      </ul>
+        <use xlink:href="#facebook"></use></svg></a></li>
+    </ul>
     </footer>
-  </div>
+  
 
 
 <!-- Optional JavaScript; choose one of the two! -->
