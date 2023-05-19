@@ -96,7 +96,7 @@ class Main(APIView):
                                   ))
 
 
-        return render(request, "jinstagram/main.html", context=dict(feeds=feed_list, user=user, range_30=range(30)))
+        return render(request, "jinstagram/main.html", context=dict(feeds=feed_list, user=user, range_30=range(30), range_5=range(5)))
 
 
 class UploadFeed(APIView):
