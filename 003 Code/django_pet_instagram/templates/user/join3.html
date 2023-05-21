@@ -41,36 +41,55 @@
                                                src="/media/main_image.png">
         </div>
         <div style="font-weight: bold; color: gray;padding-bottom: 50px"> 강아지 정보를 입력해주세요.</div>
+        
         <div>
-        <div class="form-floating mb-3">
-            <label for="activity" class="form-label" style="font-size: 14px; position: absolute; top: -40px; left: -15px;">활동성</label>
-            <input type="range" class="form-range" id="input_activity" min="0" max="100" onchange="updateInput()" oninput="document.getElementById('value1').innerHTML=this.value;">
-            <span id="value1"></span>
-            <div style="display: flex; justify-content: space-between;">
-                <span style="font-size: 12px;">비활동적</span>
-                <span style="font-size: 12px;">활동적</span>
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="input_weight" placeholder="무게를 입력해주세요" style="font-size: 14px; height: 24px">
+                <label for="label_weight" class="selected-option" style="font-size: 14px;padding: 4px 10px; color: black;">무게(KG)</label>
             </div>
         </div>
-        </div>
-        <div>
+
+        <!-- <div>
+            <div class="form-floating mb-3">
+                <label for="activity" class="form-label" style="font-size: 14px; position: absolute; top: -40px; left: -15px;">활동성</label>
+                <input type="range" class="form-range" id="input_activity" min="0" max="100" onchange="updateInput()" oninput="document.getElementById('value1').innerHTML=this.value;">
+                <span id="value1"></span>
+                <div style="display: flex; justify-content: space-between;">
+                    <span style="font-size: 12px;">비활동적</span>
+                    <span style="font-size: 12px;">활동적</span>
+                </div>
+            </div>
+            </div>
+        <div> -->
         
+        <div class="form-floating mb-3">
+            <select class="form-control" style="font-size: 14px; height: 24px" id="input_activity_control" onchange="onSelectChangeActivity()">
+                <option value="" selected disabled>활동성</option>
+                <option value="매우 얌전함">매우 얌전함</option>
+                <option value="조금 얌전함">조금 얌전함</option>
+                <option value="보통">보통</option>
+                <option value="조금 활발함">조금 활발함</option>
+                <option value="매우 활발함">매우 활발함</option>
+            </select>
+            <label for="activity_control" class="selected-option" id="label_activity_control" style="color: black;">활동성 선택</label>
+        </div>
+
         <div class="form-floating mb-3">
             <input type="number" class="form-control" style="font-size: 14px; height: 24px" id="input_bcs" min="1" max="9">
             <label for="label_bcs" style="font-size: 14px;padding: 4px 10px">BCS(비만도)</label>
             <a href="/media/BCS_image.png" target="_blank" style="font-size: 12px;" id="BCS_image">BCS에 대한 자세한 내용보기</a>
         </div>
   
-        </div>
         <div class="form-floating mb-3">
             <select class="form-control" style="font-size: 14px; height: 24px" id="input_weight_control" onchange="onSelectChangeWeight()">
               <option value="" selected disabled>체중증감 선택</option>
-              <option value="lose a lot of weight">lose a lot of weight</option>
-              <option value="lose a little weight">lose a little weight</option>
-              <option value="maintain weight">maintain weight</option>
-              <option value="gain a little weight">gain a little weight</option>
-              <option value="gain a lot of weight">gain a lot of weight</option>
+              <option value="매우 감량">매우 감량</option>
+              <option value="조금 감량">조금 감량</option>
+              <option value="유지">유지</option>
+              <option value="조금 증량">조금 증량</option>
+              <option value="매우 증량">매우 증량</option>
             </select>
-            <label for="weight_control" class="selected-option" id="label_weight_control" style="color: black;">체중증감</label>
+            <label for="weight_control" class="selected-option" id="label_weight_control" style="color: black;">체중 증감</label>
         </div>
                    
 
@@ -85,28 +104,37 @@
 
 <!-- Optional JavaScript; choose one of the two! -->
 <script>
+    function onSelectChangeActivity(){
+        var activitySelect = document.getElementById("input_activity_control");
+        var selectedActivity = activitySelect.options[activitySelect.selectedIndex].value;
+        var label = document.getElementById("label_activity_control");
+        label.color = "black";
+        label.innerHTML = selectedActivity !== "" ? selectedActivity : "활동성";
+    }
     // progress_bar 설정
     $(document).ready(function() {
         let progress = 0;
-        let totalFields = 11;
+        let totalFields = 12;
         let defaultNumber = 8;
         let completedFields = 0;
         completedFields = defaultNumber + calculateCompletedFields();
         progress = (completedFields / totalFields) * 100;
         const progressBar = $('.progress');
         progressBar.animate({ width: progress + '%' }, 1000);
-        // $('#progress_bar').css('width', progress + '%').attr('aria-valuenow', progress);
       });
     
       function calculateCompletedFields() {
         let completedFields = 0;
-        if ($('#input_bcs').val() !== "" && $('#input_bcs').val() != 5) {
+        if ($('#input_bcs').val() !== "") {
           completedFields++;
         }
-        if ($('#input_activity').val() !== "" && $('#input_activity').val() != 50) {
+        if ($('#input_weight').val() !== "" && $('#input_weight').val() != 0) {
           completedFields++;
         }
         if ($('#input_weight_control').val() !== "" && $('#input_weight_control').val() != null) {
+          completedFields ++;
+        }
+        if ($('#input_activity_control').val() !== "" && $('#input_activity_control').val() != null) {
           completedFields ++;
         }
         return completedFields;
@@ -114,7 +142,7 @@
 
       function updateProgressBar() {
         let progress = 0;
-        let totalFields = 11;
+        let totalFields = 12;
         let defaultNumber = 8;
         let completedFields = 0;
         completedFields = defaultNumber + calculateCompletedFields();
@@ -124,11 +152,11 @@
         // $('#progress_bar').css('width', progress + '%').attr('aria-valuenow', progress);
     }
 
-
+    $('#input_weight').on('change', updateProgressBar);
     $('#input_weight_control').on('change', updateProgressBar);
     $('#input_bcs').on('change', updateProgressBar);
-    $('#input_activity').on('change', updateProgressBar);
-
+    $('#input_activity_control').on('change', updateProgressBar);
+    
     // 실시간 값 보여주기
     function ShowSliderValue(sVal)
     {
@@ -138,11 +166,12 @@
  
     $('#join_button').click(function () {
 
-        let activity = $('#input_activity').val();
+        let weight = $('#input_weight').val();
         let bcs = $('#input_bcs').val();
-        let weight_control = $('#input_weight_control').val();
+        let weight_control = $('#input_weight_control').val();       
+        let activity_control = $('#input_activity_control').val();
         
-        if (!activity || !bcs || !weight_control) {
+        if (!weight || !bcs || !weight_control || !activity_control) {
             alert("입력되지 않은 값이 있습니다.");
             return;
           }
@@ -150,9 +179,10 @@
         $.ajax({
             url: "/user/join3",
             data: {
-                activity : activity,
+                weight : weight,
                 weight_control : weight_control,
-                bcs : bcs
+                bcs : bcs,
+                activity_control : activity_control
             },
             method: "POST",
             success: function (data) {

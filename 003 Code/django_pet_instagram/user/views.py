@@ -48,7 +48,7 @@ class Join2(APIView):
         request.session['species'] = request.data.get('species', None)
         request.session['age']  = request.data.get('age', None)
         request.session['sex']  = request.data.get('sex', None)
-        request.session['weight']  = request.data.get('weight', None)
+        request.session['dog_nickname']  = request.data.get('dog_nickname', None)
         return render(request, 'user/join3.html')
     
 class Join3(APIView):    
@@ -57,8 +57,9 @@ class Join3(APIView):
             return redirect('login')
         return render(request, "user/join3.html")
     
-    def post(self, request):   
-        request.session['activity'] = request.data.get('activity', None)
+    def post(self, request):
+        request.session['weight']  = request.data.get('weight', None)   
+        request.session['activity'] = request.data.get('activity_control', None)
         request.session['weight_control']  = request.data.get('weight_control', None)
         request.session['bcs']  = request.data.get('bcs', None)
         return render(request, "user/join4.html")
@@ -78,19 +79,22 @@ class Join4(APIView):
         nickname = request.session.get('nickname')
         name = request.session.get('name')
         password = request.session.get('password')
+
+        dog_nickname = request.session.get('dog_nickname')
         species = request.session.get('species')
         age = request.session.get('age')
-        sex = request.session.get('sex')
-        weight = request.session.get('weight')
-        activity = request.session.get('activity')
-        weight_control = request.session.get('weight_control')
+        sex = convert_to_number("sex", request.session.get('sex')) #
+        weight = request.session.get('weight') 
+        activity = convert_to_number("activity", request.session.get('activity')) #
+        weight_control = convert_to_number("weight_control", request.session.get('weight_control')) #
         bcs = request.session.get('bcs')
-        cycle = request.session.get('cycle')
+        food_cycle = convert_to_number("cycle", request.session.get('cycle')) #
         improve = request.session.get('improve')
         disease = request.session.get('disease')
-
+        
+        
         # Dog 객체 생성
-        dog = Dog(species=species, age=age, sex=sex, weight=weight, activity=activity, weight_control=weight_control, bcs=bcs, cycle=cycle, improve=improve, disease=disease)
+        dog = Dog(nickname=dog_nickname,species=species, age=age, sex=sex, weight=weight, activity=activity, weight_control=weight_control, bcs=bcs, food_cycle=food_cycle, improve=improve, disease=disease)
 
         # 사용자 생성
         user = User.objects.create_user(email=email, nickname=nickname, name=name, password=password)
@@ -151,3 +155,54 @@ class UploadProfile(APIView):
 
         return Response(status=200)
 
+def convert_to_number(category, value):
+    if category == 'sex':
+        if value == '중성':
+            return 0
+        elif value == '암컷':
+            return 1
+        elif value == '수컷':
+            return 2
+        else:
+            return "Invalid value for 'sex'"
+
+    elif category == 'activity':
+        if value == '매우 얌전함':
+            return 0
+        elif value == '조금 얌전함':
+            return 1
+        elif value == '보통':
+            return 2
+        elif value == '조금 활발함':
+            return 3
+        elif value == '매우 활발함':
+            return 4
+        else:
+            return "Invalid value for 'activity'"
+    
+    elif category == 'weight_control':
+        if value == '매우 감량':
+            return 0
+        elif value == '조금 감량':
+            return 1
+        elif value == '유지':
+            return 2
+        elif value == '조금 증량':
+            return 3
+        elif value == '매우 증량':
+            return 4
+        else:
+            return "Invalid value for 'weight_control'"
+    
+    elif category == 'cycle':
+        if value == '1주 기준':
+            return 1
+        elif value == '1달 기준':
+            return 2
+        elif value == '1년 기준':
+            return 3
+        else:
+            return "Invalid value for 'cycle'"
+    
+    else:
+        return "Invalid category"

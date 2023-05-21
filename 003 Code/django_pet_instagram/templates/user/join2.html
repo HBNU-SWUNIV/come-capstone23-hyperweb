@@ -69,8 +69,14 @@
         <div style="font-weight: bold; color: gray;padding-bottom: 20px"> 강아지 정보를 입력해주세요.</div>
         <div>
             <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="input_dog_nickname" placeholder="애완견 별명을 입력해주세요" style="font-size: 14px; height: 24px">
+                <label for="input_dog_nickname" style="font-size: 14px;padding: 4px 10px">애완견 별명</label>
+            </div>
+        </div>
+        <div>
+            <div class="form-floating mb-3">
                 <input type="text" class="form-control" id="input_species" placeholder="견종을 입력해주세요" style="font-size: 14px; height: 24px" oninput="filterWords()">
-                <label for="input_age" style="font-size: 14px;padding: 4px 10px">견종</label>
+                <label for="input_species" style="font-size: 14px;padding: 4px 10px">견종</label>
                 <ul id="suggestions" class="suggestions"></ul>
             </div>
         </div>
@@ -89,12 +95,6 @@
                     <option value="중성">중 성</option>
                 </select>
                 <label for="label_sex" class="selected-option" id="label_sex" style="color: black;">성별</label>
-            </div>
-        </div>
-        <div>
-            <div class="form-floating mb-3">
-                <input type="text" class="form-control" id="input_weight" placeholder="무게를 입력해주세요" style="font-size: 14px; height: 24px">
-                <label for="label_weight" class="selected-option" style="font-size: 14px;padding: 4px 10px; color: black;">무게(KG)</label>
             </div>
         </div>
         <button id="join2_button"  class="btn btn-primary" style="width: 100%"> 다음 </button>
@@ -142,7 +142,7 @@
     // load시 실행 함수
     $(document).ready(function() {
         let progress = 0;
-        let totalFields = 11;
+        let totalFields = 12;
         let defaultNumber = 4;
         let completedFields = 0;
         completedFields = defaultNumber + calculateCompletedFields();
@@ -165,35 +165,23 @@
         if ($('#input_sex').val() !== "" && $('#input_sex').val() != null) {
           completedFields ++;
         }
-        if ($('#input_weight').val() !== "" && $('#input_weight').val() != null) {
+        if ($('#input_dog_nickname').val() !== "" && $('#input_dog_nickname').val() != null) {
             completedFields++;
           }
         return completedFields;
       }
-      
-    function onSelectChangeWeight() {
-            var weightSelect = document.getElementById("input_weight");
-            var selectedWeight = weightSelect.options[weightSelect.selectedIndex].value;
-            var label = document.getElementById("label_weight");
-            label.innerHTML = selectedWeight !== "" ? selectedWeight : "무게";
-        }
 
-    function onSelectChangeSpecies() {
-            var speciesSelect = document.getElementById("input_species");
-            var selectedSpecies = speciesSelect.options[speciesSelect.selectedIndex].value;
-            var label = document.getElementById("label_species");
-            label.innerHTML = selectedSpecies !== "" ? selectedSpecies : "종";
-        }
-
+    
     function onSelectChangeSex() {
         var sexSelect = document.getElementById("input_sex");
         var selectedSex = sexSelect.options[sexSelect.selectedIndex].value;
         var label = document.getElementById("label_sex");
         label.innerHTML = selectedSex !== "" ? selectedSex : "성별";
     }
+
     function updateProgressBar() {
         let progress = 0;
-        let totalFields = 11;
+        let totalFields = 12;
         let defaultNumber = 4;
         let completedFields = 0;
         completedFields = defaultNumber + calculateCompletedFields();
@@ -204,10 +192,10 @@
         // $('#progress_bar').css('width', progress + '%').attr('aria-valuenow', progress);
     }
 
-    $('input').on('input', updateProgressBar);
+    $('#input_age').on('change', updateProgressBar);
     $('#input_species').on('change', updateProgressBar);
     $('#input_sex').on('change', updateProgressBar);
-    $('#input_weight').on('change', updateProgressBar);
+    $('#input_dog_nickname').on('change', updateProgressBar);
 
 
     $('#join2_button').click(function () {
@@ -215,9 +203,9 @@
         let species = $('#input_species').val();
         let age = $('#input_age').val();
         let sex = $('#input_sex').val();
-        let weight = $('#input_weight').val();
+        let dog_nickname = $('#input_dog_nickname').val();
 
-        if (!species || !age || !sex || !weight) {
+        if (!species || !age || !sex || !dog_nickname) {
             alert("입력되지 않은 값이 있습니다.");
             return;
           }
@@ -228,7 +216,7 @@
                 species : species,
                 age : age,
                 sex : sex,
-                weight : weight
+                dog_nickname : dog_nickname
             },
             method: "POST",
             success: function (data) {

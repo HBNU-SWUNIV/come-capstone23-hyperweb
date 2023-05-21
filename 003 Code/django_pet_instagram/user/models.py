@@ -21,14 +21,15 @@ class MyUserManager(BaseUserManager):
 
 
 class Dog(models.Model):
+    nickname = models.CharField(max_length=30, default="")
     species = models.CharField(max_length=30)
     age = models.IntegerField()
     sex = models.CharField(max_length=10)
     weight = models.CharField(max_length=30)
     activity = models.CharField(max_length=100)
-    weight_control = models.CharField(max_length=30)
+    weight_control = models.IntegerField() # 0 1 2 3 4순
     bcs = models.IntegerField()
-    cycle = models.CharField(max_length=30, blank=True)
+    food_cycle = models.IntegerField(default=0) # 0-> 없음 1 -> 1주 2-> 1달 3 -> 1년
     improve = models.CharField(max_length=30, blank=True)
     disease = models.CharField(max_length=30, blank=True)
     user = models.ForeignKey('User', on_delete=models.CASCADE, null=True, blank=True)

@@ -16,7 +16,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['18.212.168.167', '18.209.167.251', '127.0.0.1']
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -38,7 +37,6 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    #'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'Jinstagram.middleware.XFrameOptionsMiddleware',  # 사용자 정의 미들웨어 추가 Iframe사용을 위해~
 ]
 
