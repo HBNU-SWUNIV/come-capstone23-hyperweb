@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Nutrient Analysis</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 10px;
+            text-align: left;
+        }
+        .bar {
+            height: 20px;
+            background-color: #00A5CF;
+        }
+    </style>
+</head>
+<body>
+<h1>Nutrient Analysis</h1>
+<table>
+    <thead>
+        <tr>
+            <th>Nutrient</th>
+            <th>Actual Value</th>
+            <th>Percentage</th>
+            <th>Minimum Value</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for nutrient in nutrients %}
+        <tr>
+            <td>{{ nutrient.name }}</td>
+            <td>{{ nutrient.actual_value }}</td>
+            
+            <td style="max-width: 100%;">
+              <div class="bar" style="width: {% if nutrient.actual_value > nutrient.minimum_value %}100{% else %}{% widthratio nutrient.actual_value nutrient.minimum_value 100 %}{% endif %}%;"></div>
+            </td>
+            <td>{{ nutrient.minimum_value }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</body>
+</html>
