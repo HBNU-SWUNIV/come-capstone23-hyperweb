@@ -8,7 +8,7 @@ class Command(BaseCommand):
     help = 'Create random users'
 
     def handle(self, *args, **kwargs):
-        fake = Faker()
+        fake = Faker("ko_KR")
 
         def generate_fake_user():
             user = User()
