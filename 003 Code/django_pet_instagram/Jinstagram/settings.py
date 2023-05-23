@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'content',
     'user',
+    'make_report',
     'Jinstagram'
 ]
 
