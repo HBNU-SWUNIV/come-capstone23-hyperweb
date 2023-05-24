@@ -2,59 +2,115 @@
 <html>
 <head>
     <title>Nutrient Analysis</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>
+        body {
+            background-image: url("/media/recipe_image.pg");
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        .overlay {
+            position: absolute; 
+            top: 0; 
+            bottom: 0; 
+            left: 0; 
+            right: 0;
+            text-align: center;
+        }
+        .profile-image {
+            border-radius: 50%;
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            position: absolute;
+            top: 30%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .overlay-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: black;
+            font-size: 2em;
+        }
+    </style>
 </head>
 <body>
-<div>
-    <canvas id="myChart"></canvas>
-</div>
+    <img src="/media/recipe_image.jpg" alt="Nutrition image" style="width: 100%;">
+    <img src="/media/default_profile.png" alt="Profile image" class="profile-image">
+    <div class="overlay">
+        <div class="overlay-text">"댕댕이1"을 위한 식단 보고서</div>
+    </div>
+    <div class="container">
+        <h1>식단 보고서</h1>
+        <h2>음식 유형: 단백질이 풍부한 식단</h2>
+        <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                    <th>식재료명</th>
+                    <th>무게</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>식재료1</td>
+                    <td>100g</td>
+                </tr>
+                <tr>
+                    <td>식재료2</td>
+                    <td>50g</td>
+                </tr>
+                <tr>
+                    <td>식재료3</td>
+                    <td>75g</td>
+                </tr>
+            </tbody>
+        </table>
+        <h2>총 칼로리 : 1000</h2>
+        <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                    <th>단백질</th>
+                    <th>지방</th>
+                    <th>탄수화물</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ 30 }}</td>
+                    <td>{{ 20 }}</td>
+                    <td>{{ 50 }}</td>
+                </tr>
+            </tbody>
+        </table>
 
-<script>
-    // Sample data for demonstration purposes
-    var nutrients = [
-        { name: 'Protein', actual_value: 25, minimum_value: 20 },
-        { name: 'Fat', actual_value: 15, minimum_value: 10 },
-        { name: 'Carbohydrate', actual_value: 55, minimum_value: 50 },
-        { name: 'Fiber', actual_value: 5, minimum_value: 3 },
-    ];
-
-    var ctx = document.getElementById('myChart').getContext('2d');
-    var actualValues = nutrients.map(function(nutrient) { return nutrient.actual_value; });
-    var minimumValues = nutrients.map(function(nutrient) { return nutrient.minimum_value; });
-    var percentValues = actualValues.map(function(value, i) { return ((value / minimumValues[i]) * 100).toFixed(2); });
-
-    var myChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: nutrients.map(function(nutrient) { return nutrient.name; }),
-            datasets: [{
-                label: 'Actual Value',
-                data: actualValues,
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 1
-            }, {
-                label: 'Minimum Value',
-                data: minimumValues,
-                backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                borderColor: 'rgba(255, 99, 132, 1)',
-                borderWidth: 1
-            }, {
-                label: 'Percent Value',
-                data: percentValues,
-                backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                borderColor: 'rgba(54, 162, 235, 1)',
-                borderWidth: 1
-            }]
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
-    });
-</script>
+        <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Nutrient</th>
+                    <th>Actual Value</th>
+                    <th>Percentage</th>
+                    <th>Minimum Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for nutrient in nutrients %}
+                <tr>
+                    <td>{{ nutrient.name }}</td>
+                    <td>{{ nutrient.actual_value }}</td>
+                    <td style="max-width: 100%;">
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" style="width: {% if nutrient.actual_value > nutrient.minimum_value %}100{% else %}{% widthratio nutrient.actual_value nutrient.minimum_value 100 %}{% endif %}%;" aria-valuenow="{{ nutrient.actual_value }}" aria-valuemin="0" aria-valuemax="{{ nutrient.minimum_value }}"></div>
+                        </div>
+                    </td>
+                    <td>{{ nutrient.minimum_value }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </body>
 </html>
