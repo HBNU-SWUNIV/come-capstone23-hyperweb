@@ -21,9 +21,9 @@ class Command(BaseCommand):
             user.location = fake.city()
             user.company = fake.company()
 
-            image_content = ContentFile(fake.binary(length=(1024 * 1024)))  # 1MB 이미지 파일 생성
-            image_content.name = 'profile.png'
-            user.profile_image = image_content
+            # image_content = ContentFile(fake.binary(length=(1 * 1)))  # 1MB 이미지 파일 생성
+            # image_content.name = 'profile.png'
+            # user.profile_image = image_content
 
             user.save()
 
