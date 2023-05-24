@@ -8,7 +8,7 @@ class Command(BaseCommand):
     help = 'Create random users'
 
     def handle(self, *args, **kwargs):
-        fake = Faker("ko_KR")
+        fake = Faker()
 
         def generate_fake_user():
             user = User()
@@ -27,5 +27,5 @@ class Command(BaseCommand):
 
             user.save()
 
-        for _ in range(10):  # 10개의 임의의 사용자 생성
+        for _ in range(100):  # 10개의 임의의 사용자 생성
             generate_fake_user()

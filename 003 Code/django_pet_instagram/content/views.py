@@ -94,9 +94,9 @@ class Main(APIView):
                                   is_liked=is_liked,
                                   is_marked=is_marked
                                   ))
+        user_example = User.objects.all().values_list('name', flat=True)
 
-
-        return render(request, "jinstagram/main.html", context=dict(feeds=feed_list, user=user, range_30=range(30), range_5=range(5)))
+        return render(request, "jinstagram/main.html", context=dict(feeds=feed_list, user=user, range_30=range(30), range_5=range(5), user_example=user_example[30:59]))
 
 
 class UploadFeed(APIView):
