@@ -8,7 +8,7 @@ def index(request):
     context = {
         'nutrients': nutrients
     }
-    return render(request, 'report/report2.html', context)
+    return render(request, 'report/report3.html', context)
 
 
 def make_report(request):
