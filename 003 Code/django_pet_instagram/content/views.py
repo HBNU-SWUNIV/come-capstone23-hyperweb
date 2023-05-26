@@ -9,6 +9,8 @@ from Jinstagram.settings import MEDIA_ROOT
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, HttpResponseRedirect
 from user.models import Dog 
+from django.http import JsonResponse
+import time
 
 @csrf_exempt
 def submit_user_info(request):
@@ -202,3 +204,11 @@ class ToggleBookmark(APIView):
             Bookmark.objects.create(feed_id=feed_id, is_marked=is_marked, email=email)
 
         return Response(status=200)
+
+
+# 미 구현 => Post 데이터 DB가 아직 없어서 나중에
+def post_api(request):
+    # data = list(YourModel.objects.values())
+    data = [0,1,2,3,4]
+    time.sleep(3)
+    return JsonResponse(data, safe=False)  # JSON 응답을 반환

@@ -10,6 +10,6 @@ urlpatterns = [
     path('login', Login.as_view(), name="login"),
     path('logout', LogOut.as_view()),
     path('profile/upload', UploadProfile.as_view()),
-     path('check_email/', views.check_email, name='check_email'),
+    path('check_email/', views.check_email, name='check_email'),
 ]
 

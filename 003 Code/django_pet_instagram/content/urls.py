@@ -11,5 +11,6 @@ urlpatterns = [
     path('main', Main.as_view()),
     path('submit_pet_info/', views.submit_pet_info, name='submit_pet_info'),
     path('submit_user_info/', views.submit_user_info, name='submit_user_info'),
+    path('post_api', views.post_api, name='post_api'),
 ]
 
