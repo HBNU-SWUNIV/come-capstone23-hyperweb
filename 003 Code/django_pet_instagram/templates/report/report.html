@@ -2,89 +2,83 @@
 <html>
 <head>
     <title>Nutrient Analysis</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            border: 1px solid black;
-            padding: 10px;
-            text-align: left;
-        }
-        .bar {
-            height: 20px;
-            background-color: #00A5CF;
+        .nutrient-progress {
+            width: 80%; 
+            margin-top: 20px; 
+            margin-bottom: 20px;
         }
     </style>
 </head>
 <body>
-<h1>Nutrient Analysis</h1>
-<h2>먹을 강아지 이름: 댕댕이1</h2>
-<h2>음식 유형: 단백질이 풍부한 식단</h2>
-<table>
-    <thead>
-        <tr>
-            <th>식재료명</th>
-            <th>무게</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>식재료1</td>
-            <td>100g</td>
-        </tr>
-        <tr>
-            <td>식재료2</td>
-            <td>50g</td>
-        </tr>
-        <tr>
-            <td>식재료3</td>
-            <td>75g</td>
-        </tr>
-    </tbody>
-</table>
-<h2>하루 필요한 칼로리: 2000</h2>
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            border: 1px solid black;
-            padding: 10px;
-            text-align: left;
-        }
-        .bar {
-            height: 20px;
-            background-color: #00A5CF;
-        }
-    </style>
-</head>
-<body>
-<h1>Nutrient Analysis</h1>
-<table>
-    <thead>
-        <tr>
-            <th>Nutrient</th>
-            <th>Actual Value</th>
-            <th>Percentage</th>
-            <th>Minimum Value</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for nutrient in nutrients %}
-        <tr>
-            <td>{{ nutrient.name }}</td>
-            <td>{{ nutrient.actual_value }}</td>
-            
-            <td style="max-width: 100%;">
-              <div class="bar" style="width: {% if nutrient.actual_value > nutrient.minimum_value %}100{% else %}{% widthratio nutrient.actual_value nutrient.minimum_value 100 %}{% endif %}%;"></div>
-            </td>
-            <td>{{ nutrient.minimum_value }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+    <div class="container">
+        <h1>식단 보고서</h1>
+        <h2>음식 유형: 단백질이 풍부한 식단</h2>
+        <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                    <th>식재료명</th>
+                    <th>무게</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>식재료1</td>
+                    <td>100g</td>
+                </tr>
+                <tr>
+                    <td>식재료2</td>
+                    <td>50g</td>
+                </tr>
+                <tr>
+                    <td>식재료3</td>
+                    <td>75g</td>
+                </tr>
+            </tbody>
+        </table>
+        <h2>총 칼로리 : 1000</h2>
+        <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                    <th>단백질</th>
+                    <th>지방</th>
+                    <th>탄수화물</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ 30 }}</td>
+                    <td>{{ 20 }}</td>
+                    <td>{{ 50 }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Nutrient</th>
+                    <th>Actual Value</th>
+                    <th>Percentage</th>
+                    <th>Minimum Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for nutrient in nutrients %}
+                <tr>
+                    <td>{{ nutrient.name }}</td>
+                    <td>{{ nutrient.actual_value }}</td>
+                    <td style="max-width: 100%;">
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" style="width: {% if nutrient.actual_value > nutrient.minimum_value %}100{% else %}{% widthratio nutrient.actual_value nutrient.minimum_value 100 %}{% endif %}%;" aria-valuenow="{{ nutrient.actual_value }}" aria-valuemin="0" aria-valuemax="{{ nutrient.minimum_value }}"></div>
+                        </div>
+                    </td>
+                    <td>{{ nutrient.minimum_value }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </body>
 </html>
