@@ -57,7 +57,8 @@
             margin-top:30px;
         }
         .post {
-            height: 700px;
+            width: 840px;
+            height: 750px;
             margin-left: 200px;
             margin-right: 200px;
             font-family: Arial, sans-serif;
@@ -73,16 +74,21 @@
             flex-direction: row;
             border-bottom: 1px solid #eee;
         }
-        .post-body {
-            height: 550px;
-            padding: 16px;
+        .post-images {
+            height: 420px;
             overflow: auto;
         }
 
         .post-caption {
-            height: 100px;
+            height: 50px;
             font-size: 0.9em;
             border-top: 1px solid #eee;
+        }
+        .post-text{
+            height: 230px;
+            margin-left:20px;
+            margin-right:20px;
+            margin-top:30px;
         }
         .profile-picture {
             margin: 10px 0px;
@@ -101,9 +107,8 @@
         }
 
         .post-caption > svg{
-            margin-left:30px;
-            margin-top:20px;
-            margin-bottom: 20px;
+            margin-left:40px;
+            margin-top:15px;
         }
         body {
             overflow-x: hidden;
@@ -128,8 +133,7 @@
         .swiper-slide_image_list_value{
             width : 70px;
             height : 70px;
-            margin-top: 30px;
-            margin-bottom: 30px;
+            margin-top: 20px;
             border-radius: 100%;
         }
         
@@ -239,6 +243,86 @@
             font-weight: bold;
         }
 
+        .slideShow{
+            margin-top: 15px;
+            width: 100%;
+            height: 400px;
+            position: relative;
+            overflow: hidden;   
+            /*리스트 형식으로 이미지를 일렬로 
+            정렬할 것이기 때문에, 500px 밖으로 튀어 나간 이미지들은
+            hidden으로 숨겨줘야됨*/
+        }
+
+
+        .slides{
+        position: absolute;
+        left: 0;
+        top: 0;
+        margin:0px;
+        padding:0px;
+       
+        transition: left 0.5s ease-out; 
+        /*ease-out: 처음에는 느렸다가 점점 빨라짐*/
+        }
+
+        /* 첫 번째 슬라이드 가운데에 정렬하기위해
+        첫번째 슬라이드만 margin-left조정 */
+        .slides li:first-child{
+        margin-left: 100px;
+        }
+
+        /* 슬라이드들 옆으로 정렬 */
+        .slides li:not(:last-child){
+        float: left;
+        margin-right: 100px;
+        }
+
+        .slides li{
+        float: left;
+        }
+
+        .controller span{
+        position:absolute;
+        background-color: transparent;
+        color: black;
+        text-align: center;
+        border-radius: 50%;
+        padding: 10px 20px;
+        top: 50%;
+        font-size: 1.3em;
+        cursor: pointer;
+        }
+
+        /* 이전, 다음 화살표에 마우스 커서가 올라가 있을때 */
+        .controller span:hover{
+        background-color: rgba(128, 128, 128, 0.11);
+        }
+
+        .prev{
+        left: 10px;
+        }
+
+        /* 이전 화살표에 마우스 커서가 올라가 있을때 
+        이전 화살표가 살짝 왼쪽으로 이동하는 효과*/
+        .prev:hover{
+        transform: translateX(-10px);
+        }
+
+        .next{
+        right: 10px;
+        }
+
+        /* 다음 화살표에 마우스 커서가 올라가 있을때 
+        이전 화살표가 살짝 오른쪽으로 이동하는 효과*/
+        .next:hover{
+        transform: translateX(10px);
+        }
+        .slides > li > img{
+            width: 640px;
+            height: 360px;
+            left:-100px;
+        }
         
     </style>
 </head>
@@ -282,14 +366,14 @@
         <div style="display: flex; flex-direction: row;text-align: center; justify-content: center;padding-top: 60px; background-color:#ddd; width: 130px;">
         </div>
 
-        <div class="swiper-container" style="border-bottom: solid 1px #ddd;">
+        <div class="swiper-container" style="border-bottom: solid 1px #ddd; height: 130px;">
             <div class="swiper-wrapper">
                 {% for item in user_example %}
-                <div class="swiper-slide" style="display: flex;justify-content: center;">
+                <div class="swiper-slide" style="display: flex;justify-content: center;padding: 0px;">
                     <div class="swiper-slide_image_list_value" style="height:100px;padding:0px;">
                         <div>
                             <img class="profile" style="border-radius: 100%; border: 3px solid #f2befc;padding:2px;height: 80px; width: 80px;" src="/media/example/{{forloop.counter}}.jpg">
-                            <label style="width: 80px; height:50px;text-align: center;">{{item}}</label>
+                            <label style="width: 80px; height:50px;text-align: center;">{{ item|slice:":5" }}</label>
                         </div>
                     </div>
                 </div>
@@ -334,12 +418,25 @@
                             <span class="username">username</span>
                             <span style="color:rgb(128, 128, 128);font-size: 12px;">팔로워수 N명 </span>
                         </div>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16" style="margin:10px 0px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16" style="margin-top:9px;margin-bottom:9px;">
                             <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
                         </svg>
                     </div>
-                    <div class="post-body">
-                        내 용
+                    <div class="post-images">
+                        <div class="slideShow" id="slideShow{{ forloop.counter }}">
+                            <ul class="slides" id="slides{{ forloop.counter }}">
+                              <li><img src="/media/example/1.jpg" alt=""></li>
+                              <li><img src="/media/example/2.jpg" alt=""></li>
+                              <li><img src="/media/example/3.jpg" alt=""></li>
+                              <li><img src="/media/example/4.jpg" alt=""></li>
+                              <li><img src="/media/example/5.jpg" alt=""></li>
+                              <li><img src="/media/example/6.jpg" alt=""></li>
+                            </ul>  
+                            <p class="controller" id="controller{{ forloop.counter }}">
+                              <span class="prev" id="prev{{ forloop.counter }}">&lang;</span>  
+                              <span class="next" id="next{{ forloop.counter }}">&rang;</span>
+                            </p>
+                        </div>                          
                     </div>
                     <div class="post-caption">
                         <svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
@@ -354,6 +451,9 @@
                         <svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px" fill="currentColor" class="bi bi-bookmark" viewBox="0 0 16 16">
                             <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z"/>
                         </svg>
+                    </div>
+                    <div class="post-text">
+                        글자확인을 위한 글 글자확인을 위한 글글자확인을 위한 글글자확인을 위한 글글자확인을 위한 글글자확인을 위한 글글자확인을 위한 글글자확인을 위한 글글자확인을 위한 글글자확인을 위한 글글자확인을 위한 글
                     </div>        
                 </div>
                 {% endfor %}
@@ -493,6 +593,53 @@
   
 <!-- Optional JavaScript; choose one of the two! -->
 <script>
+    $(document).ready(function(){
+        var posts = document.getElementsByClassName('post');
+    var postCount = posts.length;
+
+    for (var i = 1; i <= postCount; i++) {
+        const slides = document.querySelector('#slides' + i); //전체 슬라이드 컨테이너
+        const slideImg = document.querySelectorAll('#slides'+ i + ' li'); //모든 슬라이드들
+        let currentIdx = 0; //현재 슬라이드 index
+        const slideCount = slideImg.length; // 슬라이드 개수
+        const prev = document.querySelector('#prev' + i); //이전 버튼
+        const next = document.querySelector('#next' + i); //다음 버튼
+        const slideWidth = 840; //한개의 슬라이드 넓이
+        const slideMargin = 100; //슬라이드간의 margin 값
+
+        //전체 슬라이드 컨테이너 넓이 설정
+        slides.style.width = (slideWidth + slideMargin) * slideCount + 'px';
+
+        function moveSlide(num) {
+        slides.style.left = -num * 740 + 'px';
+        currentIdx = num;
+        console.log(currentIdx + " " + slideCount);
+        }
+
+        prev.addEventListener('click', function () {
+        /*첫 번째 슬라이드로 표시 됐을때는 
+        이전 버튼 눌러도 아무런 반응 없게 하기 위해 
+        currentIdx !==0일때만 moveSlide 함수 불러옴 */
+
+        if (currentIdx !== 0) moveSlide(currentIdx - 1);
+        });
+
+        next.addEventListener('click', function () {
+        /* 마지막 슬라이드로 표시 됐을때는 
+        다음 버튼 눌러도 아무런 반응 없게 하기 위해
+        currentIdx !==slideCount - 1 일때만 
+        moveSlide 함수 불러옴 */
+        if (currentIdx !== slideCount - 1) {
+            moveSlide(currentIdx + 1);
+        }
+        });
+    }
+    });
+
+    
+    
+
+
     function isScrollBottom() {
         var scrollTop = $(window).scrollTop();
         var innerHeight = $(window).innerHeight();
@@ -528,7 +675,7 @@
                                 <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
                             </svg>
                         </div>
-                        <div class="post-body">
+                        <div class="post-images">
                             내 용
                         </div>
                         <div class="post-caption">
