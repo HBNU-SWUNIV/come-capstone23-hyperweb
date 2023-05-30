@@ -26,11 +26,12 @@ def submit_user_info(request):
 def submit_pet_info(request):
     if request.method == 'POST':
         # 데이터 가져오기
+        nickname = request.POST['dog_nickname']
         species = request.POST['breed']
         age = request.POST['age']
         sex = request.POST['gender']
         weight = request.POST['weight']
-        activity = request.POST['activityLevel']
+        activity = request.POST['activity']
         bcs = request.POST['bcs']
         weight_control = request.POST['weightChange']
         cycle = request.POST['cycle']
@@ -41,6 +42,7 @@ def submit_pet_info(request):
         user = User.objects.filter(email=email).first()
         # 새로운 Dog 객체 생성 및 저장
         dog = Dog(
+            nickname=nickname,
             species=species,
             age=age,
             sex=sex,
@@ -48,7 +50,7 @@ def submit_pet_info(request):
             activity=activity,
             bcs=bcs,
             weight_control=weight_control,
-            cycle=cycle,
+            food_cycle=cycle,
             improve=improve,
             disease=disease,
         )
@@ -210,5 +212,5 @@ class ToggleBookmark(APIView):
 def post_api(request):
     # data = list(YourModel.objects.values())
     data = [0,1,2,3,4]
-    time.sleep(3)
+    time.sleep(2)
     return JsonResponse(data, safe=False)  # JSON 응답을 반환

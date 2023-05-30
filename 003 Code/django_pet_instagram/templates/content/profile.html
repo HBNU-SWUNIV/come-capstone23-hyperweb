@@ -97,6 +97,7 @@
         body, html {
             margin: 0;
             height: 100%;
+            overflow-x: hidden;
         }
 
 
@@ -157,6 +158,49 @@
         .navbar {
             background-color: #1a3b5c;
           }
+
+          .dog-check-list {
+            width: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .sub-dog-list {
+            transition: transform 0.3s ease-in-out;
+            border-radius: 4%;
+            border:1px solid black;
+            width: calc(50% - 10px); 
+            background-color: #f0f0f0;
+            margin-bottom: 20px;
+            height: 220px;
+            display: flex;
+        }
+        .dog-value-list{
+            display: flex;
+            flex-direction: column;
+        }
+        .dog-value{
+            display: flex;
+            flex-direction: row;
+            margin-top: 10px;
+            margin-left: 20px;
+        }
+
+        .dog-value > label{
+            width: 70px;
+            height: 40px;
+            line-height: 40px;
+        }
+        .dog-value > input{
+            height: 40px;
+            width: 140px;
+            margin-right: 5px;
+        }
+        .sub-dog-list:hover {
+            transform: translateY(-5px);
+        }
+
     </style>
 </head>
 <body>
@@ -226,49 +270,69 @@
         <a class="list-group-item list-group-item-action" href="#list-item-3">정보 수정</a>
       </div>
     </div>
+
     <div class="col-8" style="margin-left:300px">
       <div data-bs-spy="scroll" data-bs-target="#list-example" data-bs-smooth-scroll="true" class="scrollspy-example" tabindex="0">
         <h4 id="list-item-1"></br></br></br>애완견 확인</br></br></br></h4>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">종</th>
-                    <th scope="col">나이</th>
-                    <th scope="col">성별</th>
-                    <th scope="col">몸무게(KG)</th>
-                    <th scope="col">활동성</th>
-                    <th scope="col">원하는 몸무게</th>
-                    <th scope="col">BCS</th>
-                    <!-- 필요한 경우 다른 필드 추가 -->
-                </tr>
-            </thead>
-            <tbody>
-                {% for dog in dogs %}
-                    <tr>
-                        <td>{{ forloop.counter }}</td>
-                        <td>{{ dog.species }}</td>
-                        <td>{{ dog.age }}</td>
-                        <td>{{ dog.sex }}</td>
-                        <td>{{ dog.weight }}</td>
-                        <td>{{ dog.activity }}</td>
-                        <td>{{ dog.weight_control }}</td>
-                        <td>{{ dog.bcs }}</td>
-                        <!-- 필요한 경우 다른 필드 추가 -->
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <div class="dog-check-list">
+            {% for dog in dogs %}
+            <div class="sub-dog-list">
+                <div style="display: flex;flex-direction: row;">
+                    <div style="display: flex;flex-direction: column;">
+                        <span style="width: 30px;height: 30px;text-align: center;font-size: 20px;font-weight: bold;">{{ forloop.counter }}</span>
+                        <img src="/media/dog-images/{{ forloop.counter }}.jpg" style="width:100px;height: 100px;border-radius: 100%;margin-left:30px">
+                    </div>
+                    <div class="dog-value-list">               
+                        <div class="dog-value">
+                            <label>별 명</label>
+                            <input type="text" class="form-control" value={{ dog.nickname }}>
+                        </div>
+                        <div class="dog-value">
+                            <label>견 종</label>
+                            <input type="text" class="form-control" style="width: 280px;" value={{ dog.species }}>
+                        </div>
+                        <div style="display: flex;flex-direction: row;">
+                            <div class="dog-value">
+                                <label>나 이</label>
+                                <input type="text" class="form-control" value={{ dog.age }}>
+                            </div>
+                            <div class="dog-value">
+                                <label>성 별</label>
+                                <input type="text" class="form-control" value="{{ dog.get_sex_display }}">
+                            </div>
+                        </div>               
+                        <div style="display: flex;flex-direction: row;" >
+                            <div class="dog-value">
+                                <label>몸무게</label>
+                                <input type="text" class="form-control" value={{ dog.weight }}>
+                            </div>
+                            <div class="dog-value">
+                                <label>활동성</label>
+                                <input type="text" class="form-control" value="{{ dog.get_activity_display }}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}          
+        </div>
+        <p>Designed by rawpixel.com / Freepik</p>
         </br></br></br>
 
         <h4 id="list-item-2"></br></br></br>애완견 추가</br></br></br></h4>
         <form class="row g-3 needs-validation" method="post" action="{% url 'submit_pet_info' %}" novalidate>
             {% csrf_token %}
+            <div class="row mb-3">
+                <label for="input_dog_nickname" class="col-sm-2 col-form-label">별 명</label>
+                <div class="col-sm-10" style="position: relative;"> 
+                    <input type="text" class="form-control" id="dog_nickname" name="dog_nickname" placeholder="" required>
+                </div>
+            </div>
 
             <div class="row mb-3">
                 <label for="input_bread" class="col-sm-2 col-form-label">견 종</label>
                 <div class="col-sm-10" style="position: relative;"> 
-                    <input type="text" class="form-control" id="input_bread" name="breed" oninput="filterWords()" placeholder="(ex)Afador" required>
+                    <input type="text" class="form-control" id="bread" name="breed" oninput="filterWords()" placeholder="(ex)Afador" required>
                     <ul id="suggestions" class="suggestions" style="position: absolute; top:20px"></ul>
                 </div>
             </div>
@@ -288,9 +352,9 @@
                 <label for="gender" class="col-sm-2 col-form-label">성 별</label>
                 <div class="col-sm-10">
                     <select class="form-control" id="gender" name="gender" required>
-                        <option value="수컷">암 컷</option>
-                        <option value="암컷">수 컷</option>
-                        <option value="중성">중 성</option>
+                        <option value="0">중 성</option>
+                        <option value="1">암 컷</option>
+                        <option value="2">수 컷</option>
                     </select>
                 </div>
             </div>
@@ -303,12 +367,17 @@
             </div>
     
             <div class="row mb-3">
-                <label for="activityLevel" class="col-sm-2 col-form-label">활동성(<span id="value1"></span>)</label>
-                
+                <label for="activity_control" class="col-sm-2 col-form-label" id="label_activity_control">활동성</label>
                 <div class="col-sm-10">
-                    <input type="range" class="form-range" id="activityLevel" name="activityLevel" min="1" max="100" 
-                    onchange="updateInput()" oninput="document.getElementById('value1').innerHTML=this.value;" required>                    
-                </div>
+                    <select class="form-control" id="activity_control" name="activity" required>
+                        <option value="" selected disabled>활동성</option>
+                        <option value="0">매우 얌전함</option>
+                        <option value="1">조금 얌전함</option>
+                        <option value="2">보통</option>
+                        <option value="3">조금 활발함</option>
+                        <option value="4">매우 활발함</option>
+                    </select>
+                </div>             
             </div>
 
             <div class="row mb-3">
@@ -324,11 +393,11 @@
                 <div class="col-sm-10">
                     <select class="form-control" id="weightChange" name="weightChange" required>
                         <option value="" selected disabled>체중증감 선택</option>
-                        <option value="lose a lot of weight">lose a lot of weight</option>
-                        <option value="lose a little weight">lose a little weight</option>
-                        <option value="maintain weight">maintain weight</option>
-                        <option value="gain a little weight">gain a little weight</option>
-                        <option value="gain a lot of weight">gain a lot of weight</option>
+                        <option value="0">lose a lot of weight</option>
+                        <option value="1">lose a little weight</option>
+                        <option value="2">maintain weight</option>
+                        <option value="3">gain a little weight</option>
+                        <option value="4">gain a lot of weight</option>
                     </select>
                 </div>
             </div>
@@ -338,9 +407,9 @@
                 <label for="cycle" class="col-sm-2 col-form-label">주기</label>
                 <div class="col-sm-10">
                     <select class="form-control" id="cycle" name="cycle">
-                        <option value="1주일 기준">1주일 기준</option>
-                        <option value="1달 기준">1달 기준</option>
-                        <option value="1년 기준">1년 기준</option>
+                        <option value="1">1주일 기준</option>
+                        <option value="2">1달 기준</option>
+                        <option value="3">1년 기준</option>
                     </select>
                 </div>            
             </div>
@@ -515,6 +584,13 @@
 
 <!-- Optional JavaScript; choose one of the two! -->
 <script>
+    function onSelectChangeActivity(){
+        var activitySelect = document.getElementById("input_activity_control");
+        var selectedActivity = activitySelect.options[activitySelect.selectedIndex].value;
+        var label = document.getElementById("label_activity_control");
+        label.color = "black";
+        label.innerHTML = selectedActivity !== "" ? selectedActivity : "활동성";
+    }
         (() => {
     'use strict'
 

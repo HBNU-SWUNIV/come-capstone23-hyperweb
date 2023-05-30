@@ -83,12 +83,12 @@ class Join4(APIView):
         dog_nickname = request.session.get('dog_nickname')
         species = request.session.get('species')
         age = request.session.get('age')
-        sex = convert_to_number("sex", request.session.get('sex')) #
+        sex = request.session.get('sex')
         weight = request.session.get('weight') 
-        activity = convert_to_number("activity", request.session.get('activity')) #
-        weight_control = convert_to_number("weight_control", request.session.get('weight_control')) #
+        activity = request.session.get('activity')
+        weight_control = request.session.get('weight_control')
         bcs = request.session.get('bcs')
-        food_cycle = convert_to_number("cycle", request.session.get('cycle')) #
+        food_cycle = request.session.get('cycle')
         improve = request.session.get('improve')
         disease = request.session.get('disease')
         
@@ -154,55 +154,3 @@ class UploadProfile(APIView):
         user.save()
 
         return Response(status=200)
-
-def convert_to_number(category, value):
-    if category == 'sex':
-        if value == '중성':
-            return 0
-        elif value == '암컷':
-            return 1
-        elif value == '수컷':
-            return 2
-        else:
-            return "Invalid value for 'sex'"
-
-    elif category == 'activity':
-        if value == '매우 얌전함':
-            return 0
-        elif value == '조금 얌전함':
-            return 1
-        elif value == '보통':
-            return 2
-        elif value == '조금 활발함':
-            return 3
-        elif value == '매우 활발함':
-            return 4
-        else:
-            return "Invalid value for 'activity'"
-    
-    elif category == 'weight_control':
-        if value == '매우 감량':
-            return 0
-        elif value == '조금 감량':
-            return 1
-        elif value == '유지':
-            return 2
-        elif value == '조금 증량':
-            return 3
-        elif value == '매우 증량':
-            return 4
-        else:
-            return "Invalid value for 'weight_control'"
-    
-    elif category == 'cycle':
-        if value == '1주 기준':
-            return 1
-        elif value == '1달 기준':
-            return 2
-        elif value == '1년 기준':
-            return 3
-        else:
-            return "Invalid value for 'cycle'"
-    
-    else:
-        return "Invalid category"

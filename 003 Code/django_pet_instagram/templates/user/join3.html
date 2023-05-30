@@ -48,28 +48,15 @@
                 <label for="label_weight" class="selected-option" style="font-size: 14px;padding: 4px 10px; color: black;">무게(KG)</label>
             </div>
         </div>
-
-        <!-- <div>
-            <div class="form-floating mb-3">
-                <label for="activity" class="form-label" style="font-size: 14px; position: absolute; top: -40px; left: -15px;">활동성</label>
-                <input type="range" class="form-range" id="input_activity" min="0" max="100" onchange="updateInput()" oninput="document.getElementById('value1').innerHTML=this.value;">
-                <span id="value1"></span>
-                <div style="display: flex; justify-content: space-between;">
-                    <span style="font-size: 12px;">비활동적</span>
-                    <span style="font-size: 12px;">활동적</span>
-                </div>
-            </div>
-            </div>
-        <div> -->
         
         <div class="form-floating mb-3">
             <select class="form-control" style="font-size: 14px; height: 24px" id="input_activity_control" onchange="onSelectChangeActivity()">
                 <option value="" selected disabled>활동성</option>
-                <option value="매우 얌전함">매우 얌전함</option>
-                <option value="조금 얌전함">조금 얌전함</option>
-                <option value="보통">보통</option>
-                <option value="조금 활발함">조금 활발함</option>
-                <option value="매우 활발함">매우 활발함</option>
+                <option value="0">매우 얌전함</option>
+                <option value="1">조금 얌전함</option>
+                <option value="2">보통</option>
+                <option value="3">조금 활발함</option>
+                <option value="4">매우 활발함</option>
             </select>
             <label for="activity_control" class="selected-option" id="label_activity_control" style="color: black;">활동성 선택</label>
         </div>
@@ -83,11 +70,11 @@
         <div class="form-floating mb-3">
             <select class="form-control" style="font-size: 14px; height: 24px" id="input_weight_control" onchange="onSelectChangeWeight()">
               <option value="" selected disabled>체중증감 선택</option>
-              <option value="매우 감량">매우 감량</option>
-              <option value="조금 감량">조금 감량</option>
-              <option value="유지">유지</option>
-              <option value="조금 증량">조금 증량</option>
-              <option value="매우 증량">매우 증량</option>
+              <option value="0">매우 감량</option>
+              <option value="1">조금 감량</option>
+              <option value="2">유지</option>
+              <option value="3">조금 증량</option>
+              <option value="4">매우 증량</option>
             </select>
             <label for="weight_control" class="selected-option" id="label_weight_control" style="color: black;">체중 증감</label>
         </div>
@@ -106,7 +93,7 @@
 <script>
     function onSelectChangeActivity(){
         var activitySelect = document.getElementById("input_activity_control");
-        var selectedActivity = activitySelect.options[activitySelect.selectedIndex].value;
+        var selectedActivity = activitySelect.options[activitySelect.selectedIndex].text;
         var label = document.getElementById("label_activity_control");
         label.color = "black";
         label.innerHTML = selectedActivity !== "" ? selectedActivity : "활동성";
@@ -203,7 +190,7 @@
     // 리스트 값 변경
     function onSelectChangeWeight() {
         var weightSelect = document.getElementById("input_weight_control");
-        var selectedWeight = weightSelect.options[weightSelect.selectedIndex].value;
+        var selectedWeight = weightSelect.options[weightSelect.selectedIndex].text;
         var label = document.getElementById("label_weight_control");
         label.innerHTML = selectedWeight !== "" ? selectedWeight : "무게";
     }

@@ -43,9 +43,9 @@
         <div>
             <div class="form-floating mb-3">
                 <select class="form-select" id="input_cycle" onchange="onSelectChangeCycle()" style="height: 24px">
-                  <option value="1주 기준">1주 기준</option>
-                  <option value="1달 기준">1달 기준</option>
-                  <option value="1년 기준">1년 기준</option>
+                  <option value="0">1주 기준</option>
+                  <option value="1">1달 기준</option>
+                  <option value="2">1년 기준</option>
                 </select>
                 <label for="cycle" class="form-label" id="label_cycle">주기</label>
             </div>              
@@ -87,7 +87,7 @@
 
     function onSelectChangeCycle() {
         var cycleSelect = document.getElementById("input_cycle");
-        var selectedCycle = cycleSelect.options[cycleSelect.selectedIndex].value;
+        var selectedCycle = cycleSelect.options[cycleSelect.selectedIndex].text;
         var label = document.getElementById("label_cycle");
         label.innerHTML = selectedCycle !== "" ? selectedCycle : "주기";
       }

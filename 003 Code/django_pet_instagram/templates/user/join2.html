@@ -90,9 +90,9 @@
             <div class="form-floating mb-3">
                 <select class="form-control" style="font-size: 14px; height: 24px" id="input_sex" onchange="onSelectChangeSex()">
                     <option value="" selected disabled>성별 선택</option>
-                    <option value="수컷">암 컷</option>
-                    <option value="암컷">수 컷</option>
-                    <option value="중성">중 성</option>
+                    <option value="0">중 성</option>
+                    <option value="1">암 컷</option>
+                    <option value="2">수 컷</option>                   
                 </select>
                 <label for="label_sex" class="selected-option" id="label_sex" style="color: black;">성별</label>
             </div>
@@ -174,7 +174,7 @@
     
     function onSelectChangeSex() {
         var sexSelect = document.getElementById("input_sex");
-        var selectedSex = sexSelect.options[sexSelect.selectedIndex].value;
+        var selectedSex = sexSelect.options[sexSelect.selectedIndex].text;
         var label = document.getElementById("label_sex");
         label.innerHTML = selectedSex !== "" ? selectedSex : "성별";
     }
@@ -234,9 +234,6 @@
         });
     });
 </script>
-
-
-
 
 <!-- Option 1: Bootstrap Bundle with Popper -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
