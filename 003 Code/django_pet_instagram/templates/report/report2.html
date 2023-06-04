@@ -101,12 +101,12 @@
                 var dataURL = canvas.toDataURL();
                 $.ajax({
                     type: "POST",
-                    url: "/make_report/save_image/",
+                    url: '{% url "report_post" %}',
                     data: {
-                        image_base64: dataURL
+                        images: dataURL
                     },
                     success: function() {
-                        alert("Image sent to server");
+                        location.replace('/main');
                     }
                 });
             });
@@ -133,8 +133,9 @@
                     <i class="material-icons like-button">favorite</i>
                 </button>
                 <button class="btn btn-primary" onclick="captureFunction()">
-                    <i class="material-icons like-button">favorite</i>
+                    <i class="material-icons like-button">share</i>
                 </button>
+
             </div>
         </div>
     </div>

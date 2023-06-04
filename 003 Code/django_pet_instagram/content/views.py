@@ -11,6 +11,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from user.models import Dog 
 from django.http import JsonResponse
 import time
+import json
 
 @csrf_exempt
 def submit_user_info(request):
@@ -73,34 +74,20 @@ class Main(APIView):
 
         if user is None:
             return render(request, "user/login.html")
-
-        feed_object_list = Feed.objects.all().order_by('-id')  # select  * from content_feed;
-        feed_list = []
-
-        for feed in feed_object_list:
-            user = User.objects.filter(email=feed.email).first()
-            reply_object_list = Reply.objects.filter(feed_id=feed.id)
-            reply_list = []
-            for reply in reply_object_list:
-                user = User.objects.filter(email=reply.email).first()
-                reply_list.append(dict(reply_content=reply.reply_content,
-                                       nickname=user.nickname))
-            like_count=Like.objects.filter(feed_id=feed.id, is_like=True).count()
-            is_liked=Like.objects.filter(feed_id=feed.id, email=email, is_like=True).exists()
-            is_marked=Bookmark.objects.filter(feed_id=feed.id, email=email, is_marked=True).exists()
-            feed_list.append(dict(id=feed.id,
-                                  image=feed.image,
-                                  content=feed.content,
-                                  like_count=like_count,
-                                  profile_image=user.profile_image,
-                                  nickname=user.nickname,
-                                  reply_list=reply_list,
-                                  is_liked=is_liked,
-                                  is_marked=is_marked
-                                  ))
+        
         user_example = User.objects.all().values_list('name', flat=True)
 
-        return render(request, "jinstagram/main.html", context=dict(feeds=feed_list, user=user, range_30=range(30), range_5=range(5), user_example=user_example[30:59]))
+        # 보고서 Post
+        post_image_num = request.session.get('post_image_num') 
+        if post_image_num is not None:
+            post_images = []
+            for i in range(post_image_num):
+                post_images.append(request.session.get(f'post_image{i}'))
+            
+            return render(request, "jinstagram/main.html", context=dict(user=user, post_images=json.dumps(post_images), range_30=range(30), range_5=range(5), user_example=user_example[30:59]))
+        
+        
+        return render(request, "jinstagram/main.html", context=dict(user=user, post_image=[], range_30=range(30), range_5=range(5), user_example=user_example[30:59]))
 
 
 class UploadFeed(APIView):
