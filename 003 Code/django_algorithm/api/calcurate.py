@@ -35,9 +35,9 @@ class DietOptimizer:
 
         return input_list
 
-    def calculate_recipe(self, input_list):
+    def calculate_recipe(self, input_list, min_caloric_val):
         nutrient_list = []
-        min_caloric_val = caloric_generator(self)
+        # min_caloric_val = caloric_generator(self)
 
         nutrient_list = nutrient_maker(min_caloric_val)
         # Instantiate a Glop solver and naming it.

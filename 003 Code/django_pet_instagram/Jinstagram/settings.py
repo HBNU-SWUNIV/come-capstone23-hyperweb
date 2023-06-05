@@ -28,7 +28,8 @@ INSTALLED_APPS = [
     'content',
     'user',
     'make_report',
-    'Jinstagram'
+    'Jinstagram',
+    'algorithm_api'
 ]
 
 MIDDLEWARE = [
@@ -42,6 +43,11 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'Jinstagram.urls'
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+
+SESSION_COOKIE_SECURE = False
+
 
 TEMPLATES = [
     {

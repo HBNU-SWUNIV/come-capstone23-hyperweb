@@ -10,7 +10,8 @@ urlpatterns = [
     path('main/', Main.as_view()),
     path('content/', include('content.urls')),
     path('user/', include('user.urls')),
-    path('make_report/',include('make_report.urls'))
+    path('make_report/',include('make_report.urls')),
+    path('algorithm_api/', include('algorithm_api.urls'))
 ]
 
 urlpatterns += static(MEDIA_URL, document_root=MEDIA_ROOT)

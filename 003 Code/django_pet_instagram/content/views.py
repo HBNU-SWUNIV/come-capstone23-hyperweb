@@ -57,6 +57,8 @@ def submit_pet_info(request):
         dog.user = user
         dog.save()
 
+        print('print Dog id', dog.id)
+
         return HttpResponseRedirect('../profile')
 
 def input_page(request):
