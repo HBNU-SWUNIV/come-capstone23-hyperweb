@@ -540,11 +540,12 @@
     $(document).ready(function(){
         var posts = document.getElementsByClassName('post');
         var postCount = posts.length;
-        var postImages = JSON.parse('{{ post_images }}');
+        var postImages = JSON.parse('{{ post_images|escapejs }}');
         console.log(postImages);
+        var startNum = 1;
         if (postImages != null) {
             var imgLine = "";
-
+            startNum = 0;
             for (var i = 0; i < postImages.length; i++) {
                 imgLine += '<li><img src="/' + postImages[i] + '" alt=""></li>';
             }
@@ -593,7 +594,7 @@
                 `);
         }
         
-        for (var i = 1; i <= postCount; i++) {
+        for (var i = startNum; i <= postCount; i++) {
             const slides = document.querySelector('#slides' + i); //전체 슬라이드 컨테이너
             const slideImg = document.querySelectorAll('#slides'+ i + ' li'); //모든 슬라이드들
             let currentIdx = 0; //현재 슬라이드 index
