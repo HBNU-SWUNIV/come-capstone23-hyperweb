@@ -87,7 +87,7 @@ class Main(APIView):
             return render(request, "jinstagram/main.html", context=dict(user=user, post_images=json.dumps(post_images), range_30=range(30), range_5=range(5), user_example=user_example[30:59]))
         
         
-        return render(request, "jinstagram/main.html", context=dict(user=user, post_image=[], range_30=range(30), range_5=range(5), user_example=user_example[30:59]))
+        return render(request, "jinstagram/main.html", context=dict(user=user, post_images=json.dumps(None), range_30=range(30), range_5=range(5), user_example=user_example[30:59]))
 
 
 class UploadFeed(APIView):
