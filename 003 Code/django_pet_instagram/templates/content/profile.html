@@ -285,30 +285,30 @@
                     <div class="dog-value-list">               
                         <div class="dog-value">
                             <label>별 명</label>
-                            <input type="text" class="form-control" value={{ dog.nickname }}>
+                            <input type="text" class="form-control" value={{ dog.nickname }} disabled>
                         </div>
                         <div class="dog-value">
                             <label>견 종</label>
-                            <input type="text" class="form-control" style="width: 280px;" value={{ dog.species }}>
+                            <input type="text" class="form-control" style="width: 280px;" value={{ dog.species }} disabled>
                         </div>
                         <div style="display: flex;flex-direction: row;">
                             <div class="dog-value">
                                 <label>나 이</label>
-                                <input type="text" class="form-control" value={{ dog.age }}>
+                                <input type="text" class="form-control" value={{ dog.age }} disabled>
                             </div>
                             <div class="dog-value">
                                 <label>성 별</label>
-                                <input type="text" class="form-control" value="{{ dog.get_sex_display }}">
+                                <input type="text" class="form-control" value="{{ dog.get_sex_display }}" disabled>
                             </div>
                         </div>               
                         <div style="display: flex;flex-direction: row;" >
                             <div class="dog-value">
                                 <label>몸무게</label>
-                                <input type="text" class="form-control" value={{ dog.weight }}>
+                                <input type="text" class="form-control" value={{ dog.weight }} disabled>
                             </div>
                             <div class="dog-value">
                                 <label>활동성</label>
-                                <input type="text" class="form-control" value="{{ dog.get_activity_display }}">
+                                <input type="text" class="form-control" value="{{ dog.get_activity_display }}" disabled>
                             </div>
                         </div>
                     </div>
