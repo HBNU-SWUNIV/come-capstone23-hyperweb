@@ -24,7 +24,7 @@
     <!-- Swiper -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.5.1/css/swiper.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.5.1/js/swiper.min.js"></script>
-    <title>Hello, world!</title>
+    <title>메인화면</title>
 
     <style>
         /** 노트북 설정 **/
@@ -107,7 +107,8 @@
             font-weight: bold;
         }
 
-        .post-caption > svg{
+        .post-caption > svg,
+        .post-caption > img {
             margin-left:40px;
             margin-top:15px;
         }
@@ -325,6 +326,12 @@
             left:-100px;
         }
         
+        #heart, #chat, #share, #bookmark {
+        transition: 0.5s;
+        }
+        #heart:hover, #chat:hover, #share:hover, #bookmark:hover {
+            transform: translateY(-10px);
+        }
     </style>
 </head>
 <body>
@@ -442,18 +449,10 @@
                         </div>                          
                     </div>
                     <div class="post-caption">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
-                            <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
-                        </svg>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px"  fill="currentColor" class="bi bi-chat" viewBox="0 0 16 16">
-                            <path d="M2.678 11.894a1 1 0 0 1 .287.801 10.97 10.97 0 0 1-.398 2c1.395-.323 2.247-.697 2.634-.893a1 1 0 0 1 .71-.074A8.06 8.06 0 0 0 8 14c3.996 0 7-2.807 7-6 0-3.192-3.004-6-7-6S1 4.808 1 8c0 1.468.617 2.83 1.678 3.894zm-.493 3.905a21.682 21.682 0 0 1-.713.129c-.2.032-.352-.176-.273-.362a9.68 9.68 0 0 0 .244-.637l.003-.01c.248-.72.45-1.548.524-2.319C.743 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7-3.582 7-8 7a9.06 9.06 0 0 1-2.347-.306c-.52.263-1.639.742-3.468 1.105z"/>
-                        </svg>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px"  fill="currentColor" class="bi bi-share" viewBox="0 0 16 16">
-                            <path d="M13.5 1a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5zm-8.5 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm11 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/>
-                        </svg>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px" fill="currentColor" class="bi bi-bookmark" viewBox="0 0 16 16">
-                            <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z"/>
-                        </svg>
+                        <img id = "heart" src="/media/heart.svg">
+                        <img id = "chat" src="/media/chat.svg">
+                        <img id = "share" src="/media/share.svg">
+                        <img id = "bookmark" src="/media/bookmark.svg">
                     </div>
                     <div class="post-text">
                         내용
@@ -535,63 +534,6 @@
             <img src="/media/loading_spinner.gif">
         </div>
         
-
-
-        <!-- 첫번째 모달 -->
-        <div id="first_modal" class="modal_overlay">
-            <div class="modal_window">
-                <div style="display: flex; flex-direction: row; justify-content: space-between">
-                    <div style="width: 40px; background: gray">
-
-                    </div>
-                    <div>
-                        새 이미지 업로드
-                    </div>
-                    <div style="width: 40px; background: gray">
-                        <span class="modal_close material-icons-outlined">close</span>
-                    </div>
-                </div>
-
-                <div class="img_upload_space" style="border-top: solid 1px gray;width: 778px; height: 540px;margin-top: 10px">
-
-                </div>
-            </div>
-        </div>
-
-        <!-- 두번째 모달 -->
-        <div id="second_modal" class="modal_overlay">
-            <div class="modal_window">
-                <div style="display: flex; flex-direction: row; justify-content: space-between">
-                    <div style="width: 40px; background: gray">
-
-                    </div>
-                    <div>
-                        새 이미지 업로드
-                    </div>
-                    <div style="width: 40px; background: gray">
-                        <span class="modal_close material-icons-outlined">close</span>
-                    </div>
-                </div>
-
-                <div style="border-top: solid 1px gray;display: flex; flex-direction: row;margin-top: 10px">
-                    <div class="img_upload_space" style="width: 500px; height: 540px;">
-
-                    </div>
-                    <div style="border-left: solid 1px gray">
-                        <div>
-                            <textarea id="input_feed_content" class="form-control" style="width: 276px; height: 400px"
-                                    id="exampleFormControlTextarea1" rows="5"></textarea>
-                        </div>
-                        <button id="feed_create_button" type="button" class="btn btn-primary" style="width: 100%">
-                            공유하기
-                        </button>
-                    </div>
-
-                </div>
-
-            </div>
-        </div>
-        
     </div>
   
 <!-- Optional JavaScript; choose one of the two! -->
@@ -599,49 +541,130 @@
     $(document).ready(function(){
         var posts = document.getElementsByClassName('post');
         var postCount = posts.length;
+        var postImages = JSON.parse('{{ post_images|escapejs }}');
+        console.log(postImages);
+        var startNum = 1;
+        if (postImages != null) {
+            var imgLine = "";
+            startNum = 0;
+            for (var i = 0; i < postImages.length; i++) {
+                imgLine += '<li><img src="/' + postImages[i] + '" alt=""></li>';
+            }
 
-    for (var i = 1; i <= postCount; i++) {
-        const slides = document.querySelector('#slides' + i); //전체 슬라이드 컨테이너
-        const slideImg = document.querySelectorAll('#slides'+ i + ' li'); //모든 슬라이드들
-        let currentIdx = 0; //현재 슬라이드 index
-        const slideCount = slideImg.length; // 슬라이드 개수
-        const prev = document.querySelector('#prev' + i); //이전 버튼
-        const next = document.querySelector('#next' + i); //다음 버튼
-        const slideWidth = 840; //한개의 슬라이드 넓이
-        const slideMargin = 100; //슬라이드간의 margin 값
+            let divElement = $('#post-list');
+            divElement.prepend(`                   
+                <div class="post">
+                    <div class="post-header">
+                        <img class="profile-picture" src="/media/default_profile.png" style="border: 1px solid #f2befc;">
+                        <div class="profile-user">
+                            <span class="username">username</span>
+                            <span style="color:rgb(128, 128, 128);font-size: 12px;">팔로워수 N명 </span>
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16" style="margin-top:9px;margin-bottom:9px;">
+                            <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
+                        </svg>
+                    </div>
+                    <div class="post-images">
+                        <div class="slideShow" id="slideShow0">
+                            <ul class="slides" id="slides0">
+                              ` + imgLine + `
+                            </ul>  
+                            <p class="controller" id="controller0">
+                              <span class="prev" id="prev0">&lang;</span>  
+                              <span class="next" id="next0">&rang;</span>
+                            </p>
+                        </div>                          
+                    </div>
+                    <div class="post-caption">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
+                            <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px"  fill="currentColor" class="bi bi-chat" viewBox="0 0 16 16">
+                            <path d="M2.678 11.894a1 1 0 0 1 .287.801 10.97 10.97 0 0 1-.398 2c1.395-.323 2.247-.697 2.634-.893a1 1 0 0 1 .71-.074A8.06 8.06 0 0 0 8 14c3.996 0 7-2.807 7-6 0-3.192-3.004-6-7-6S1 4.808 1 8c0 1.468.617 2.83 1.678 3.894zm-.493 3.905a21.682 21.682 0 0 1-.713.129c-.2.032-.352-.176-.273-.362a9.68 9.68 0 0 0 .244-.637l.003-.01c.248-.72.45-1.548.524-2.319C.743 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7-3.582 7-8 7a9.06 9.06 0 0 1-2.347-.306c-.52.263-1.639.742-3.468 1.105z"/>
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px"  fill="currentColor" class="bi bi-share" viewBox="0 0 16 16">
+                            <path d="M13.5 1a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5zm-8.5 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm11 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/>
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px" fill="currentColor" class="bi bi-bookmark" viewBox="0 0 16 16">
+                            <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z"/>
+                        </svg>
+                    </div>
+                    <div class="post-text">
+                        보고서로 생성된 글입니다.                    </div>        
+                </div>
+                `);
+        }
+        
+        for (var i = startNum; i <= postCount; i++) {
+            const slides = document.querySelector('#slides' + i); //전체 슬라이드 컨테이너
+            const slideImg = document.querySelectorAll('#slides'+ i + ' li'); //모든 슬라이드들
+            let currentIdx = 0; //현재 슬라이드 index
+            const slideCount = slideImg.length; // 슬라이드 개수
+            const prev = document.querySelector('#prev' + i); //이전 버튼
+            const next = document.querySelector('#next' + i); //다음 버튼
+            const slideWidth = 840; //한개의 슬라이드 넓이
+            const slideMargin = 100; //슬라이드간의 margin 값
 
-        //전체 슬라이드 컨테이너 넓이 설정
-        slides.style.width = (slideWidth + slideMargin) * slideCount + 'px';
+            //전체 슬라이드 컨테이너 넓이 설정
+            slides.style.width = (slideWidth + slideMargin) * slideCount + 'px';
 
-        function moveSlide(num) {
-        slides.style.left = -num * 740 + 'px';
-        currentIdx = num;
-        console.log(currentIdx + " " + slideCount);
+            function moveSlide(num) {
+            slides.style.left = -num * 740 + 'px';
+            currentIdx = num;
+            console.log(currentIdx + " " + slideCount);
+            }
+
+            prev.addEventListener('click', function () {
+            /*첫 번째 슬라이드로 표시 됐을때는 
+            이전 버튼 눌러도 아무런 반응 없게 하기 위해 
+            currentIdx !==0일때만 moveSlide 함수 불러옴 */
+
+            if (currentIdx !== 0) moveSlide(currentIdx - 1);
+            });
+
+            next.addEventListener('click', function () {
+            /* 마지막 슬라이드로 표시 됐을때는 
+            다음 버튼 눌러도 아무런 반응 없게 하기 위해
+            currentIdx !==slideCount - 1 일때만 
+            moveSlide 함수 불러옴 */
+            if (currentIdx !== slideCount - 1) {
+                moveSlide(currentIdx + 1);
+            }
+            });
         }
 
-        prev.addEventListener('click', function () {
-        /*첫 번째 슬라이드로 표시 됐을때는 
-        이전 버튼 눌러도 아무런 반응 없게 하기 위해 
-        currentIdx !==0일때만 moveSlide 함수 불러옴 */
-
-        if (currentIdx !== 0) moveSlide(currentIdx - 1);
+        $("#heart").click(function() {
+            if ($(this).attr("src") == "/media/heart.svg") {
+                $(this).attr("src", "/media/heart-fill.svg");
+            } else {
+                $(this).attr("src", "/media/heart.svg");
+            }
         });
 
-        next.addEventListener('click', function () {
-        /* 마지막 슬라이드로 표시 됐을때는 
-        다음 버튼 눌러도 아무런 반응 없게 하기 위해
-        currentIdx !==slideCount - 1 일때만 
-        moveSlide 함수 불러옴 */
-        if (currentIdx !== slideCount - 1) {
-            moveSlide(currentIdx + 1);
-        }
+        $("#chat").click(function() {
+            if ($(this).attr("src") == "/media/chat.svg") {
+                $(this).attr("src", "/media/chat-fill.svg");
+            } else {
+                $(this).attr("src", "/media/chat.svg");
+            }
         });
-    }
+
+        $("#share").click(function() {
+            if ($(this).attr("src") == "/media/share.svg") {
+                $(this).attr("src", "/media/share-fill.svg");
+            } else {
+                $(this).attr("src", "/media/share.svg");
+            }
+        });
+
+        $("#bookmark").click(function() {
+            if ($(this).attr("src") == "/media/bookmark.svg") {
+                $(this).attr("src", "/media/bookmark-fill.svg");
+            } else {
+                $(this).attr("src", "/media/bookmark.svg");
+            }
+        });
     });
-
-    
-    
-
 
     function isScrollBottom() {
         var scrollTop = $(window).scrollTop();
@@ -797,9 +820,6 @@
     }
 });
 
-
-    
-    
     var mySwiper = new Swiper('.swiper-container', {
         slidesPerView: 8,
         slidesPerGroup: 8,
@@ -821,214 +841,8 @@
             }
         }
     });
-    $(".bookmark").click(function (event) {
-        let feed_id = event.target.attributes.getNamedItem('feed_id').value;
-        let bookmark_id = event.target.id;
-        let bookmark_text = $.trim($('#' + bookmark_id).html());
-        if (bookmark_text == 'bookmark') {
-            $('#' + bookmark_id).html('bookmark_border');
-        } else {
-            $('#' + bookmark_id).html('bookmark');
-        }
-
-        $.ajax({
-            url: "/content/bookmark",
-            data: {
-                feed_id: feed_id,
-                bookmark_text: bookmark_text
-            },
-            method: "POST",
-            success: function (data) {
-                console.log("성공");
-            },
-            error: function (request, status, error) {
-                console.log("에러");
-            },
-            complete: function () {
-                console.log("완료");
-            }
-        });
-    });
-
-
-    $(".favorite").click(function (event) {
-        let feed_id = event.target.attributes.getNamedItem('feed_id').value;
-        let favorite_id = event.target.id;
-        console.log(favorite_id);
-        let favorite_text = $.trim($('#' + favorite_id).html());
-        console.log(favorite_text);
-        if (favorite_text == 'favorite') {
-            $('#' + favorite_id).html('favorite_border');
-        } else {
-            $('#' + favorite_id).html('favorite');
-        }
-
-        $.ajax({
-            url: "/content/like",
-            data: {
-                feed_id: feed_id,
-                favorite_text: favorite_text
-            },
-            method: "POST",
-            success: function (data) {
-                console.log("성공");
-            },
-            error: function (request, status, error) {
-                console.log("에러");
-            },
-            complete: function () {
-                console.log("완료");
-            }
-        });
-    });
-
-    $(".upload_reply").click(function (event) {
-        let feed_id = event.target.attributes.getNamedItem('feed_id').value;
-        let reply_id = 'reply_' + feed_id;
-        let reply_content = $('#' + reply_id).val();
-
-        if (reply_content.length <= 0) {
-            alert("댓글을 입력하세요");
-            return 0;
-        }
-
-        $.ajax({
-            url: "/content/reply",
-            data: {
-                feed_id: feed_id,
-                reply_content: reply_content
-            },
-            method: "POST",
-            success: function (data) {
-                console.log("성공");
-                alert("댓글 성공");
-                $("#reply_list_" + feed_id).append("<div style='margin: 0 20px;text-align: left;font-size: 14px'><b>{{ user.nickname }}</b> " + reply_content + "</div>")
-                {location.replace('/main');}
-
-            },
-            error: function (request, status, error) {
-                console.log("에러");
-            },
-            complete: function () {
-                console.log("완료");
-                $('#' + reply_id).val('');
-            }
-        });
-
-    });
-
-    $(".modal_close").click(function () {
-        $('#first_modal').css({
-            display: 'none'
-        });
-        $('#second_modal').css({
-            display: 'none'
-        });
-    });
-
-    let files;
-
-    $('#nav_bar_add_box').click(function () {
-        $('#first_modal').css({
-            display: 'flex'
-        });
-
-        $(document.body).css({
-            overflow: 'hidden'
-        });
-
-    });
-
-    $('#feed_create_button').click(function () {
-        alert("공유하기 눌렀다.");
-
-        let file = files[0];
-        let image = files[0].name;
-        let content = $('#input_feed_content').val();
-
-        let fd = new FormData();
-
-        fd.append('file', file);
-        fd.append('image', image);
-        fd.append('content', content);
-
-        $.ajax({
-            url: "/content/upload",
-            data: fd,
-            method: "POST",
-            processData: false,
-            contentType: false,
-            success: function (data) {
-                console.log("성공");
-            },
-            error: function (request, status, error) {
-                console.log("에러");
-            },
-            complete: function () {
-                console.log("완료");
-                location.replace("/main");
-            }
-        });
-    });
-
-    $('.img_upload_space')
-        .on("dragover", dragOver)
-        .on("dragleave", dragOver)
-        .on("drop", uploadFiles);
-
-    function dragOver(e) {
-        e.stopPropagation();
-        e.preventDefault();
-
-        if (e.type == "dragover") {
-            $(e.target).css({
-                "background-color": "black",
-                "outline-offset": "-20px"
-            });
-        } else {
-            $(e.target).css({
-                "outline-offset": "-10px"
-            });
-        }
-    }
 
     
-    function uploadFiles(e) {
-        e.stopPropagation();
-        e.preventDefault();
-
-        e.dataTransfer = e.originalEvent.dataTransfer; //2
-        files = e.target.files || e.dataTransfer.files;
-        console.log("뭔가 파일을 올렸네??" + files[0].name);
-        if (files.length > 1) {
-            alert('하나만 올려라.');
-            return;
-        }
-
-        if (files[0].type.match(/image.*/)) {
-
-            $('#first_modal').css({
-                display: 'none'
-            });
-            $('#second_modal').css({
-                display: 'flex'
-            });
-
-            $('.img_upload_space').css({
-                "background-image": "url(" + window.URL.createObjectURL(files[0]) + ")",
-                "outline": "none",
-                "background-size": "100%",
-                "background-repeat": "no-repeat",
-                "background-position": "center"
-            });
-        } else {
-            alert('이미지가 아닙니다.');
-            return;
-        }
-
-    }
-
-
 </script>
 
 
