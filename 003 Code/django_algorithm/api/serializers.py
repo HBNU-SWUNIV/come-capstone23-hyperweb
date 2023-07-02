@@ -1,31 +1,23 @@
 from rest_framework import serializers
-# from .models import Item
-from .models import Food_Item
-from .models import Food_save
-from .models import Dog_Info
-# from .models import Nut_save
-# class ItemSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Item
-#         fields = ("__all__")
-#         #fields = ('name', 'description', 'cost')
 
+from .models import Food_Item, Dog_Info, Get_Id, Nut_7_save, Nut_report
 
-# class FoodItemSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Food_Item
-#         fields = ['name', 'unit']
 
 class FoodItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = Food_Item
-        fields = ['name', 'unit']
+        fields = ['name', 'unit', 'dog_info']
 
-    def to_internal_value(self, data):
-        if isinstance(data, list):  # handle a list of items
-            return [super(FoodItemSerializer, self).to_internal_value(item) for item in data]
-        else:
-            return super(FoodItemSerializer, self).to_internal_value(data)
+        
+class Nut7Serializer(serializers.ModelSerializer):
+    class Meta:
+        model = Nut_7_save
+        fields = ['A10100', 'A10300', 'A10400', 'A10600', 'A10700', 'suffient', 'lack', 'dog_info']
+
+class NutReportSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Nut_report
+        fields = ['nut_name', 'actual_num', 'percent', 'min_num', 'dog_info']
         
 class DogInfoSerializer(serializers.ModelSerializer):
     food_items = FoodItemSerializer(many=True)
@@ -40,15 +32,9 @@ class DogInfoSerializer(serializers.ModelSerializer):
         for food_item_data in food_items_data:
             Food_Item.objects.create(dog_info=dog_info, **food_item_data)
         return dog_info
-
-class Food_saveSerializer(serializers.ModelSerializer):
+    
+class GetIdSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Food_save
-        fields = '__all__'
-
-
-
-# class Nut_saveSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Nut_save
-#         fields = '__all__'
+        model = Get_Id
+        fields = ['dog_info_id']
+        

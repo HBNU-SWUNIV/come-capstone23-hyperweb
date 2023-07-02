@@ -64,10 +64,12 @@ class Dog(models.Model):
     user = models.ForeignKey('User', on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
-        return f"{self.species} - {self.age} - {self.sex}"
+        # return f"{self.species} - {self.age} - {self.sex}"
+        return f"{self.age} - {self.weight} - {self.activity} - {self.bcs} - {self.sex}"
     
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
+
 
 class User(AbstractBaseUser):
     email = models.EmailField(unique=True, max_length=254)
@@ -94,3 +96,10 @@ class User(AbstractBaseUser):
     def __str__(self):
         return self.email
     
+class Dog_Food_Token(models.Model):
+    user_id = models.ForeignKey(User, related_name='Dog_food_token', on_delete=models.CASCADE, null=True)
+    dog_id = models.ForeignKey(Dog, related_name='Dog_food_token', on_delete=models.CASCADE, null=True)
+    dog_token = models.IntegerField()
+    
+    def __str__(self):
+        return self.dog_token

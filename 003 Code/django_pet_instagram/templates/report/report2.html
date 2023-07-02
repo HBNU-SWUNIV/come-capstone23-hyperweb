@@ -121,7 +121,7 @@
     <div class="container">
         
         <div class="overlay">
-            <div class="overlay-text">"댕댕이1"을 위한 식단 보고서</div>
+            <div class="overlay-text">"{{dog_nickname}}"을 위한 식단 보고서</div>
             <div class="button-container">
                 <button class="btn btn-primary mr-2" onclick="printFunction()">
                     <i class="material-icons">print</i>
@@ -139,7 +139,7 @@
         </div>
     </div>
     <div class="container">
-        <h2>음식 유형: 단백질이 풍부한 식단</h2>           
+        <h2>음식 유형: 탄수화물이 풍부한 식단</h2>           
         </table>
         <div class="container mt-4">
             <div class="row no-gutters">
@@ -147,7 +147,7 @@
                     <div class="card">
                         <div class="card-body text-center">
                             <h5 class="card-title font-weight-bold">총 칼로리</h5>
-                            <p class="card-text display-4">1000</p>
+                            <p class="card-text display-4">{{ nut7.A10100 }}</p>
                         </div>
                     </div>
                 </div>
@@ -155,7 +155,7 @@
                     <div class="card">
                         <div class="card-body text-center">
                             <h5 class="card-title font-weight-bold">단백질</h5>
-                            <p class="card-text display-4">{{ 30 }}</p>
+                            <p class="card-text display-4">{{ nut7.A10300 }}</p>
                         </div>
                     </div>
                 </div>
@@ -163,7 +163,7 @@
                     <div class="card">
                         <div class="card-body text-center">
                             <h5 class="card-title font-weight-bold">지방</h5>
-                            <p class="card-text display-4">{{ 20 }}</p>
+                            <p class="card-text display-4">{{ nut7.A10400 }}</p>
                         </div>
                     </div>
                 </div>
@@ -171,7 +171,7 @@
                     <div class="card">
                         <div class="card-body text-center">
                             <h5 class="card-title font-weight-bold">탄수화물</h5>
-                            <p class="card-text display-4">{{ 50 }}</p>
+                            <p class="card-text display-4">{{ nut7.A10600 }}</p>
                         </div>
                     </div>
                 </div>
@@ -182,7 +182,7 @@
                     <div class="card">
                         <div class="card-body text-center">
                             <h5 class="card-title font-weight-bold">수분량</h5>
-                            <p class="card-text display-4">{{ 100 }}</p>
+                            <p class="card-text display-4">{{ nut7.A10700 }}</p>
                         </div>
                     </div>
                 </div>
@@ -190,7 +190,7 @@
                     <div class="card">
                         <div class="card-body text-center">
                             <h5 class="card-title font-weight-bold">충족한 영양소 갯수</h5>
-                            <p class="card-text display-4">{{ 100 }}</p>
+                            <p class="card-text display-4">{{ nut7.suffient }}</p>
                         </div>
                     </div>
                 </div>
@@ -198,7 +198,7 @@
                     <div class="card">
                         <div class="card-body text-center">
                             <h5 class="card-title font-weight-bold">부족한 영양소 갯수</h5>
-                            <p class="card-text display-4">{{ 100 }}</p>
+                            <p class="card-text display-4">{{ nut7.lack }}</p>
                         </div>
                     </div>
                 </div>
@@ -212,18 +212,12 @@
                 </tr>
             </thead>
             <tbody>
+                {% for food in foods %}
                 <tr>
-                    <td>식재료1</td>
-                    <td>100g</td>
+                    <td>{{ food.name }}</td>
+                    <td>{{ food.unit }}</td>
                 </tr>
-                <tr>
-                    <td>식재료2</td>
-                    <td>50g</td>
-                </tr>
-                <tr>
-                    <td>식재료3</td>
-                    <td>75g</td>
-                </tr>
+                {% endfor %}
             </tbody>       
         <table class="table">
             <thead class="thead-dark">
@@ -237,14 +231,19 @@
             <tbody>
                 {% for nutrient in nutrients %}
                 <tr>
-                    <td>{{ nutrient.name }}</td>
-                    <td>{{ nutrient.actual_value }}</td>
+                    <td>{{ nutrient.nut_name }}</td>
+                    <td>{{ nutrient.actual_num }}</td>
                     <td style="max-width: 100%;">
                         <div class="progress">
-                            <div class="progress-bar" role="progressbar" style="width: {% if nutrient.actual_value > nutrient.minimum_value %}100{% else %}{% widthratio nutrient.actual_value nutrient.minimum_value 100 %}{% endif %}%;" aria-valuenow="{{ nutrient.actual_value }}" aria-valuemin="0" aria-valuemax="{{ nutrient.minimum_value }}"></div>
+                            <div class="progress-bar" role="progressbar"
+                                style="width: {{ nutrient.percent }}%;"
+                                aria-valuenow="{{ nutrient.actual_num  }}"
+                                aria-valuemin="0"
+                                aria-valuemax="{{ nutrient.min_num }}">
+                            </div>
                         </div>
                     </td>
-                    <td>{{ nutrient.minimum_value }}</td>
+                    <td>{{ nutrient.min_num }}</td>
                 </tr>
                 {% endfor %}
             </tbody>

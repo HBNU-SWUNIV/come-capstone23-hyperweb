@@ -1,15 +1,68 @@
 from django.http import HttpResponseRedirect
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.backends import ModelBackend
 from django.http import HttpResponseBadRequest
 from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.backends import ModelBackend
+
+from rest_framework import status
 from rest_framework.views import APIView
-from .models import Food, FoodList
-from user.models import User
-from user.models import Dog 
-from django.forms.models import model_to_dict
+from rest_framework.decorators import api_view 
+from rest_framework.response import Response
+
+from .models import FoodList, Food_Item, Nut_7_save, Nut_report
+from user.models import User, Dog, Dog_Food_Token
+from .serializer import FoodItemSerializer, Nut7Serializer, NutReportSerializer
+
 import requests
 import json
+
+#result food get
+def result_food(dog_info_id):
+    print('result food info post')
+    
+    BASE_URL = "http://127.0.0.1:6000/result_food/"
+    send_json = {"dog_info_id": dog_info_id}
+    
+    response = requests.post(BASE_URL, json=send_json)
+    serializer = FoodItemSerializer(data=response.json(), many=True)
+    
+    if serializer.is_valid():
+        # Serializer 내부의 create 메소드를 호출하여 저장합니다.
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+#result nut7 post
+def result_nut7(dog_info_id):
+    print('result nut7 info post')
+    
+    BASE_URL = "http://127.0.0.1:6000/result_nut7/"
+    send_json = {"dog_info_id": dog_info_id}
+    
+    response = requests.post(BASE_URL, json=send_json)
+    serializer = Nut7Serializer(data=response.json())
+    
+    if serializer.is_valid():
+        # Serializer 내부의 create 메소드를 호출하여 저장합니다.
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+#result nut report post
+def result_nut_report(dog_info_id):
+    print('result nut report info post')
+    
+    BASE_URL = "http://127.0.0.1:6000/result_nut_report/"
+    send_json = {"dog_info_id": dog_info_id}
+    
+    response = requests.post(BASE_URL, json=send_json)
+    serializer = NutReportSerializer(data=response.json(), many=True)
+    
+    if serializer.is_valid():
+        # Serializer 내부의 create 메소드를 호출하여 저장합니다.
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 def caloric_generator(age, weight, activate, bcs, sex):
@@ -65,23 +118,42 @@ class Food_view(APIView):
         self.activate = 2
         self.bcs = 4
         self.sex = 0
+        self.user = None
+        self.dog = None
+        self.dog_info_id = None
+        self.dog_id = None
 
     def get(self, request):
         # login session 개선 필요
-        if isinstance(request.user, ModelBackend) and request.user.is_authenticated:
-            # 로그인된 사용자인 경우
-            user = request.user
-            dogs = Dog.objects.filter(user=user.id)
-            print(dogs.age, dogs.weight, dogs.activate, dogs.bcs, dogs.sex)
-            self.dog_mer = caloric_generator(dogs.age, dogs.weight, dogs.activate, dogs.bcs, dogs.sex)
-        else:
-            print('not login')
+        email = request.session.get('email', None)
+        user = User.objects.filter(email=email).first()
+
+        user = User.objects.get(email=email)
+        dogs = Dog.objects.get(user=user)
+        
+        print(user, dogs)
+        
+        self.user = user
+        self.dog = dogs
+        self.dog_id = dogs.id
+        print(dogs.age, dogs.weight, dogs.activity, dogs.bcs, dogs.sex, self.dog_id)
+        request.session['dog_id'] = dogs.id
+
+        # if isinstance(request.user, ModelBackend) and request.user.is_authenticated:
+        #     # 로그인된 사용자인 경우
+        #     user = request.user
+        #     dogs = Dog.objects.filter(user=user.id)
+        #     print(dogs.age, dogs.weight, dogs.activate, dogs.bcs, dogs.sex)
+        #     self.dog_mer = caloric_generator(dogs.age, dogs.weight, dogs.activate, dogs.bcs, dogs.sex)
+        #     print('logined')
+        # else:
+        #     print('not login')
         return render(request, "algorithm_api/Food_view.html")
     
+    
     def post(self, request):
-        self.dog_mer = caloric_generator(self.age, self.weight, self.activate, self.bcs, self.sex)
-
-        print('post start ')
+        
+        print('post start')
         body_unicode = request.body.decode('utf-8')  # Decode the request body
         body_data = json.loads(body_unicode)  # Parse it into Python dictionary
         input_result = body_data.get('foods')  # Get the foods data
@@ -90,8 +162,8 @@ class Food_view(APIView):
             print('Invalid request data')
             return HttpResponseBadRequest("Invalid request data")
 
-        food_list_model = FoodList()
-        food_list_model.save()
+        # food_list_model = FoodList()
+        # food_list_model.save()
         food_dicts = []
         for food_data in input_result:
             food_name = food_data['food']
@@ -103,44 +175,47 @@ class Food_view(APIView):
             }
             food_dicts.append(food_dict)
 
-        print(food_dicts)
         dog_mer = self.dog_mer
         json_dict = {
             "dog_mer" : dog_mer,
             "food_items": food_dicts
         }
         json_list = [json_dict]
-        print(json_list)
 
-        response = requests.post("http://127.0.0.1:6000/Food_Item/", json=json_list)
-        if response.status_code == 200:
-            # If successful, send a GET request to the same server
-            get_response = requests.get("http://127.0.0.1:6000/Food_Item/")
-            
-            # Process the GET response
-            if get_response.status_code == 200:
-                get_data = get_response.json()
-                # Do something with the data...
+        BASE_URL = "http://127.0.0.1:6000/Food_Item/"
+        try:
+            # POST request
+            response = requests.post(BASE_URL, json=json_list)
+            # print(response)
+            if response.status_code == 205:
+                return Response(status=205, data=dict(message="음식을 다시 설정하시요."))
             else:
-                print("GET request failed with status code:", get_response.status_code)
-        else:
-            print("POST request failed with status code:", response.status_code)
-        print(get_data)
+                result_info = response.json()
+                print(result_info['dog_info_id'])
+                self.dog_info_id = result_info['dog_info_id']
+                dog_token = Dog_Food_Token()
+                dog_token.user_id = self.user
+                dog_token.dog_id = self.dog
+                dog_token.dog_token = self.dog_info_id
+                dog_token.save()
+                print('token saved')
+                print('end')
+                request.session['dog_info_id'] = self.dog_info_id
+                
+                response_food = result_food(self.dog_info_id)
+                # print('log response_food', response_food)
 
-        return render(request, "algorithm_api/Food_view.html")
+                response_nut7 = result_nut7(self.dog_info_id)
+                # print('log response_nut7', response_nut7)
+                
+                response_nut_report = result_nut_report(self.dog_info_id)
+                # print('log response_nut_report', response_nut_report)      
 
-
-# def food_view(request):
-#     if request.method == 'POST':
-
-#         food_names = request.POST.getlist('foods')
-#         food_list = FoodList()
-#         food_list.save()
-
-#         for food_name in food_names:
-#             food, created = Food.objects.get_or_create(name=food_name)
-#             food_list.foods.add(food)
-
-#         return HttpResponseRedirect('/')
-
-#     return render(request, 'algorithm_api/new_input.html')
+                return render(request, 'report/report2.html')
+            
+            
+            
+        except requests.RequestException as e:
+            # For network exceptions
+            print("An error occurred:", str(e))
+        return Response(status=400, data=dict(message="음식을 다시 설정하시요."))
