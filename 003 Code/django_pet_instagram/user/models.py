@@ -102,12 +102,19 @@ class User(AbstractBaseUser):
 class Post(models.Model):
     user = models.ForeignKey('User', on_delete=models.CASCADE)
     text = models.TextField(blank=True, null=True)
-    image = models.ImageField(upload_to='media/posts/images', blank=True, null=True)
     hashtag = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
 
     def __str__(self):
         return self.text
+
+class PostImage(models.Model):
+    post = models.ForeignKey(Post, related_name='images', on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='media/posts/images', blank=True, null=True)
+
+    def __str__(self):
+        return self.post.text + " Image"
+
 
 class Dog_Food_Token(models.Model):
     user_id = models.ForeignKey(User, related_name='Dog_food_token', on_delete=models.CASCADE, null=True)
