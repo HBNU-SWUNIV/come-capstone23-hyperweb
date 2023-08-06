@@ -71,6 +71,8 @@ class Dog(models.Model):
 
 class User(AbstractBaseUser):
     email = models.EmailField(unique=True, max_length=254)
+    age = models.IntegerField(default=20, blank=True)
+    sex = models.CharField(default="Male", max_length=10, blank=True)
     nickname = models.CharField(max_length=30)
     name = models.CharField(max_length=30)
     password = models.CharField(max_length=128)

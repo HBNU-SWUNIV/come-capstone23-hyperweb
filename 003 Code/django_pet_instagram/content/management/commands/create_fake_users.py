@@ -2,13 +2,16 @@ import requests
 import random
 import base64
 import io
+import re
+import time
 
 from django.http import JsonResponse
 from django.core.files.base import ContentFile
 from django.core.management.base import BaseCommand
 
-from user.models import User
+from user.models import User, Post
 
+import openai
 from faker import Faker
 from faker.providers import DynamicProvider
 from PIL import Image, PngImagePlugin
@@ -47,9 +50,98 @@ person_personal_place_provider = DynamicProvider(
 )
 
 class Command(BaseCommand):
+    def __init__(self):
+        self.diffusion_url = "http://127.0.0.1:7860"
+        self.set_diffusion_model()
     help = 'Create random users'
     
-    def make_json(self):
+    def get_gpt_quary1(self):
+        system_content = (
+            f"I am a system that creates Instagram posts for you."
+            f"I don't use emojis based on Unicode characters."
+            f"The content I generate includes post captions and hashtags using '#' symbol, output in korean"
+        )
+        
+        assistant_content = (
+            f"The content will include details like the user's "
+            f"age, gender, hobbies, and the type of dog they have."
+        )
+        
+        user_content = (
+            f"person age : {self.user.age}, "
+            f"person sex : {self.user.sex}, "
+            f"person hobbies : {self.user.personal_habit}, "
+            f"person place = {self.user.personal_place}, "
+            f"dog type : shiba-inu"
+        )
+        
+        msg = [
+            {
+                "role": "system",
+                "content" : system_content
+            },
+            {
+                "role": "assistant",
+                "content": assistant_content
+            },
+            {
+                "role" : "user",
+                "content" : user_content
+            }
+        ]
+        return msg
+    
+    def get_gpt_quary2(self):
+        system_content = (
+            f"You are an AI model capable of extracting key words and concepts from text content. "
+            f"Your task is to analyze an Instagram post and identify the main themes, "
+            f"expressed in single words or short phrases. "
+            f"Be as precise and concise as possible,you must answered me in English."
+        )
+        
+        user_content = (
+            f"I need a compressed word for 10-20 content, please answered me in English"
+        )
+        
+        msg = [
+            {
+                "role": "system",
+                "content" : system_content
+                
+            },
+            {
+                "role": "user",
+                "content" : user_content
+            },
+            {
+                "role": "user",
+                "content": self.gpt_first_response
+            }
+        ]
+        return msg
+    
+    def get_gpt_prompt(self, msg):
+        completion = openai.ChatCompletion.create(
+                    model = "gpt-3.5-turbo-0613",
+                    messages = msg
+                    )
+        return completion['choices'][0]['message']['content']
+    
+    def get_gpt_key(self):
+        with open('content/management/commands/gpt_key.txt', 'r') as file:
+            line = file.read()
+        file.close()
+        return line
+    
+    def set_gpt_result(self):
+        openai.api_key = self.get_gpt_key()
+        self.gpt_first_response = self.get_gpt_prompt(self.get_gpt_quary1())
+        print("Log first_prompt : ", self.gpt_first_response)
+        self.gpt_second_respose = self.get_gpt_prompt(self.get_gpt_quary2())
+        print("Log second_prompt : ", self.gpt_second_respose)
+        
+
+    def get_diffusion_quary(self):
         # age, sex, habit, profit, place
         prompt_format = (
             f"person age = {self.user.age}, "
@@ -57,27 +149,54 @@ class Command(BaseCommand):
             f"person habit = {self.user.personal_habit}, "
             f"person profit = {self.user.personal_profit}, "
             f"person place = {self.user.personal_place}"
-            f"one person with one dog"
+            f"{self.gpt_second_respose}"
         )
+        
+        negative_prompt_format = (
+            f"CyberRealistic_Negative-neg "
+        )
+        
         payload = {
             "prompt": prompt_format,
-            # "negative_prompt" : negative_prompt_format,
+            "negative_prompt" : negative_prompt_format,
             "steps": 20,
             "sampler_index": "Euler a",
+            "cfg_scale" : 4.5,
+            "sampler_name" : "DPM++ SDE Karras",
+            "n_iter" : 2
         }
         
         return payload
     
-    def stable_diffusion(self):
-        diffusion_url = 'http://127.0.0.1:7860/sdapi/v1/txt2img'
-        response = requests.post(diffusion_url, json=self.make_json())
+    def set_diffusion_model(self):
+        dif_url = f'{self.diffusion_url}/sdapi/v1/options'
+        option_payload = {
+            "sd_model_checkpoint": "cyberrealistic_v32.safetensors",
+            "CLIP_stop_at_last_layers": 2
+        }
+        response = requests.post(url=dif_url, json=option_payload)
+        print(response)
+    
+    def set_stable_diffusion(self, post):
+        dif_url = f"{self.diffusion_url}/sdapi/v1/txt2img"
+        print("Log get_diffusion : ",self.get_diffusion_quary())
+        response = requests.post(url=dif_url, json=self.get_diffusion_quary())
         img_json = response.json()
-        
-        for i in img_json['images']:
-            image = Image.open(io.BytesIO(base64.b64decode(i.split(",",1)[0])))
-            image.save('output.png')
-        
 
+        for idx, img in enumerate(img_json['images']):
+            # image = Image.open(io.BytesIO(base64.b64decode(i.split(",",1)[0])))
+            # image.save('output.png')
+            img_name = f'{int(time.time())}_{random.randint(1000, 9999)}_{idx}.png'
+            
+            image = Image.open(io.BytesIO(base64.b64decode(img.split(",", 1)[0])))
+            image_io = io.BytesIO()
+            image.save(image_io, format='PNG')
+            image_file = ContentFile(image_io.getvalue(), name=img_name)
+
+            post.image.save(img_name, image_file)
+            
+        return post
+            
     def handle(self, *args, **kwargs):
         fake = Faker()
         fake_kr = Faker('ko-KR')
@@ -100,15 +219,24 @@ class Command(BaseCommand):
             user.personal_habit = fake_kr.person_habit()
             user.personal_profit = fake_kr.person_profit()
             user.personal_place = fake_kr.person_personal_place()
+        
+            user.save()
             
             self.user = user
-            self.stable_diffusion()
+            post = Post()
+            post.user = user
+            # gpt quary set
+            self.set_gpt_result()
+            post.text = self.gpt_first_response
+            post.hashtag = re.findall(r'#\w+', self.gpt_first_response)
+            
+            post = self.set_stable_diffusion(post)
+            post.save()
 
             # image_content = ContentFile(fake.binary(length=(1 * 1)))  # 1MB 이미지 파일 생성
             # image_content.name = 'profile.png'
             # user.profile_image = image_content
 
-            user.save()
 
         for _ in range(100):  # 10개의 임의의 사용자 생성
             generate_fake_user()
