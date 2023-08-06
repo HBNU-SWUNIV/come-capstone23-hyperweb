@@ -66,16 +66,10 @@ def result_nut_report(dog_info_id):
 
 
 def caloric_generator(age, weight, activate, bcs, sex):
-    cal_weight = 1
+    cal_weight =  1
     # weight = 15
 
     MER = 132 * (weight ** 0.75)
-
-    #input
-    # activate = 2
-    # sex = 0
-    # age = 0
-    # bcs = 4
 
     if activate == 0:
         cal_weight = cal_weight * 0.75
@@ -202,7 +196,7 @@ class Food_view(APIView):
                 print('end')
                 request.session['dog_info_id'] = self.dog_info_id
                 
-                response_food = result_food(self.dog_info_id)
+                response_food = result_food(self.dog_info_id) 
                 # print('log response_food', response_food)
 
                 response_nut7 = result_nut7(self.dog_info_id)
