@@ -3,6 +3,10 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# GPT key
+gpt/
+gpt_key.txt
+
 # C extensions
 *.so
 
