@@ -117,8 +117,9 @@ def report_to_post(request):
         
 
 
-# @csrf_exempt
-# def save_image(request):
+@csrf_exempt
+def save_image(request):
+    return
 #     if request.method == 'POST':
 #         format, imgstr = request.POST['image_base64'].split(';base64,')
 #         ext = format.split('/')[-1]
