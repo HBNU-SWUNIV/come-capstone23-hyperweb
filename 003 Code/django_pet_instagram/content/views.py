@@ -3,7 +3,7 @@ from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import Feed, Reply, Like, Bookmark
-from user.models import User
+from user.models import User, Post
 import os
 from Jinstagram.settings import MEDIA_ROOT
 from django.views.decorators.csrf import csrf_exempt
@@ -79,17 +79,8 @@ class Main(APIView):
         
         user_example = User.objects.all().values_list('name', flat=True)
 
-        # 보고서 Post
-        post_image_num = request.session.get('post_image_num') 
-        if post_image_num is not None:
-            post_images = []
-            for i in range(post_image_num):
-                post_images.append(request.session.get(f'post_image{i}'))
-            
-            return render(request, "jinstagram/main.html", context=dict(user=user, post_images=json.dumps(post_images), range_30=range(30), range_5=range(5), user_example=user_example[30:59]))
-        
-        
-        return render(request, "jinstagram/main.html", context=dict(user=user, post_images=json.dumps(None), range_30=range(30), range_5=range(5), user_example=user_example[30:59]))
+        posts = Post.objects.all()
+        return render(request, "jinstagram/main.html", context=dict(user=user, posts = posts, range_30=range(30), range_5=range(5), user_example=user_example[30:59]))
 
 
 class UploadFeed(APIView):

@@ -430,7 +430,7 @@
                     <div class="swiper-button-prev"></div>
                 </div> -->
                 <div id="post-list">
-                    {% for i in range_5 %}
+                    {% for post in posts %}
                     <div class="post">
                         <div class="post-header">
                             <img class="profile-picture" src="/media/default_profile.png" style="border: 1px solid #f2befc;">
@@ -445,12 +445,9 @@
                         <div class="post-images">
                             <div class="slideShow" id="slideShow{{ forloop.counter }}">
                                 <ul class="slides" id="slides{{ forloop.counter }}">
-                                  <li><img src="/media/tile_0_myimage.png" alt=""></li>
-                                  <li><img src="/media/tile_1_myimage.png" alt=""></li>
-                                  <li><img src="/media/tile_2_myimage.png" alt=""></li>
-                                  <li><img src="/media/myimage.png" alt=""></li>
-                                  <li><img src="/media/example/5.jpg" alt=""></li>
-                                  <li><img src="/media/example/6.jpg" alt=""></li>
+                                    {% for image in post.images.all %}
+                                    <li><img src="{{ image.image.url }}"/></li>
+                                    {% endfor %}
                                 </ul>  
                                 <p class="controller" id="controller{{ forloop.counter }}">
                                   <span class="prev" id="prev{{ forloop.counter }}">&lang;</span>  
@@ -465,7 +462,8 @@
                             <img id = "bookmark" src="/media/bookmark.svg">
                         </div>
                         <div class="post-text">
-                            내용
+                            {{ post.text }}
+                            {{ post.hashtag }}
                         </div>        
                     </div>
                     {% endfor %}
