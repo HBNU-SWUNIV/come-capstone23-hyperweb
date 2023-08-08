@@ -115,6 +115,11 @@
             flex-direction: column;
             margin-left:10px;
         }
+        .profile-time{
+            margin: 15px 0px;
+            color:gray;
+            margin-left:400px;
+        }
         .username {
             font-weight: bold;
         }
@@ -396,7 +401,7 @@
     .list-main-image img {
         cursor: pointer; /* hand cursor */
     }
-
+    
     </style>
 </head>
 <body>
@@ -463,8 +468,9 @@
                         <div class="post-header">
                             <img class="profile-picture" src="/media/default_profile.png" style="border: 1px solid #f2befc;">
                             <div class="profile-user">
-                                <span class="username">{{ post.user.name }}</span>
+                                <span class="username">{{ post.user.nickname }}</span>
                             </div>
+                            <span class="profile-time">{{ post.time_difference }}</span>
                         </div>
                         
                         <div class="post-images" id="post-images-{{ forloop.counter }}">
@@ -485,7 +491,7 @@
                         </div>
 
                         <div class="post-text">
-                            <span style="font-weight: bold;">{{ post.user.name }}</span>
+                            <span style="font-weight: bold;">{{ post.user.nickname }}</span>
                             {% if post.text|length > 100 %}
                                 <div class="text-content" data-fulltext="{{ post.text|escapejs }}">
                                     {{ post.text|truncatechars:50 }}

@@ -13,6 +13,7 @@ from django.http import JsonResponse
 import time
 import json
 from ast import literal_eval
+from datetime import datetime, timezone
 
 def parse_string_list(string_list):
     try:
@@ -86,8 +87,29 @@ class Main(APIView):
         
         user_example = User.objects.all().values_list('name', flat=True)
 
-        posts = Post.objects.all()
+        posts = Post.objects.all().order_by('-created_at')
         
+
+        # 현재 시간 가져오기 (UTC 기준)
+        current_time = datetime.now(timezone.utc)
+
+        posts = Post.objects.all().order_by('-created_at')
+
+        # 각 Post에 대한 시간 차이 계산 후, 인스턴스에 추가
+        for post in posts:
+            delta = current_time - post.created_at
+            if delta.days < 1:
+                # 시간 단위로 저장 (예: "5h")
+                hours = delta.seconds // 3600
+                post.time_difference = f"{hours}h"
+            elif delta.days < 365:
+                # 일 단위로 저장 (예: "150days")
+                post.time_difference = f"{delta.days}days"
+            else:
+                # 연 단위로 저장 (예: "2years")
+                years = delta.days // 365
+                post.time_difference = f"{years}years"
+
         # 해시태그 필드 파싱
         for post in posts:
             post.hashtag_list = parse_string_list(post.hashtag)
