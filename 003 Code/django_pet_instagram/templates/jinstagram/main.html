@@ -393,6 +393,9 @@
         color: inherit;      /* 마우스 호버 또는 포커스 상태에서도 색상 상속 */
     }
 
+    .list-main-image img {
+        cursor: pointer; /* hand cursor */
+    }
 
     </style>
 </head>
@@ -402,9 +405,9 @@
             <div id="ul-list" style="border-right:1px #ddd solid;">
                 <ul style="padding-bottom: 20px;padding-left: 0px;">
                     <!-- 메인화면 로고 위치-->
-                    <li class="list-main-image" style="margin-bottom:50px;margin-top:40px;margin-left: 20px;"> 
+                    <li class="list-main-image" style="margin-bottom:40px;margin-top:30px;margin-left: 20px;" onclick="location.reload();"> 
                         <img src="/media/logo.png" style="width:70px;">
-                    </li>
+                    </li>                    
                     <li class="contents-list">
                         <img src="/media/house-door-fill.svg">
                         <span>메인화면</span>
@@ -420,11 +423,15 @@
                     <li class="contents-list">
                         <img  src="/media/plus-square.svg">
                         <span>만들기</span>
-                    </li>
+                    </li>                  
                     <li class="contents-list">
                         <img  src="/media/journal-plus.svg">
                         <a href="{% url 'Food_view' %}">보고서 작성</a>             
-                    </li>         
+                    </li>  
+                    <li class="contents-list">
+                        <img  src="/media/gear-fill.svg">
+                        <a href="{% url 'profile' %}">옵션</a>             
+                    </li>       
                 </ul>
             </div>
             <div id="myModal" class="modal">
