@@ -12,6 +12,13 @@ from user.models import Dog
 from django.http import JsonResponse
 import time
 import json
+from ast import literal_eval
+
+def parse_string_list(string_list):
+    try:
+        return literal_eval(string_list)
+    except (ValueError, SyntaxError):
+        return []
 
 @csrf_exempt
 def submit_user_info(request):
@@ -80,7 +87,12 @@ class Main(APIView):
         user_example = User.objects.all().values_list('name', flat=True)
 
         posts = Post.objects.all()
-        return render(request, "jinstagram/main.html", context=dict(user=user, posts = posts, range_30=range(30), range_5=range(5), user_example=user_example[30:59]))
+        
+        # 해시태그 필드 파싱
+        for post in posts:
+            post.hashtag_list = parse_string_list(post.hashtag)
+
+        return render(request, "jinstagram/main.html", context=dict(user=user, posts=posts, range_5=range(5), user_example=user_example[30:59]))
 
 
 class UploadFeed(APIView):

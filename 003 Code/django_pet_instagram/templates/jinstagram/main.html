@@ -57,39 +57,50 @@
             margin-top:30px;
         }
         .post {
-            width: 840px;
-            height: 750px;
-            margin-left: 200px;
-            margin-right: 200px;
+            width: 600px;
+            margin-left: 350px;
             font-family: Arial, sans-serif;
-            border: 1px solid #ccc;
-            border-radius: 3%;
+            padding-bottom: 25px;
+            border-bottom: 1px #ddd  solid;
         }
 
         .post-header {
             padding: 0px;
             margin-top:10px;
-            margin-left:20px;
+            margin-left:5px;
+            margin-bottom: 10px;
             height: 50px;
             display: flex;
             flex-direction: row;
-            border-bottom: 1px solid #eee;
         }
         .post-images {
-            height: 420px;
-            overflow: auto;
+            height: 520px;
+            position: relative;
+            width: 100%;
+            margin: auto;
+            overflow: hidden;
         }
 
         .post-caption {
-            height: 50px;
+            height: 30px;
             font-size: 0.9em;
             border-top: 1px solid #eee;
         }
         .post-text{
-            height: 230px;
-            margin-left:20px;
-            margin-right:20px;
+            height: auto;
             margin-top:30px;
+        }
+        .text-hashtag{
+            color: #3498db;             /* 해시태그의 글자 색상 */
+            text-decoration: none;     /* 밑줄 제거 */
+            padding: 2px 6px;          /* 패딩 */
+            border-radius: 4px;        /* 라운드 테두리 */
+            margin-right: 5px;         /* 오른쪽 마진으로 해시태그 간의 간격 조절 */
+            display: inline-block;     /* 인라인 블록 요소로 설정 */
+            transition: background-color 0.3s;  /* 배경색의 부드러운 전환 효과 */
+        }
+        .text-hashtag.collapsed {
+            display: none;
         }
         .profile-picture {
             margin: 10px 0px;
@@ -98,10 +109,11 @@
             border-radius: 100%;
         }
         .profile-user{
+            margin: 15px 0px;
             width:100px;
             display:flex;
             flex-direction: column;
-            margin-left:30px;
+            margin-left:10px;
         }
         .username {
             font-weight: bold;
@@ -109,8 +121,10 @@
 
         .post-caption > svg,
         .post-caption > img {
-            margin-left:40px;
-            margin-top:15px;
+            margin-right: 20px;
+            margin-top: 10px;
+            width: 25px;
+            height: 25px;
         }
         body {
             overflow-x: hidden;
@@ -222,9 +236,10 @@
             list-style-type: none;
         }
         #ul-list{
-            width: 250px;
+            width: 400px;
             
         }
+
         .contents-list{
             padding-top:20px;
             padding-bottom: 20px;
@@ -235,11 +250,12 @@
             background-color: #f5f5f5;  /* 마우스를 올려놓았을 때의 배경색 */
         }
         .contents-list > img{
-            width: 30px;
-            height: 30px;
-            margin-right:5px;
+            width: 25px;
+            height: 25px;
+            margin-right:10px;
         }
-        .contents-list > span{
+        .contents-list > span,
+        .contents-list > a{
             width: 30px;
             height: 30px;
             font-weight: bold;
@@ -253,35 +269,6 @@
             /*리스트 형식으로 이미지를 일렬로 
             정렬할 것이기 때문에, 500px 밖으로 튀어 나간 이미지들은
             hidden으로 숨겨줘야됨*/
-        }
-
-
-        .slides{
-        position: absolute;
-        left: 0;
-        top: 0;
-        margin:0px;
-        margin-top:30px;
-        padding:0px;
-       
-        transition: left 0.5s ease-out; 
-        /*ease-out: 처음에는 느렸다가 점점 빨라짐*/
-        }
-
-        /* 첫 번째 슬라이드 가운데에 정렬하기위해
-        첫번째 슬라이드만 margin-left조정 */
-        .slides li:first-child{
-        margin-left: 100px;
-        }
-
-        /* 슬라이드들 옆으로 정렬 */
-        .slides li:not(:last-child){
-        float: left;
-        margin-right: 100px;
-        }
-
-        .slides li{
-        float: left;
         }
 
         .controller span{
@@ -301,31 +288,6 @@
         background-color: rgba(128, 128, 128, 0.11);
         }
 
-        .prev{
-        left: 10px;
-        }
-
-        /* 이전 화살표에 마우스 커서가 올라가 있을때 
-        이전 화살표가 살짝 왼쪽으로 이동하는 효과*/
-        .prev:hover{
-        transform: translateX(-10px);
-        }
-
-        .next{
-        right: 10px;
-        }
-
-        /* 다음 화살표에 마우스 커서가 올라가 있을때 
-        이전 화살표가 살짝 오른쪽으로 이동하는 효과*/
-        .next:hover{
-        transform: translateX(10px);
-        }
-        .slides > li > img{
-            width: 640px;
-            height: 360px;
-            left:-100px;
-        }
-        
         #heart, #chat, #share, #bookmark {
         transition: 0.5s;
         }
@@ -371,16 +333,77 @@
         cursor: pointer;
         }
 
+
+
+        .slide {
+            display: none;
+            position: relative;  /* 슬라이드에 상대 위치를 설정합니다. */
+        }
+
+    
+        .post-imgs {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .prev, .next {
+            cursor: pointer;
+            position: absolute;  /* 화살표에 절대 위치를 설정합니다. */
+            top: 50%;
+            transform: translateY(-50%);  /* 화살표를 수직으로 중앙에 위치시킵니다. */
+            padding: 8px 12px;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+            background-color: rgba(0,0,0,0.5);
+            border-radius: 3px;
+            transition: 0.6s ease;
+            z-index: 1;  /* 화살표가 이미지 위에 나타나도록 합니다. */
+        }
+
+        .prev {
+            left: 0;  /* 왼쪽 화살표를 왼쪽으로 정렬합니다. */
+        }
+
+        .next {
+            right: 0;  /* 오른쪽 화살표를 오른쪽으로 정렬합니다. */
+        }
+
+        .prev:hover, .next:hover {
+            background-color: rgba(0,0,0,0.8);
+        }
+        .disabled-button {
+            opacity: 0.3;          /* 버튼의 투명도를 낮춰서 비활성화처럼 보이게 합니다. */
+            pointer-events: none; /* 버튼 클릭을 막습니다. */
+        }
+
+
+        .read-more {
+            color: gray;
+            cursor: pointer;
+        }
+
+        a {
+        color: inherit;      /* 부모 요소의 글자 색상을 상속 */
+        text-decoration: none;  /* 밑줄 제거 */
+    }
+
+    a:hover, a:focus {
+        color: inherit;      /* 마우스 호버 또는 포커스 상태에서도 색상 상속 */
+    }
+
+
     </style>
 </head>
 <body>
     <div id='wrapper' style="margin-bottom: 0px;">    
         <div style="width:1920px; display: flex;justify-content: flex-start;flex-direction:row;">
-            <div id="ul-list">
-                <ul style="border-bottom:1px #ddd solid; padding-bottom: 20px;padding-left: 0px;">
+            <div id="ul-list" style="border-right:1px #ddd solid;">
+                <ul style="padding-bottom: 20px;padding-left: 0px;">
                     <!-- 메인화면 로고 위치-->
-                    <li class="list-main-image" style="margin-bottom:50px;margin-top:10px;"> 
-                        <img src="/media/main_image.png" style="width:150px;">
+                    <li class="list-main-image" style="margin-bottom:50px;margin-top:40px;margin-left: 20px;"> 
+                        <img src="/media/logo.png" style="width:70px;">
                     </li>
                     <li class="contents-list">
                         <img src="/media/house-door-fill.svg">
@@ -399,10 +422,8 @@
                         <span>만들기</span>
                     </li>
                     <li class="contents-list">
-                        <a href="{% url 'Food_view' %}">
-                            <!-- <img  src="/media/plus-square.svg"> -->
-                            <span>보고서 작성</span>
-                        </a>
+                        <img  src="/media/journal-plus.svg">
+                        <a href="{% url 'Food_view' %}">보고서 작성</a>             
                     </li>         
                 </ul>
             </div>
@@ -435,36 +456,46 @@
                         <div class="post-header">
                             <img class="profile-picture" src="/media/default_profile.png" style="border: 1px solid #f2befc;">
                             <div class="profile-user">
-                                <span class="username">username</span>
-                                <span style="color:rgb(128, 128, 128);font-size: 12px;">팔로워수 N명 </span>
+                                <span class="username">{{ post.user.name }}</span>
                             </div>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16" style="margin-top:9px;margin-bottom:9px;">
-                                <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
-                            </svg>
                         </div>
-                        <div class="post-images">
-                            <div class="slideShow" id="slideShow{{ forloop.counter }}">
-                                <ul class="slides" id="slides{{ forloop.counter }}">
-                                    {% for image in post.images.all %}
-                                    <li><img src="{{ image.image.url }}"/></li>
-                                    {% endfor %}
-                                </ul>  
-                                <p class="controller" id="controller{{ forloop.counter }}">
-                                  <span class="prev" id="prev{{ forloop.counter }}">&lang;</span>  
-                                  <span class="next" id="next{{ forloop.counter }}">&rang;</span>
-                                </p>
-                            </div>                          
+                        
+                        <div class="post-images" id="post-images-{{ forloop.counter }}">
+                            <a class="prev" onclick="moveSlide(-1, 'post-images-{{ forloop.counter }}')">&#10094;</a>
+                            <a class="next" onclick="moveSlide(1, 'post-images-{{ forloop.counter }}')">&#10095;</a>
+                            {% for image in post.images.all %}
+                            <div class="slide">
+                                <img src="{{ image.image.url }}" class="post-imgs"/>
+                            </div>
+                            {% endfor %}
                         </div>
+
                         <div class="post-caption">
                             <img id = "heart" src="/media/heart.svg">
                             <img id = "chat" src="/media/chat.svg">
                             <img id = "share" src="/media/share.svg">
                             <img id = "bookmark" src="/media/bookmark.svg">
                         </div>
+
                         <div class="post-text">
-                            {{ post.text }}
-                            {{ post.hashtag }}
-                        </div>        
+                            <span style="font-weight: bold;">{{ post.user.name }}</span>
+                            {% if post.text|length > 100 %}
+                                <div class="text-content" data-fulltext="{{ post.text|escapejs }}">
+                                    {{ post.text|truncatechars:50 }}
+                                    <span class="read-more">...더보기</span>
+                                </div>
+                                <div class="text-hashtag collapsed">  <!-- 초기에 숨김 처리를 위해 collapsed 클래스 추가 -->
+                                    {% for hashtag in post.hashtag_list %}
+                                        <span class="hashtag">{{ hashtag }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <div class="text-content">
+                                    {{ post.text|linebreaks }}
+                                </div>
+                            {% endif %}
+                        </div>
+                                                        
                     </div>
                     {% endfor %}
                 </div>
@@ -549,6 +580,90 @@
   
 <!-- Optional JavaScript; choose one of the two! -->
 <script>
+    // 더보기
+    document.addEventListener("DOMContentLoaded", function() {
+    var readMoreButtons = document.querySelectorAll('.read-more');
+
+    for (let btn of readMoreButtons) {
+        btn.addEventListener('click', function(event) {
+            var textContent = event.target.closest('.text-content');
+            var fullText = textContent.getAttribute('data-fulltext');
+
+            // \u000A를 <br>로 변환
+            fullText = fullText.replace(/\\u000A/g, '<br>');  // 주의: 두 개의 백슬래시가 필요
+
+            // 전체 텍스트로 교체
+            textContent.innerHTML = fullText;
+
+            // 더보기 버튼 제거
+            event.target.style.display = 'none';
+
+            // 해시태그 표시
+            var hashtag = textContent.nextElementSibling;
+            if (hashtag && hashtag.classList.contains('text-hashtag')) {
+                hashtag.classList.remove('collapsed');
+            }
+        });
+    }
+});
+
+    // post-images 화살표 이동 
+    function moveSlide(n, containerId) {
+        let container = document.getElementById(containerId);
+        let slides = container.querySelectorAll(".slide");
+        let slideIndex;
+
+        if(!container.slideIndex) {
+            container.slideIndex = 1;
+        }
+
+        slideIndex = container.slideIndex;
+
+        if (slideIndex + n > slides.length || slideIndex + n < 1) {
+            // 첫번째 슬라이드에서 prev를 클릭하거나 마지막 슬라이드에서 next를 클릭하는 경우 아무것도 하지 않습니다.
+            return;
+        }
+        
+        showSlide(slideIndex + n, containerId);
+    }
+
+    function showSlide(slideIndex, containerId) {
+        let container = document.getElementById(containerId);
+        let slides = container.querySelectorAll(".slide");
+        let prevButton = container.querySelector(".prev");
+        let nextButton = container.querySelector(".next");
+
+        for (let i = 0; i < slides.length; i++) {
+            slides[i].style.display = "none";
+        }
+        
+        slides[slideIndex - 1].style.display = "block";
+
+        // 첫번째 슬라이드면 prev 버튼을 비활성화합니다.
+        if (slideIndex === 1) {
+            prevButton.classList.add("disabled-button");
+        } else {
+            prevButton.classList.remove("disabled-button");
+        }
+
+        // 마지막 슬라이드면 next 버튼을 비활성화합니다.
+        if (slideIndex === slides.length) {
+            nextButton.classList.add("disabled-button");
+        } else {
+            nextButton.classList.remove("disabled-button");
+        }
+
+        container.slideIndex = slideIndex;
+    }
+
+    // 초기 슬라이드를 설정합니다.
+    document.querySelectorAll(".post-images").forEach(container => {
+        showSlide(1, container.id);
+    });
+
+
+
+
     $(document).ready(function(){
         var posts = document.getElementsByClassName('post');
         var postCount = posts.length;
@@ -726,93 +841,6 @@
                     var posts = document.getElementsByClassName('post');
                     var postCount = posts.length;
                     var newPostCount = postCount + index + 1;
-                    divElement.append(`                   
-                <div class="post">
-                    <div class="post-header">
-                        <img class="profile-picture" src="/media/default_profile.png" style="border: 1px solid #f2befc;">
-                        <div class="profile-user">
-                            <span class="username">username</span>
-                            <span style="color:rgb(128, 128, 128);font-size: 12px;">팔로워수 N명 </span>
-                        </div>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16" style="margin-top:9px;margin-bottom:9px;">
-                            <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
-                        </svg>
-                    </div>
-                    <div class="post-images">
-                        <div class="slideShow" id="slideShow${newPostCount}">
-                            <ul class="slides" id="slides${newPostCount}">
-                              <li><img src="/media/example/1.jpg" alt=""></li>
-                              <li><img src="/media/example/2.jpg" alt=""></li>
-                              <li><img src="/media/example/3.jpg" alt=""></li>
-                              <li><img src="/media/example/4.jpg" alt=""></li>
-                              <li><img src="/media/example/5.jpg" alt=""></li>
-                              <li><img src="/media/example/6.jpg" alt=""></li>
-                            </ul>  
-                            <p class="controller" id="controller${newPostCount}">
-                              <span class="prev" id="prev${newPostCount}">&lang;</span>  
-                              <span class="next" id="next${newPostCount}">&rang;</span>
-                            </p>
-                        </div>                          
-                    </div>
-                    <div class="post-caption">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
-                            <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
-                        </svg>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px"  fill="currentColor" class="bi bi-chat" viewBox="0 0 16 16">
-                            <path d="M2.678 11.894a1 1 0 0 1 .287.801 10.97 10.97 0 0 1-.398 2c1.395-.323 2.247-.697 2.634-.893a1 1 0 0 1 .71-.074A8.06 8.06 0 0 0 8 14c3.996 0 7-2.807 7-6 0-3.192-3.004-6-7-6S1 4.808 1 8c0 1.468.617 2.83 1.678 3.894zm-.493 3.905a21.682 21.682 0 0 1-.713.129c-.2.032-.352-.176-.273-.362a9.68 9.68 0 0 0 .244-.637l.003-.01c.248-.72.45-1.548.524-2.319C.743 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7-3.582 7-8 7a9.06 9.06 0 0 1-2.347-.306c-.52.263-1.639.742-3.468 1.105z"/>
-                        </svg>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px"  fill="currentColor" class="bi bi-share" viewBox="0 0 16 16">
-                            <path d="M13.5 1a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5zm-8.5 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm11 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/>
-                        </svg>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px" fill="currentColor" class="bi bi-bookmark" viewBox="0 0 16 16">
-                            <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z"/>
-                        </svg>
-                    </div>
-                    <div class="post-text">
-                        글자확인을 위한 글 글자확인을 위한 글글자확인을 위한 글글자확인을 위한 글글자확인을 위한 글글자확인을 위한 글글자확인을 위한 글글자확인을 위한 글글자확인을 위한 글글자확인을 위한 글글자확인을 위한 글
-                    </div>        
-                </div>
-                `);
-
-
-                const slides = document.querySelector('#slides' + newPostCount); //전체 슬라이드 컨테이너
-                const slideImg = document.querySelectorAll('#slides'+ newPostCount + ' li'); //모든 슬라이드들
-                let currentIdx = 0; //현재 슬라이드 index
-                const slideCount = slideImg.length; // 슬라이드 개수
-                const prev = document.querySelector('#prev' + newPostCount); //이전 버튼
-                const next = document.querySelector('#next' + newPostCount); //다음 버튼
-                const slideWidth = 840; //한개의 슬라이드 넓이
-                const slideMargin = 100; //슬라이드간의 margin 값
-
-                //전체 슬라이드 컨테이너 넓이 설정
-                slides.style.width = (slideWidth + slideMargin) * slideCount + 'px';
-
-                function moveSlide(num) {
-                slides.style.left = -num * 740 + 'px';
-                currentIdx = num;
-                console.log(currentIdx + " " + slideCount);
-                }
-
-                prev.addEventListener('click', function () {
-                /*첫 번째 슬라이드로 표시 됐을때는 
-                이전 버튼 눌러도 아무런 반응 없게 하기 위해 
-                currentIdx !==0일때만 moveSlide 함수 불러옴 */
-
-                if (currentIdx !== 0) moveSlide(currentIdx - 1);
-                });
-
-                next.addEventListener('click', function () {
-                /* 마지막 슬라이드로 표시 됐을때는 
-                다음 버튼 눌러도 아무런 반응 없게 하기 위해
-                currentIdx !==slideCount - 1 일때만 
-                moveSlide 함수 불러옴 */
-                if (currentIdx !== slideCount - 1) {
-                    moveSlide(currentIdx + 1);
-                }
-                });
-                
-                
-
                 });
             },
             error: function(error) {
@@ -875,8 +903,7 @@
             }
         }
     });
-
-    
+   
 </script>
 
 
