@@ -177,33 +177,6 @@
             background-color: white;
         }
 
-        .modal_overlay {
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            left: 0;
-            top: 0;
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(1.5px);
-            -webkit-backdrop-filter: blur(1.5px);
-            z-index: 10000;
-        }
-
-        .modal_window {
-            background: white;
-            backdrop-filter: blur(13.5px);
-            -webkit-backdrop-filter: blur(13.5px);
-            border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            width: 800px;
-            height: 600px;
-            position: relative;
-            padding: 10px;
-        }
         #sidebar {
             width: 520px;
             margin-right:10px;
@@ -299,27 +272,7 @@
         #heart:hover, #chat:hover, #share:hover, #bookmark:hover {
             transform: translateY(-10px);
         }
-        .modal {
-        display: none;
-        position: fixed;
-        z-index: 1;
-        padding-top: 100px;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        overflow: auto;
-        background-color: rgb(0,0,0);
-        background-color: rgba(0,0,0,0.9);
-        }
-
-        .modal-content {
-            margin: auto;
-            display: block;
-            width: auto;
-            max-height: 60vh;
-        }
-
+        
 
         .close {
         position: absolute;
@@ -402,12 +355,62 @@
         cursor: pointer; /* hand cursor */
     }
     
+    /* 모달 창 스타일 */
+    .modal {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        padding-top: 100px;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    }
+
+    .modal-content {
+        background-color: #fefefe;
+        margin: auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 50%;
+        height: 70%;
+        z-index: 1000; 
+    }
+
+    .close {
+        color: #aaaaaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+        color: #000;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    #modal-content-head{
+        display: flex;
+        flex-direction: column;
+        border-bottom: 1px solid #DDD;
+        padding-bottom : 15px;
+    }
+
+    #modal-name{
+        text-align: center;
+        font-weight: bold;
+        font-size: 18px;
+    }
     </style>
 </head>
 <body>
     <div id='wrapper' style="margin-bottom: 0px;">    
         <div style="width:1920px; display: flex;justify-content: flex-start;flex-direction:row;">
-            <div id="ul-list" style="border-right:1px #ddd solid;">
+            <div id="ul-list" style="border-right:2px #0D8C7F solid;">
                 <ul style="padding-bottom: 20px;padding-left: 0px;">
                     <!-- 메인화면 로고 위치-->
                     <li class="list-main-image" style="margin-bottom:40px;margin-top:30px;margin-left: 20px;" onclick="location.reload();"> 
@@ -427,7 +430,7 @@
                     </li>
                     <li class="contents-list">
                         <img  src="/media/plus-square.svg">
-                        <span>만들기</span>
+                        <a href="#" class="btn" style="width: 90px; padding:0px; margin-left:-20px;">만들기</a>
                     </li>                  
                     <li class="contents-list">
                         <img  src="/media/journal-plus.svg">
@@ -438,12 +441,24 @@
                         <a href="{% url 'profile' %}">옵션</a>             
                     </li>       
                 </ul>
+                <!-- 숨겨진 파일 입력 필드 추가 -->
+                <input type="file" id="fileInput" style="display: none;">
             </div>
-            <div id="myModal" class="modal">
-                <span class="close">&times;</span>
-                <img class="modal-content" id="img01">
-                <div id="caption"></div>
-            </div> 
+            <!-- ... 기존의 HTML ... -->
+
+            <!-- 모달 창 추가 -->
+            <div class="modal" id="myModal">
+                <div class="modal-content">
+                    <div id="modal-content-head">
+                        <span id="modal-name">포스팅 작성</span>
+                        <span class="close" style="top:5px">&times;</span>
+                    </div>
+                    <img src="/media/images_removed.png" style="width: 100px; height: 100px;">
+                    <div>사진을 올려주세요</div>
+                    <input type="file" id="fileInput">
+                </div>
+            </div>
+
             <div id="main-line" style="width:1200px; display: flex;justify-content: flex-start;flex-direction:column;">
                 <!-- <div class="swiper-container" style="border-bottom: solid 1px #ddd; height: 130px;">
                     <div class="swiper-wrapper">
@@ -593,6 +608,100 @@
   
 <!-- Optional JavaScript; choose one of the two! -->
 <script>
+    
+    // 모달
+
+    // 모달 창을 가져옵니다.
+    var modal = document.getElementById("myModal");
+
+    // "만들기" 항목을 가져옵니다.
+    var btn = document.querySelector(".contents-list");
+
+    // 모달 창의 "X" 버튼을 가져옵니다.
+    var span = document.querySelector(".close");
+
+    // "만들기" 항목을 클릭하면 모달 창이 나타납니다.
+    btn.onclick = function() {
+        modal.style.display = "block";
+    }
+
+    // "X" 버튼을 클릭하면 모달 창이 사라집니다.
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    // 모달 창 외부를 클릭하면 모달 창이 사라집니다.
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+
+
+    // 모달과 버튼에 대한 참조를 얻습니다.
+    var modal = document.getElementById("myModal");
+    var btn = document.querySelector(".btn");
+    var close = document.querySelector(".close");
+
+    // 버튼 클릭 시 모달을 표시합니다.
+    btn.onclick = function(event) {
+        event.preventDefault();  // <a> 태그의 기본 동작(페이지 이동)을 막습니다.
+        modal.style.display = "block";
+    }
+
+    // "X" 클릭 시 모달을 숨깁니다.
+    close.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    // 모달 외부 클릭 시 모달을 숨깁니다.
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+
+    // 모달 및 버튼들의 참조
+    var modal = document.getElementById("myModal");
+    var prevButtons = document.querySelectorAll(".prev");
+    var nextButtons = document.querySelectorAll(".next");
+
+    document.querySelector(".btn").onclick = function(event) {
+        event.preventDefault();
+        modal.style.display = "block";
+
+        // 모든 .prev 버튼에 대해 z-index 변경
+        prevButtons.forEach(function(button) {
+            button.style.zIndex = "0";
+        });
+
+        // 모든 .next 버튼에 대해 z-index 변경
+        nextButtons.forEach(function(button) {
+            button.style.zIndex = "0";
+        });
+    }
+
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+
+            // 모든 .prev 버튼에 대해 z-index 변경
+            prevButtons.forEach(function(button) {
+                button.style.zIndex = "1";
+            });
+
+            // 모든 .next 버튼에 대해 z-index 변경
+            nextButtons.forEach(function(button) {
+                button.style.zIndex = "1";
+            });
+        }
+    }
+
+
+
+// 만약 다른 부분을 클릭하여 모달 창을 닫고 싶다면 추가적인 이벤트 리스너를 작성할 수 있습니다.
+
+
     // 더보기
     document.addEventListener("DOMContentLoaded", function() {
     var readMoreButtons = document.querySelectorAll('.read-more');
@@ -805,27 +914,6 @@
         });
     });
 
-    $(document).ready(function(){
-        var modal = document.getElementById("myModal");
-        var modalImg = document.getElementById("img01");
-
-        $('.post-images img').click(function(){
-            modal.style.display = "block";
-            modalImg.src = this.src;
-        });
-
-        var span = document.getElementsByClassName("close")[0];
-        span.onclick = function() {
-            modal.style.display = "none";
-        }
-
-        // When the user clicks anywhere outside of the modal, close it
-        window.onclick = function(event) {
-            if (event.target == modal) {
-            modal.style.display = "none";
-            }
-        }
-    });
 
 
     function isScrollBottom() {

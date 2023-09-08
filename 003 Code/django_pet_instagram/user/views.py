@@ -8,7 +8,8 @@ from django.contrib.auth.hashers import make_password,check_password
 from Jinstagram.settings import MEDIA_ROOT
 import hashlib
 from django.http import JsonResponse
-
+from django.shortcuts import render
+import pandas as pd
 
 def check_email(request):
     email = request.GET.get('email')
@@ -42,6 +43,7 @@ class Join2(APIView):
     def get(self, request):
         if not request.session.get('email'):
             return redirect('login')
+
         return render(request, "user/join2.html")
     
     def post(self, request):
