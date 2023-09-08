@@ -13,7 +13,7 @@ urlpatterns = [
     path('submit_pet_info/', views.submit_pet_info, name='submit_pet_info'),
     path('submit_user_info/', views.submit_user_info, name='submit_user_info'),
     path('post_api', views.post_api, name='post_api'),
-    path('Food_view', Food_view.as_view())
-
+    path('Food_view', Food_view.as_view()),
+    path('upload_image/', views.upload_image, name='upload_image'),
 ]
 

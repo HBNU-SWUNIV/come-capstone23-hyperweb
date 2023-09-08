@@ -14,6 +14,7 @@ import time
 import json
 from ast import literal_eval
 from datetime import datetime, timezone
+from django.http import JsonResponse
 
 def parse_string_list(string_list):
     try:
@@ -228,3 +229,16 @@ def post_api(request):
     data = [0,1,2,3,4]
     time.sleep(2)
     return JsonResponse(data, safe=False)  # JSON 응답을 반환
+
+def upload_image(request):
+    if request.method == 'POST':
+        image = request.FILES.get('file')
+        # 이미지 저장 또는 처리 로직
+        # 예를 들면:
+        # image_model = ImageModel(image=image)
+        # image_model.save()
+
+        return JsonResponse({'message': '이미지가 성공적으로 업로드되었습니다.'})
+
+    return JsonResponse({'error': '잘못된 요청입니다.'})
+
