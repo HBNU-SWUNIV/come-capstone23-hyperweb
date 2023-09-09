@@ -3,6 +3,7 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.hashers import make_password
 from django.conf import settings
+from django.contrib.auth.decorators import login_required
 
 class MyUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):

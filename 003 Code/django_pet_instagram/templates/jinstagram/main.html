@@ -26,6 +26,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.5.1/js/swiper.min.js"></script>
     <title>메인화면</title>
 
+        <!-- 소스 다운 -->
+    <script src="https://unpkg.com/@yaireo/tagify"></script>
+    <!-- 폴리필 (구버젼 브라우저 지원) -->
+    <script src="https://unpkg.com/@yaireo/tagify/dist/tagify.polyfills.min.js"></script>
+    <link href="https://unpkg.com/@yaireo/tagify/dist/tagify.css" rel="stylesheet" type="text/css" />
+
     <style>
         /** 노트북 설정 **/
         @media only screen and (min-width: 1000px) and (max-width: 1400px){
@@ -374,8 +380,8 @@
         margin: auto;
         padding: 20px;
         border: 1px solid #888;
-        width: 960px;
-        height: 700px;
+        width: 1000px;
+        height: 850px;
         z-index: 1000; 
     }
 
@@ -413,6 +419,7 @@
         display: flex;
         flex-direction: column;
         align-items: center;
+        width: 100%;
     }
 
     #modal-content-body > * {
@@ -428,6 +435,56 @@
         cursor: pointer; /* 선택 가능한 표시를 위한 스타일 */
     }
 
+    .post-upload {
+        display: none;
+        height: 80%;
+        border: 1px solid #e0e0e0;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        background-color: #ffffff;
+        margin-top:50px;
+    }
+
+    /* 제목 입력 */
+    .post-upload-title input {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #e0e0e0;
+        border-radius: 5px;
+        font-size: 16px;
+        outline: none;
+    }
+
+    /* 본문 내용 입력 */
+    .post-upload-text textarea {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #e0e0e0;
+        border-radius: 5px;
+        font-size: 14px;
+        outline: none;
+        resize: vertical; /* 사용자가 세로 크기만 조절할 수 있게 합니다. */
+    }
+
+    /* 해시태그 입력 */
+    .post-upload-hashtag input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #e0e0e0;
+        border-radius: 5px;
+        font-size: 14px;
+        outline: none;
+        color: #8e8e8e; /* 해시태그의 회색 텍스트 스타일 */
+    }
+
+    #modeal-content-main{
+        display: flex;
+        flex-direction: row;
+        height: 100%;
+    }
     </style>
 </head>
 <body>
@@ -469,17 +526,37 @@
             <div class="modal" id="myModal">
                 <div class="modal-content">
                     <div id="modal-content-head">
+                        <div id="prevButtonContainer" style="display: inline-block;"></div>
                         <span id="modal-name">포스팅 작성</span>
+                        <div id="nextButtonContainer" style="display: inline-block;"></div>
                         <span class="close close-top-right">&times;</span>
-                        <div id="nextButtonContainer"></div>
                     </div>
-                    <div id="modal-content-body">
-                        <div id="imagePreviewContainer"></div> <!-- 이미지 미리보기가 표시될 영역 -->
-                        <img src="/media/images_removed.png" style="width: 500px; height: 500px;">
-                        <span id="uploadPrompt">사진을 선택하거나 올려주세요</span>
-                        <input type="file" id="fileInput" multiple> <!-- 여러 파일 선택 허용 -->                       
-                    </div>                 
                     
+                    <div id="modeal-content-main">
+                        <div id="modal-content-body">
+                            <div id="imagePreviewContainer"></div> <!-- 이미지 미리보기가 표시될 영역 -->
+                            <img src="/media/images_removed.png" style="width: 500px; height: 500px;">
+                            <span id="uploadPrompt">사진을 선택하거나 올려주세요</span>
+                            <input type="file" id="fileInput" multiple accept=".png, .jpg, .jpeg"> <!-- 여러 파일 선택 허용 -->                                                  
+                        </div>
+                        {% csrf_token %}
+                        <div class="post-upload">
+                            <!-- 제목 입력 -->
+                            <div class="post-upload-title">
+                                <input type="text" id="postTitle" name="title" placeholder="제목을 입력하세요">
+                            </div>
+                        
+                            <!-- 본문 내용 입력 -->
+                            <div class="post-upload-text">
+                                <textarea id="postContent" name="content" rows="4" placeholder="내용을 입력하세요"></textarea>
+                            </div>
+                        
+                            <!-- 해시태그 입력 -->
+                            <div class="post-upload-hashtag">
+                                <input type="text" id="postHashtag" name="hashtag" placeholder="#해시태그">
+                            </div>
+                        </div>                                    
+                    </div>
                 </div>
             </div>
             
@@ -545,6 +622,11 @@
                             {% else %}
                                 <div class="text-content">
                                     {{ post.text|linebreaks }}
+                                    <div class="text-hashtag">
+                                        {% for hashtag in post.hashtag_list %}
+                                            <span class="hashtag">{{ hashtag }}</span>
+                                        {% endfor %}
+                                    </div>
                                 </div>
                             {% endif %}
                         </div>
@@ -633,36 +715,173 @@
   
 <!-- Optional JavaScript; choose one of the two! -->
 <script>
-    // 다음 버튼 생성 코드
-    document.addEventListener('DOMContentLoaded', function() {
-    const fileInput = document.getElementById('fileInput');
-    const nextButtonContainer = document.getElementById('nextButtonContainer');
 
-    fileInput.addEventListener('change', function() {
-        if (this.files.length > 0) {
-            // 버튼이 이미 존재하는지 확인
-            const existingButton = nextButtonContainer.querySelector('.nextButton');
-            if (!existingButton) {
-                // 버튼 생성
-                const nextButton = document.createElement('button');
+    // 해시태그
+    const input = document.getElementById("postHashtag");
+    let tagify = new Tagify(input); // initialize Tagify
+    
+    // 태그가 추가되면 이벤트 발생
+    tagify.on('add', function() {
+      console.log(tagify.value); // 입력된 태그 정보 객체
+    })
+
+    const uploadPostURL = '{% url "upload_post" %}';
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+    // 다음 && 이전 버튼 생성 코드
+    document.addEventListener('DOMContentLoaded', function() {
+        const fileInput = document.getElementById('fileInput');
+        const prevButtonContainer = document.getElementById('prevButtonContainer');
+        const nextButtonContainer = document.getElementById('nextButtonContainer');
+        const modalContentBody = document.getElementById('modal-content-body');
+        const postUpload = document.querySelector('.post-upload');
+
+        function resetLayout() {
+            modalContentBody.style.width = '100%';
+            postUpload.style.width = '0%'; 
+            postUpload.style.display = 'none';
+            fileInput.value = '';
+        }
+        function closeModal() {
+            const modal = document.getElementById('myModal');
+            modal.style.display = 'none';  // 혹은 modal.classList.add('hidden'); (숨기는 클래스를 사용하는 경우)
+        }
+
+        fileInput.addEventListener('change', function() {
+            if (this.files.length > 0) {
+                // 이미 존재하는 버튼들을 제거 (재선택을 위한 초기화)
+                while (prevButtonContainer.firstChild) {
+                    prevButtonContainer.removeChild(prevButtonContainer.firstChild);
+                }
+                while (nextButtonContainer.firstChild) {
+                    nextButtonContainer.removeChild(nextButtonContainer.firstChild);
+                }
+
+                // 이전 버튼 생성
+                const prevButton = document.createElement('a');
+                prevButton.innerText = '이전';
+                prevButton.className = 'prevButton';
+                prevButton.href = 'javascript:void(0)';
+                applyButtonStyles(prevButton);
+                prevButtonContainer.appendChild(prevButton);
+
+                // 다음 버튼 생성
+                const nextButton = document.createElement('a');
                 nextButton.innerText = '다음';
                 nextButton.className = 'nextButton';
+                nextButton.href = 'javascript:void(0)';
+                applyButtonStyles(nextButton);
                 nextButtonContainer.appendChild(nextButton);
 
-                // 필요한 경우 버튼에 이벤트 리스너 추가
-                nextButton.addEventListener('click', function() {
-                    // '다음' 버튼을 눌렀을 때의 동작
-                    alert('다음 버튼이 클릭되었습니다.');
+                
+
+                nextButton.addEventListener('click', function(e) {
+                    const parentWidth = modalContentBody.parentElement.offsetWidth; // 부모 요소의 너비
+                    const computedStyle = window.getComputedStyle(modalContentBody);
+                    const widthPx = parseFloat(computedStyle.width); // 픽셀 단위의 너비 (단위 제거)
+                    const widthPercent = (widthPx / parentWidth) * 100; // 퍼센트로 변환
+                    if (widthPercent >= 80) {
+                        nextButton.innerText = '공유하기';
+                        e.preventDefault();
+                        modalContentBody.style.width = '50%';
+                        postUpload.style.width = '50%';
+                        postUpload.style.display = 'block';
+                    } else {
+                        const formData = new FormData();
+
+                        const title = document.getElementById('postTitle').value;
+                        const content = document.getElementById('postContent').value;
+                        const hashtag = document.getElementById('postHashtag').value;
+
+                        if (!title) {
+                            alert("제목을 입력해주세요.");
+                            return;
+                        }
+
+                        if (!content) {
+                            alert("내용을 입력해주세요.");
+                            return;
+                        }
+
+                        if (!hashtag) {
+                            alert("해시태그를 입력해주세요.");
+                            return;
+                        }
+
+                        for (let i = 0; i < fileInput.files.length; i++) {
+                            formData.append('files', fileInput.files[i]);
+                        }
+
+                        formData.append('title', title);
+                        formData.append('content', content);
+                        formData.append('hashtag', hashtag);
+
+                        fetch(uploadPostURL, {
+                            method: 'POST',
+                            body: formData,
+                            headers: {
+                                'X-CSRFToken': csrfToken
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            closeModal();
+                            window.location.reload();  // 현재 페이지 새로고침
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                        });
+                        }         
                 });
+
+                prevButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+
+                    if (uploadPrompt.textContent.length > 0) { // 초기 화면인 경우
+                        resetLayout();
+                        uploadPrompt.style.display = 'block';
+                        defaultImage.style.display = 'block';
+                        imagePreviewContainer.style.display = 'none';
+                       
+                        // '다음' 버튼 제거
+                        if (nextButton) {
+                            nextButton.remove();
+                        }
+
+                        // '이전' 버튼 제거
+                        if (prevButton) {
+                            prevButton.remove();
+                        }
+
+                        
+                    } else {
+                        // 초기 화면이 아닌 경우의 처리
+                        // 예: 다른 단계로 이동하거나, 다른 UI 변경
+                        e.preventDefault();
+                    }
+                });
+
+                
+            } else {
+                resetLayout(); // 파일 선택이 취소되었을 경우 초기 상태로
+
+                while (prevButtonContainer.firstChild) {
+                    prevButtonContainer.removeChild(prevButtonContainer.firstChild);
+                }
+                while (nextButtonContainer.firstChild) {
+                    nextButtonContainer.removeChild(nextButtonContainer.firstChild);
+                }
             }
-        } else {
-            // 선택된 파일이 없다면, '다음' 버튼 제거
-            while (nextButtonContainer.firstChild) {
-                nextButtonContainer.removeChild(nextButtonContainer.firstChild);
-            }
+        });
+
+        function applyButtonStyles(button) {
+            button.style.display = 'inline-block';
+            button.style.padding = '10px 20px';
+            button.style.color = 'blue';
         }
-    });
-});    
+});
+
+
     
 // 모달
     // 모달 창을 가져옵니다.
@@ -756,9 +975,8 @@
     // 파일 드래그앤 드롭, 첨부
     // 이미지 파일 입력과 미리보기 이미지를 선택
     const fileInput = document.getElementById('fileInput');
-    const uploadPrompt = document.getElementById('uploadPrompt');
     const imagePreviewContainer = document.getElementById('imagePreviewContainer');
-    const defaultImage = document.querySelector('#modal-content-body img'); // 기본 이미지 선택
+    const defaultImage = document.querySelector('#modal-content-body img');
 
     fileInput.addEventListener('change', function() {
         const files = this.files;
@@ -772,21 +990,29 @@
             // 기본 이미지 숨기기
             defaultImage.style.display = 'none';
 
-            Array.from(files).forEach(file => {
-                const reader = new FileReader();
+            imagePreviewContainer.style.display = 'block';
+            // 이미지 크기를 장수에 따라 결정
+            let imgSize;
+            switch (files.length) {
+                case 1: imgSize = '300px'; break;
+                case 2: imgSize = '250px'; break;
+                default: imgSize = '200px'; break;
+            }
 
+            for (let i = 0; i < Math.min(files.length, 5); i++) { // 최대 5장만 보여줌
+                const reader = new FileReader();
+                
                 reader.addEventListener('load', function() {
-                    // 각 파일에 대한 미리보기 이미지 생성
                     const img = document.createElement('img');
                     img.setAttribute('src', this.result);
-                    img.style.width = '300px';   // 미리보기 이미지 크기 설정
-                    img.style.height = '300px';
-                    img.style.margin = '30px';   // 간격 설정
+                    img.style.width = imgSize;
+                    img.style.height = imgSize;
+                    img.style.margin = '10px';
                     imagePreviewContainer.appendChild(img);
                 });
 
-                reader.readAsDataURL(file);
-            });
+                reader.readAsDataURL(files[i]);
+            }
         } else {
             // 파일 선택이 취소된 경우 메시지와 기본 이미지를 다시 표시
             uploadPrompt.style.display = 'block';
@@ -794,8 +1020,7 @@
         }
     });
 
-
-
+    
 
 
 // 만약 다른 부분을 클릭하여 모달 창을 닫고 싶다면 추가적인 이벤트 리스너를 작성할 수 있습니다.

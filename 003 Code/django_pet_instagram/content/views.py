@@ -3,7 +3,7 @@ from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import Feed, Reply, Like, Bookmark
-from user.models import User, Post
+from user.models import User, Post, PostImage
 import os
 from Jinstagram.settings import MEDIA_ROOT
 from django.views.decorators.csrf import csrf_exempt
@@ -242,3 +242,26 @@ def upload_image(request):
 
     return JsonResponse({'error': '잘못된 요청입니다.'})
 
+def upload_post(request):
+    if request.method == 'POST':
+        email = request.session.get('email', None)
+        user = User.objects.filter(email=email).first()
+        text = request.POST.get('content')
+        hashtag = request.POST.get('hashtag')
+        data = json.loads(hashtag)
+        hashtags = [f"#{item['value']}" for item in data]
+        print(hashtags)
+
+        # Post 객체 생성 및 저장
+        post = Post(user=user, text=text, hashtag=hashtags)
+        post.save()
+
+        # 이미지를 저장하기 위한 로직
+        for file in request.FILES.getlist('files'): 
+            # 'files'는 프론트엔드에서 이미지 파일을 보낼 때의 이름이어야 함
+            post_image = PostImage(post=post, image=file)
+            post_image.save()
+
+        return JsonResponse({'message': 'Post uploaded successfully!'}, status=200)
+    
+    return JsonResponse({'error': 'Invalid request method'}, status=400)

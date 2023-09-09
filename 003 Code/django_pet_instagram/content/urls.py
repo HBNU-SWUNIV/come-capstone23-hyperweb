@@ -4,7 +4,6 @@ from . import views
 from algorithm_api.views import Food_view
 
 urlpatterns = [
-    path('upload', UploadFeed.as_view()),
     path('reply', UploadReply.as_view()),
     path('like', ToggleLike.as_view()),
     path('bookmark', ToggleBookmark.as_view()),
@@ -15,5 +14,6 @@ urlpatterns = [
     path('post_api', views.post_api, name='post_api'),
     path('Food_view', Food_view.as_view()),
     path('upload_image/', views.upload_image, name='upload_image'),
+    path('upload/', views.upload_post, name='upload_post'),
 ]
 
