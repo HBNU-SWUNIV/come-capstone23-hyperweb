@@ -16,6 +16,7 @@ from .serializer import FoodItemSerializer, Nut7Serializer, NutReportSerializer
 import requests
 import json
 
+
 #result food get
 def result_food(dog_info_id):
     print('result food info post')
@@ -142,7 +143,8 @@ class Food_view(APIView):
         #     print('logined')
         # else:
         #     print('not login')
-        return render(request, "algorithm_api/Food_view.html")
+        numbers = range(1, 101)
+        return render(request, "algorithm_api/food_view_ver2.html", {'numbers': numbers})
     
     
     def post(self, request):

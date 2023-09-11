@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Selection Modal</title>
+    <style>
+                /* 전체 화면의 다크 레이어 스타일 */
+        #modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+        }
+
+        /* 모달 내부 박스 스타일 */
+        .modal-content {
+            background-color: white;
+            width: 70%;
+            height: 80%;
+            position: absolute;
+            top: 10%; /* 상단에 위치하도록 변경 */
+            left: 50%;
+            transform: translate(-50%, 0); /* Y축 변환값 삭제 */
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        /* 검색창 스타일 */
+        #searchInput {
+            width: 98%;
+            align-items: center;
+            padding: 10px;
+            border: 1px solid #dbdbdb;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        /* 이미지 리스트 컨테이너: 높이 제한 및 세로 스크롤 설정 */
+        #imageList { 
+            overflow-y: auto;
+            overflow-x: hidden;
+            display: grid;
+            height: 650px;  /* 예시로 500px을 사용. 필요에 따라 조정 */
+            grid-template-columns: repeat(5, 1fr);
+            gap: 5px;
+        }
+
+        /* 이미지 컨테이너 스타일 변경 */
+        .image-container {
+            width: 95%;
+            height: calc(650px / 5 - 5px); /* 500px는 #imageList의 높이. 10px은 gap을 고려한 값. */
+            border: 1px solid transparent;
+            transition: border 0.3s;
+        }
+
+        .image-container > img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+
+
+        /* 선택된 이미지 테두리 색상 */
+        .selected {
+            border-color: #0095f6;
+        }
+
+        #submitBtn {
+            display: block;
+            margin: 20px auto 0;
+            padding: 10px 15px;
+            background-color: #0095f6;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        #submitBtn:hover {
+            background-color: #007dbb;
+        }
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #bbb;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .close-top-right {
+            position: fixed;
+            top: 5px;
+            right: 5px;
+            cursor: pointer; /* 선택 가능한 표시를 위한 스타일 */
+        }
+    </style>
+</head>
+<body>
+
+    <button id="createBtn">생성</button>
+
+    <!-- 이미지 선택 모달 -->
+    <div id="modal">
+        <div class="modal-content">
+            <input type="text" placeholder="검색" id="searchInput">
+            <div id="imageList">
+                {% for number in numbers %}
+                    <div class="image-container" data-name="image{{ forloop.counter }}"><img src="/media/example/0.jpg" alt="image{{ forloop.counter }}"></div>
+                {% endfor %}
+            </div>
+            <button id="submitBtn">제출</button>         
+        </div>
+        <span class="close close-top-right">&times;</span>
+    </div>
+
+
+    <!-- 선택한 이미지를 보여줄 영역 -->
+    <div id="selectedImages"></div>
+
+<script>
+    const modal = document.getElementById('modal');
+    const imageList = document.getElementById('imageList');
+    const searchInput = document.getElementById('searchInput');
+    const selectedImagesDiv = document.getElementById('selectedImages');
+
+    document.getElementById('createBtn').addEventListener('click', function() {
+        modal.style.display = 'block';
+    });
+
+    document.getElementById('submitBtn').addEventListener('click', function() {
+        selectedImagesDiv.innerHTML = '';
+        const selected = document.querySelectorAll('.selected img');
+        selected.forEach(img => {
+            selectedImagesDiv.appendChild(img.cloneNode(true));
+        });
+        modal.style.display = 'none';
+    });
+
+    imageList.addEventListener('click', function(e) {
+        if(e.target.tagName === 'IMG') {
+            const container = e.target.parentNode;
+            if(container.classList.contains('selected')) {
+                container.classList.remove('selected');
+            } else {
+                container.classList.add('selected');
+            }
+        }
+    });
+
+    searchInput.addEventListener('keyup', function() {
+        const searchText = searchInput.value.toLowerCase();
+        const images = document.querySelectorAll('.image-container');
+        images.forEach(imgContainer => {
+            const imgAlt = imgContainer.querySelector('img').alt;
+            if(imgAlt.toLowerCase().includes(searchText)) {
+                imgContainer.style.display = '';
+            } else {
+                imgContainer.style.display = 'none';
+            }
+        });
+    });
+
+
+    // 모달 창의 "X" 버튼을 가져옵니다.
+    var span = document.querySelector(".close");
+    // "X" 버튼을 클릭하면 모달 창이 사라집니다.
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+</script>
+
+</body>
+</html>
