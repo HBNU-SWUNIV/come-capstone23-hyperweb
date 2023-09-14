@@ -16,6 +16,9 @@ from .serializer import FoodItemSerializer, Nut7Serializer, NutReportSerializer
 import requests
 import json
 
+import os
+from django.conf import settings
+from rest_framework.views import APIView
 
 #result food get
 def result_food(dog_info_id):
@@ -119,32 +122,21 @@ class Food_view(APIView):
         self.dog_id = None
 
     def get(self, request):
-        # login session 개선 필요
+        # login session
         email = request.session.get('email', None)
         user = User.objects.filter(email=email).first()
-
         user = User.objects.get(email=email)
-        dogs = Dog.objects.get(user=user)
-        
-        print(user, dogs)
-        
+        dogs = Dog.objects.get(user=user)     
         self.user = user
         self.dog = dogs
         self.dog_id = dogs.id
-        print(dogs.age, dogs.weight, dogs.activity, dogs.bcs, dogs.sex, self.dog_id)
         request.session['dog_id'] = dogs.id
 
-        # if isinstance(request.user, ModelBackend) and request.user.is_authenticated:
-        #     # 로그인된 사용자인 경우
-        #     user = request.user
-        #     dogs = Dog.objects.filter(user=user.id)
-        #     print(dogs.age, dogs.weight, dogs.activate, dogs.bcs, dogs.sex)
-        #     self.dog_mer = caloric_generator(dogs.age, dogs.weight, dogs.activate, dogs.bcs, dogs.sex)
-        #     print('logined')
-        # else:
-        #     print('not login')
-        numbers = range(1, 101)
-        return render(request, "algorithm_api/food_view_ver2.html", {'numbers': numbers})
+        image_directory = os.path.join(settings.MEDIA_ROOT, 'ingredient_images')
+        all_images = [f for f in os.listdir(image_directory) if os.path.isfile(os.path.join(image_directory, f))]
+
+        return render(request, "algorithm_api/food_view_ver2.html", {'images': all_images})
+  
     
     
     def post(self, request):

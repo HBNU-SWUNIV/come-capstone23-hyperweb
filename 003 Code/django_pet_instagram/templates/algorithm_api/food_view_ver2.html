@@ -5,7 +5,70 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Image Selection Modal</title>
     <style>
-                /* 전체 화면의 다크 레이어 스타일 */
+        
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4; /* 배경색 변경 */
+            margin: 0;
+            padding: 0;
+        }
+
+        /* 배경에 페이퍼 느낌 추가 */
+        .paper-like {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 800px;
+            height: 800px;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 24px;
+            color: #4a4a4a;
+            border-bottom: 2px solid #ccc;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+        }
+
+        .description {
+            text-align: center;
+            font-size: 18px;
+            color: #8e8e8e;
+            margin-bottom: 30px;
+        }
+
+        #createBtn,
+        #reportSubmitBtn {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #3897f0;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            margin-left : 200px;
+            margin-right: 0px;
+        }
+        
+        .title {
+            text-align: center;
+            margin-top: 30px;
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #4a4a4a;
+        }
+
+        .description {
+            text-align: center;
+            margin-bottom: 40px;
+            color: #8e8e8e;
+        }
+
+        /* 전체 화면의 다크 레이어 스타일 */
         #modal {
             display: none;
             position: fixed;
@@ -111,19 +174,85 @@
             right: 5px;
             cursor: pointer; /* 선택 가능한 표시를 위한 스타일 */
         }
+
+        #selectedImages table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        #selectedImages th, #selectedImages td {
+            border: 1px solid #d1d1d1;
+            padding: 8px 15px;
+            text-align: center;
+        }
+
+        #finalSubmitBtn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #3897f0;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #finalSubmitBtn:hover {
+            background-color: #267abf;
+        }
+
+        #selectedImages td img {
+            max-width: 75px;  /* 이 값을 조절하여 이미지 크기를 조절할 수 있습니다. */
+            height: auto;
+        }
+
+        #selectedImages {
+            max-height: 300px;  /* 원하는 최대 높이값으로 설정합니다. */
+            overflow-y: auto;
+            border: 1px solid #d1d1d1;  /* 경계선을 주어 스크롤 영역을 명확히 표시합니다. */
+            padding: 10px;
+        }
+
     </style>
 </head>
 <body>
+    <div class="paper-like">
+        <div class="title">보고서 생성</div>
+        <div class="description">음식재료를 선택해주세요</div>
+        <!-- 선택한 이미지를 보여줄 영역 -->
+        <div id="selectedImages">
+            <table>
+                <thead>
+                    <tr>
+                        <th>번호</th>
+                        <th>음식 이름</th>
+                        <th>사진</th>
+                        <th>그램수</th>
+                    </tr>
+                </thead>
+                <tbody id="selectedTbody">
+                    <!-- 여기에 선택한 이미지와 입력 필드가 들어갑니다. -->
+                </tbody>
+            </table>
+            <!-- 제출 버튼 -->
+            
+        </div>
+        <div style="display: flex;flex-direction: row;">
+            <button id="createBtn">생성</button>
+            <button id="reportSubmitBtn">보고서 제출</button>
+        </div>
+        
 
-    <button id="createBtn">생성</button>
+    </div>
 
     <!-- 이미지 선택 모달 -->
     <div id="modal">
         <div class="modal-content">
             <input type="text" placeholder="검색" id="searchInput">
             <div id="imageList">
-                {% for number in numbers %}
-                    <div class="image-container" data-name="image{{ forloop.counter }}"><img src="/media/example/0.jpg" alt="image{{ forloop.counter }}"></div>
+                {% for image in images %}
+                    <div class="image-container" data-name="{{ image }}"><img src="/media/ingredient_images/{{ image }}" alt="{{ image }}" loading="lazy"></div>
                 {% endfor %}
             </div>
             <button id="submitBtn">제출</button>         
@@ -131,9 +260,7 @@
         <span class="close close-top-right">&times;</span>
     </div>
 
-
-    <!-- 선택한 이미지를 보여줄 영역 -->
-    <div id="selectedImages"></div>
+    
 
 <script>
     const modal = document.getElementById('modal');
@@ -143,15 +270,6 @@
 
     document.getElementById('createBtn').addEventListener('click', function() {
         modal.style.display = 'block';
-    });
-
-    document.getElementById('submitBtn').addEventListener('click', function() {
-        selectedImagesDiv.innerHTML = '';
-        const selected = document.querySelectorAll('.selected img');
-        selected.forEach(img => {
-            selectedImagesDiv.appendChild(img.cloneNode(true));
-        });
-        modal.style.display = 'none';
     });
 
     imageList.addEventListener('click', function(e) {
@@ -185,6 +303,59 @@
     span.onclick = function() {
         modal.style.display = "none";
     }
+
+    // ... 기존의 코드 ...
+
+    document.getElementById('submitBtn').addEventListener('click', function() {
+        selectedImagesDiv.innerHTML = '';
+        const selected = document.querySelectorAll('.selected img');
+        let tableContent = `
+            <table>
+                <thead>
+                    <tr>
+                        <th>번호</th>
+                        <th>음식 이름</th>
+                        <th>사진</th>
+                        <th>그램수</th>
+                    </tr>
+                </thead>
+                <tbody>
+        `;
+        selected.forEach((img, index) => {
+            let name = img.alt.replace(".png", "");
+            tableContent += `
+                <tr>
+                    <td>${index + 1}</td>
+                    <td>${name}</td>
+                    <td><img src="${img.src}" alt="${name}" /></td>
+                    <td><input type="text" class="gram-input" placeholder="그램수 입력"></td>
+                </tr>
+            `;
+        });
+        tableContent += `</tbody></table>`;
+        selectedImagesDiv.innerHTML = tableContent;
+        
+        modal.style.display = 'none';
+    });
+
+    document.getElementById('reportSubmitBtn').addEventListener('click', function() {
+        const gramInputs = document.querySelectorAll('.gram-input');
+        let allFilled = true;
+        gramInputs.forEach(input => {
+            if(input.value.trim() === '') {
+                allFilled = false;
+            }
+        });
+
+        if(!allFilled) {
+            alert('모든 그램수를 입력해주세요.');
+        } else {
+            // 제출 관련 코드 (예: 폼 제출)를 여기에 추가합니다.
+        }
+    });
+
+
+
 </script>
 
 </body>
