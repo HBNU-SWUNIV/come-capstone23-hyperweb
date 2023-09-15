@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,7 +22,7 @@
             padding: 20px;
             margin: 20px auto;
             max-width: 800px;
-            height: 800px;
+            height: 910px;
         }
 
         .title {
@@ -53,20 +54,7 @@
             margin-left : 200px;
             margin-right: 0px;
         }
-        
-        .title {
-            text-align: center;
-            margin-top: 30px;
-            margin-bottom: 20px;
-            font-size: 24px;
-            color: #4a4a4a;
-        }
 
-        .description {
-            text-align: center;
-            margin-bottom: 40px;
-            color: #8e8e8e;
-        }
 
         /* 전체 화면의 다크 레이어 스타일 */
         #modal {
@@ -119,6 +107,7 @@
 
         /* 이미지 컨테이너 스타일 변경 */
         .image-container {
+            position: relative; 
             width: 95%;
             height: calc(650px / 5 - 5px); /* 500px는 #imageList의 높이. 10px은 gap을 고려한 값. */
             border: 1px solid transparent;
@@ -131,11 +120,22 @@
             object-fit: cover;
         }
 
+        .image-label {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: rgba(0, 0, 0, 0.6); /* 레이블의 배경색을 약간 투명하게 설정 */
+            color: white; /* 텍스트 색상 설정 */
+            text-align: center; /* 텍스트 중앙 정렬 */
+            padding: 5px 0; /* 텍스트 주위의 여백 설정 */
+        }
 
 
-        /* 선택된 이미지 테두리 색상 */
+        /* 선택된 이미지의 테두리 스타일 변경 */
         .selected {
-            border-color: #0095f6;
+            border-width: 2px; /* 테두리 넓이 변경 */
+            border-color: #0095f6; /* 파란색 테두리 */
         }
 
         #submitBtn {
@@ -208,15 +208,88 @@
         }
 
         #selectedImages {
-            max-height: 300px;  /* 원하는 최대 높이값으로 설정합니다. */
-            overflow-y: auto;
-            border: 1px solid #d1d1d1;  /* 경계선을 주어 스크롤 영역을 명확히 표시합니다. */
-            padding: 10px;
+            width: 100%; 
+            table-layout: fixed; 
+            border-collapse: collapse;
         }
 
+        #selectedImages thead {
+            background-color: #4CAF50; /* 헤더의 배경색을 초록색으로 설정 */
+            position: relative;
+            z-index: 2;
+        }
+
+        #selectedImages tbody {
+            display: block;
+            max-height: 600px;
+            overflow-y: auto;
+            position: relative;
+            z-index: 1;
+            scrollbar-width: none; 
+            -ms-overflow-style: none;
+        }
+
+        #selectedImages tbody::-webkit-scrollbar {
+            display: none;
+        }
+
+        #selectedImages tr {
+            display: table;
+            width: 100%;
+            table-layout: fixed;
+        }
+
+        #selectedImages table {
+            table-layout: auto;
+        }
+
+        /* 표의 내용 부분 스타일 */
+        #selectedImages tbody tr:nth-child(odd) {
+            background-color: #fafafa; /* 홀수 행의 배경색 */
+        }
+
+        #selectedImages tbody tr:nth-child(even) {
+            background-color: #f0f0f0; /* 짝수 행의 배경색 */
+        }
+
+        /* 이미지 위에 표시될 체크 아이콘의 스타일 */
+        .image-container .checkmark-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: none; /* 기본적으로 숨겨져 있음 */
+            width: 50px; /* 아이콘 크기 */
+            height: 50px;
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 50%;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M9 22L3 16l-2 2 8 8 12-12-2-2z"/></svg>'); /* SVG 체크 표시 */
+            background-repeat: no-repeat;
+            background-position: center;
+            display: block; /* 기본적으로 체크 아이콘을 보여줌 */
+        }
+
+        .image-container.not-selected .checkmark-icon {
+            display: none; /* not-selected 클래스가 추가될 때 체크 아이콘 숨김 */
+        }
+
+
+        /* 모든 브라우저에 대해 스크롤바 숨기기 */
+        #selectedImages::-webkit-scrollbar {
+            width: 0;  /* Chrome, Safari, Edge 브라우저에서의 스크롤바 너비를 0으로 설정 */
+        }
+
+        #selectedImages::-moz-scrollbar {
+            width: 0;  /* Firefox 브라우저에서의 스크롤바 너비를 0으로 설정 */
+        }
+
+        #selectedImages::-ms-scrollbar {
+            width: 0;  /* Internet Explorer에서의 스크롤바 너비를 0으로 설정 */
+        }
     </style>
 </head>
 <body>
+
     <div class="paper-like">
         <div class="title">보고서 생성</div>
         <div class="description">음식재료를 선택해주세요</div>
@@ -252,7 +325,10 @@
             <input type="text" placeholder="검색" id="searchInput">
             <div id="imageList">
                 {% for image in images %}
-                    <div class="image-container" data-name="{{ image }}"><img src="/media/ingredient_images/{{ image }}" alt="{{ image }}" loading="lazy"></div>
+                    <div class="image-container" data-name="{{ image }}">
+                        <img src="/media/ingredient_images/{{ image }}" alt="{{ image }}" loading="lazy">
+                        <div class="image-label">{{ image }}</div>
+                    </div>
                 {% endfor %}
             </div>
             <button id="submitBtn">제출</button>         
@@ -260,9 +336,41 @@
         <span class="close close-top-right">&times;</span>
     </div>
 
+
+
     
 
 <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        document.querySelectorAll('.image-label').forEach(function(el) {
+            el.textContent = el.textContent.replace('.png', '');
+        });
+    });
+
+    document.addEventListener("DOMContentLoaded", function() {
+        // 모든 이미지 컨테이너 선택
+        const imageContainers = document.querySelectorAll(".image-container");
+
+        imageContainers.forEach(function(container) {
+            // 체크 아이콘 초기 설정
+            const checkmark = document.createElement("div");
+            checkmark.className = "checkmark-icon";
+            container.appendChild(checkmark);
+            container.classList.add("not-selected");  // 기본 상태로 체크 아이콘을 숨깁니다.
+
+            container.addEventListener("click", function() {
+                // .not-selected 클래스의 존재 유무에 따라 토글
+                if (this.classList.contains("not-selected")) {
+                    this.classList.remove("not-selected");
+                } else {
+                    this.classList.add("not-selected");
+                }
+            });
+        });
+    });
+
+
+
     const modal = document.getElementById('modal');
     const imageList = document.getElementById('imageList');
     const searchInput = document.getElementById('searchInput');
