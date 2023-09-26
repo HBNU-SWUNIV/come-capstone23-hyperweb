@@ -18,6 +18,70 @@ from user.models import User, Dog
 import base64
 import os
 
+def report_month(request):
+    # 예제 데이터 (실제 데이터로 교체하셔야 합니다.)
+    weekly_meals = {
+        '1주차': {
+            'menu': ['돼지고기', '감자', '브로콜리','연두부'],
+            'features': ['칼슘이 풍부한', '단백질이 풍부한', '나트륨이 풍부한'],
+             'color': 'rgba(255,0,0,0.3)',
+             'days': ['1', '22', '3', '4', '5', '23', '7'],
+        },
+        '2주차': {
+            'menu': ['소고기', '고구마', '달걀'],
+            'features': ['비타민C가 풍부한', '단백질이 풍부한', '지방이 풍부한'],
+             'color': 'rgba(0, 0, 255, 0.3)',  # 블루 색상의 투명도를 0.3으로 설정
+             'days': ['8', '16', '10', '11', '20', '21', '14','31'],
+        },
+        '3주차': {
+            'menu': ['닭고기', '파프리카','감자', '고구마'],
+            'features': ['지방이 풍부한', '탄수화물이 풍부한', '비타민B가 풍부한'],
+             'color': 'lightgreen',
+             'days': ['15', '9', '17', '18', '19', '25', '13','30'],
+        },
+        '4주차': {
+            'menu': ['소고기', '감자', '옥수수','귀리'],
+            'features': ['단백질이 풍부한', '나트륨이 풍부한', '지방이 풍부한'],
+            'color': 'lightyellow',
+             'days': ['2', '6', '24', '12', '26', '27', '28','29'],
+        },
+    }
+    calcium_data = {
+        'week1': 83,
+        'week2': 17,
+        'week3': 94,
+        'week4': 42
+    }
+    magnesium_data = {
+        'week1': 28,
+        'week2': 55,
+        'week3': 74,
+        'week4': 9
+    }
+    iron_data = {
+        'week1': 66,
+        'week2': 38,
+        'week3': 90,
+        'week4': 51
+    }
+    month_days = [
+        ['1', '2', '3', '4', '5', '6', '7'],
+        ['8', '9', '10', '11', '12', '13', '14'],
+        ['15', '16', '17', '18', '19', '20', '21'],
+        ['22', '23', '24', '25', '26', '27', '28'],
+        ['29','30','31']
+        # ... (필요한 만큼 날짜를 추가)
+    ]
+
+    
+    return render(request, 'report/report_month.html', {
+        'weekly_meals': weekly_meals,
+        'calcium_data': calcium_data,
+        'magnesium_data': magnesium_data,
+        'iron_data': iron_data,
+        'month_days': month_days
+    })
+    
 class Report2(APIView):
     def get(self, request):
         nutrients = Nutrient.objects.all()
@@ -33,6 +97,8 @@ def make_report(request):
         'nutrients': nutrients
     }
     return render(request, 'report.html', context)
+
+
 
 class ReportView(APIView):
     def __init__(self):
