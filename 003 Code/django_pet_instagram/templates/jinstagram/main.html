@@ -33,468 +33,700 @@
     <link href="https://unpkg.com/@yaireo/tagify/dist/tagify.css" rel="stylesheet" type="text/css" />
 
     <style>
-        /** 노트북 설정 **/
-        @media only screen and (min-width: 1000px) and (max-width: 1400px){
-            .swiper-slide_image_list_value {
-                width : 50px;
-                height : 50px;
-                margin-top: 20px;
+        /** 모바일 설정 **/
+        @media (max-width: 800px){
+            #main-line{
+                width:100%;
+                display: flex;
+                justify-content: flex-start;
+                flex-direction:column;
+            }
+
+            #sidebar{
+                height:600px;
+                transition: width 0.5s;
+                display: none;
+                flex-direction: row;
+                justify-content: flex-start;
+                overflow: hidden;
+            }
+            #main-template{
+                width:100%;
+            }
+            #list-main-image{
+                width: 50%;  
+            }
+            
+            #post-list{
+                width:100%;
+                transition: width 0.5s ease-in-out;
+                height: auto;
+                display: flex;
+                flex-direction: column;
+                scrollbar-width: none; /* Firefox */
+                -ms-overflow-style: none;  /* IE 10+ */
+                overflow-y:visible;
+            }
+
+            .post {
+                width: 100%;
                 margin-bottom: 20px;
-                border-radius: 70%;
+                font-family: Arial, sans-serif;
+                padding-bottom: 25px;
+                border-bottom: 1px #ddd  solid;
+            }
+
+            .post-header {
+                padding: 0px;
+                margin-top:10px;
+                margin-left:5px;
+                margin-bottom: 10px;
+                height: 50px;
+                display: flex;
+                flex-direction: row;
+            }
+            .post-images {
+                position: relative;
+                width: 100%;
+                margin: auto;
+                overflow: hidden;
+            }
+
+            .post-caption {
+                height: 30px;
+                font-size: 0.9em;
+                border-top: 1px solid #eee;
+            }
+            .post-text{
+                height: auto;
+                margin-top:10px;
+            }
+            .text-hashtag{
+                color: #3498db;             /* 해시태그의 글자 색상 */
+                text-decoration: none;     /* 밑줄 제거 */
+                padding: 2px 6px;          /* 패딩 */
+                border-radius: 4px;        /* 라운드 테두리 */
+                margin-right: 5px;         /* 오른쪽 마진으로 해시태그 간의 간격 조절 */
+                display: inline-block;     /* 인라인 블록 요소로 설정 */
+                transition: background-color 0.3s;  /* 배경색의 부드러운 전환 효과 */
+            }
+            .text-hashtag.collapsed {
+                display: none;
+            }
+            .profile-picture {
+                margin: 10px 0px;
+                width: 32px;
+                height: 32px;
+                border-radius: 100%;
+            }
+            .profile-user{
+                margin: 15px 0px;
+                width:100px;
+                display:flex;
+                flex-direction: column;
+                margin-left:10px;
+            }
+            .profile-time{
+                margin: 15px 0px;
+                color:gray;
+                margin-left:400px;
+            }
+            .username {
+                font-weight: bold;
+            }
+
+            .post-caption > svg,
+            .post-caption > img {
+                margin-right: 20px;
+                margin-top: 10px;
+                width: 25px;
+                height: 25px;
+            }
+
+            .slide{
+                width: 100%;
+                height: 300px;
+            }
+
+            .slide > img{
+                width: 100%;
+                height: 300px;
+            }
+
+            .prev, .next {
+                cursor: pointer;
+                position: absolute;  /* 화살표에 절대 위치를 설정합니다. */
+                top: 50%;
+                transform: translateY(-50%);  /* 화살표를 수직으로 중앙에 위치시킵니다. */
+                padding: 8px 12px;
+                color: white;
+                font-weight: bold;
+                font-size: 18px;
+                background-color: rgba(0,0,0,0.5);
+                border-radius: 3px;
+                transition: 0.6s ease;
+                z-index: 1;  /* 화살표가 이미지 위에 나타나도록 합니다. */
+            }
+
+            .prev {
+                left: 0;  /* 왼쪽 화살표를 왼쪽으로 정렬합니다. */
+            }
+
+            .next {
+                right: 0;  /* 오른쪽 화살표를 오른쪽으로 정렬합니다. */
+            }
+
+            .prev:hover, .next:hover {
+                background-color: rgba(0,0,0,0.8);
+            }
+
+            .profile-time{
+                margin-left: 180px;
+            }
+
+            .list-main-image{
+                border-bottom: #0D8C7F 1px solid;
+            }
+
+            .list-main-image{
+                display: none;
+            }
+            .list-main-image > img{
+                width:50px;
+            }
+
+            #ul-list{
+                width: 100%;
+            }
+
+            #ul-list-ul{
+                padding-left: 30px;
+            }
+            #mobile-main-imageDiv{
+                width: 100%;
+                border-bottom: #0D8C7F 2px solid;
+                padding-bottom: 10px;
+                margin-top: 5px;
+            }
+            #mobile-main-logo{
+                width: 50px;
+                margin-top: 10px;
+                margin-left: 10px;            
+            }
+            #ul-list {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                height: 50px;
+                background-color: white;
+                z-index: 1000;
+            }
+
+            #ul-list-ul {
+                display: flex;
+                justify-content: space-around;
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+
+            .contents-list {
+                margin-top: 10px;
+                text-align: center;
+            }
+            .contents-list > img{
+                width: 30px;
+            }
+            .contents-list > span,
+            .contents-list > a {
+                display: none;
             }
         }
-        
-        #post-list{
-            width:1400px;
-            transition: width 0.5s ease-in-out;
-            height: auto;
-            display: flex;
-            flex-direction: column;
-            scrollbar-width: none; /* Firefox */
-            -ms-overflow-style: none;  /* IE 10+ */
-            overflow-y:visible;
-        }
 
-        #post-list::-webkit-scrollbar {
-           display: none; /* Chrome, Safari, Edge */
-        }
+        @media (min-width: 801px) and (max-width: 2000px){  
+            #mobile-main-imageDiv{
+                display: none;
+            }
+            #mobile-main-logo{
+                display: none;
+            }
+            .list-main-image > img{
+                width:70px;
+            }
+            #ul-list-ul{
+                padding-bottom: 20px;padding-left: 0px;
+            }
+            #list-main-image{
+                margin-bottom:40px;margin-top:30px;margin-left: 20px;
+            }
+            #main-template{
+                width:1920px; display: flex;justify-content: flex-start;flex-direction:row;
+            }
+            #post-list{
+                width:1400px;
+                transition: width 0.5s ease-in-out;
+                height: auto;
+                display: flex;
+                flex-direction: column;
+                scrollbar-width: none; /* Firefox */
+                -ms-overflow-style: none;  /* IE 10+ */
+                overflow-y:visible;
+            }
 
-        #post-list > div{
-            margin-top:30px;
-        }
-        .post {
-            width: 600px;
-            margin-left: 350px;
-            font-family: Arial, sans-serif;
-            padding-bottom: 25px;
-            border-bottom: 1px #ddd  solid;
-        }
+            #post-list::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Edge */
+            }
 
-        .post-header {
-            padding: 0px;
-            margin-top:10px;
-            margin-left:5px;
-            margin-bottom: 10px;
-            height: 50px;
-            display: flex;
-            flex-direction: row;
-        }
-        .post-images {
-            height: 520px;
-            position: relative;
-            width: 100%;
-            margin: auto;
-            overflow: hidden;
-        }
+            #post-list > div{
+                margin-top:30px;
+            }
+            .post {
+                width: 600px;
+                margin-left: 350px;
+                font-family: Arial, sans-serif;
+                padding-bottom: 25px;
+                border-bottom: 1px #ddd  solid;
+            }
 
-        .post-caption {
-            height: 30px;
-            font-size: 0.9em;
-            border-top: 1px solid #eee;
-        }
-        .post-text{
-            height: auto;
-            margin-top:30px;
-        }
-        .text-hashtag{
-            color: #3498db;             /* 해시태그의 글자 색상 */
-            text-decoration: none;     /* 밑줄 제거 */
-            padding: 2px 6px;          /* 패딩 */
-            border-radius: 4px;        /* 라운드 테두리 */
-            margin-right: 5px;         /* 오른쪽 마진으로 해시태그 간의 간격 조절 */
-            display: inline-block;     /* 인라인 블록 요소로 설정 */
-            transition: background-color 0.3s;  /* 배경색의 부드러운 전환 효과 */
-        }
-        .text-hashtag.collapsed {
-            display: none;
-        }
-        .profile-picture {
-            margin: 10px 0px;
-            width: 32px;
-            height: 32px;
-            border-radius: 100%;
-        }
-        .profile-user{
-            margin: 15px 0px;
-            width:100px;
-            display:flex;
-            flex-direction: column;
-            margin-left:10px;
-        }
-        .profile-time{
-            margin: 15px 0px;
-            color:gray;
-            margin-left:400px;
-        }
-        .username {
+            .post-header {
+                padding: 0px;
+                margin-top:10px;
+                margin-left:5px;
+                margin-bottom: 10px;
+                height: 50px;
+                display: flex;
+                flex-direction: row;
+            }
+            .post-images {
+                height: 520px;
+                position: relative;
+                width: 100%;
+                margin: auto;
+                overflow: hidden;
+            }
+
+            .post-caption {
+                height: 30px;
+                font-size: 0.9em;
+                border-top: 1px solid #eee;
+            }
+            .post-text{
+                height: auto;
+                margin-top:30px;
+            }
+            .text-hashtag{
+                color: #3498db;             /* 해시태그의 글자 색상 */
+                text-decoration: none;     /* 밑줄 제거 */
+                padding: 2px 6px;          /* 패딩 */
+                border-radius: 4px;        /* 라운드 테두리 */
+                margin-right: 5px;         /* 오른쪽 마진으로 해시태그 간의 간격 조절 */
+                display: inline-block;     /* 인라인 블록 요소로 설정 */
+                transition: background-color 0.3s;  /* 배경색의 부드러운 전환 효과 */
+            }
+            .text-hashtag.collapsed {
+                display: none;
+            }
+            .profile-picture {
+                margin: 10px 0px;
+                width: 32px;
+                height: 32px;
+                border-radius: 100%;
+            }
+            .profile-user{
+                margin: 15px 0px;
+                width:100px;
+                display:flex;
+                flex-direction: column;
+                margin-left:10px;
+            }
+            .profile-time{
+                margin: 15px 0px;
+                color:gray;
+                margin-left:400px;
+            }
+            .username {
+                font-weight: bold;
+            }
+
+            .post-caption > svg,
+            .post-caption > img {
+                margin-right: 20px;
+                margin-top: 10px;
+                width: 25px;
+                height: 25px;
+            }
+            body {
+                overflow-x: hidden;
+            }
+            
+            #wrapper{
+                height: auto;
+                min-height: 100%;
+                padding-bottom: 10px;
+            }
+            footer{
+                height: 100px;
+                position : relative;
+                transform : translateY(-100%);
+            }
+            .swiper-container {overflow: visible;}
+            .swiper-slide-active,
+            .swiper-slide-active + .swiper-slide,
+            .swiper-slide-active + .swiper-slide + .swiper-slide,
+            .swiper-slide-active + .swiper-slide + .swiper-slide + .swiper-slide {opacity:1}
+
+            .swiper-slide_image_list_value{
+                width : 70px;
+                height : 70px;
+                margin-top: 20px;
+                border-radius: 100%;
+            }
+            
+            .box {
+                width: 150px;
+                height: 150px;
+                border-radius: 70%;
+                overflow: hidden;
+            }
+
+            .profile {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            .feed_box {
+                margin: 20px 0;
+                border: solid 1px gray;
+                background-color: white;
+            }
+
+            #sidebar {
+                width: 520px;
+                margin-right:10px;
+                transition: width 0.5s ease-in-out;
+            }
+
+            #sidebar.collapsed {
+                width: 64px;
+            }
+
+
+            #post-list.expanded {
+            width: 1956px;
+            }
+
+            #bottomDiv {
+            opacity: 1;
+            transition: opacity 0.5s ease-in-out;
+            }
+
+            #bottomDiv.hidden {
+            opacity: 0;
+            }
+
+            #arrowImg{
+                margin: 0px 0px;
+                border-radius: 15%;
+                border-bottom: 1px solid #ddd;
+                border-top: 1px solid #ddd;
+                border-left:1px solid #ddd;
+                height: 64px;
+                width: 32px;
+            }
+            li{
+                list-style-type: none;
+            }
+            #ul-list{
+                width: 400px;
+                
+            }
+
+            .contents-list{
+                padding-top:20px;
+                padding-bottom: 20px;
+                padding-left:20px;
+                background-color: #ffffff;  /* 기본 배경색 */
+            }
+            .contents-list:hover {
+                background-color: #f5f5f5;  /* 마우스를 올려놓았을 때의 배경색 */
+            }
+            .contents-list > img{
+                width: 25px;
+                height: 25px;
+                margin-right:10px;
+            }
+            .contents-list > span,
+            .contents-list > a{
+                width: 30px;
+                height: 30px;
+                font-weight: bold;
+            }
+
+            .slideShow{
+                width: 100%;
+                height: 400px;
+                position: relative;
+                overflow: hidden;   
+                /*리스트 형식으로 이미지를 일렬로 
+                정렬할 것이기 때문에, 500px 밖으로 튀어 나간 이미지들은
+                hidden으로 숨겨줘야됨*/
+            }
+
+            .controller span{
+            position:absolute;
+            background-color: transparent;
+            color: black;
+            text-align: center;
+            border-radius: 50%;
+            padding: 10px 20px;
+            top: 50%;
+            font-size: 1.3em;
+            cursor: pointer;
+            }
+
+            /* 이전, 다음 화살표에 마우스 커서가 올라가 있을때 */
+            .controller span:hover{
+            background-color: rgba(128, 128, 128, 0.11);
+            }
+
+            #heart, #chat, #share, #bookmark {
+            transition: 0.5s;
+            }
+            #heart:hover, #chat:hover, #share:hover, #bookmark:hover {
+                transform: translateY(-10px);
+            }
+            
+
+            .close {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
             font-weight: bold;
-        }
+            transition: 0.3s;
+            }
 
-        .post-caption > svg,
-        .post-caption > img {
-            margin-right: 20px;
-            margin-top: 10px;
-            width: 25px;
-            height: 25px;
-        }
-        body {
-            overflow-x: hidden;
-          }
+            .close:hover,
+            .close:focus {
+            color: #bbb;
+            text-decoration: none;
+            cursor: pointer;
+            }
+
+
+
+            .slide {
+                position: relative;  /* 슬라이드에 상대 위치를 설정합니다. */
+            }
+
         
-        #wrapper{
-            height: auto;
-            min-height: 100%;
-            padding-bottom: 10px;
-        }
-        footer{
-            height: 100px;
-            position : relative;
-            transform : translateY(-100%);
-        }
-        .swiper-container {overflow: visible;}
-        .swiper-slide-active,
-        .swiper-slide-active + .swiper-slide,
-        .swiper-slide-active + .swiper-slide + .swiper-slide,
-        .swiper-slide-active + .swiper-slide + .swiper-slide + .swiper-slide {opacity:1}
+            .post-imgs {
+                width: 100%;
+                height: auto;
+                display: block;
+            }
 
-        .swiper-slide_image_list_value{
-            width : 70px;
-            height : 70px;
-            margin-top: 20px;
-            border-radius: 100%;
+            .prev, .next {
+                cursor: pointer;
+                position: absolute;  /* 화살표에 절대 위치를 설정합니다. */
+                top: 50%;
+                transform: translateY(-50%);  /* 화살표를 수직으로 중앙에 위치시킵니다. */
+                padding: 8px 12px;
+                color: white;
+                font-weight: bold;
+                font-size: 18px;
+                background-color: rgba(0,0,0,0.5);
+                border-radius: 3px;
+                transition: 0.6s ease;
+                z-index: 1;  /* 화살표가 이미지 위에 나타나도록 합니다. */
+            }
+
+            .prev {
+                left: 0;  /* 왼쪽 화살표를 왼쪽으로 정렬합니다. */
+            }
+
+            .next {
+                right: 0;  /* 오른쪽 화살표를 오른쪽으로 정렬합니다. */
+            }
+
+            .prev:hover, .next:hover {
+                background-color: rgba(0,0,0,0.8);
+            }
+            .disabled-button {
+                opacity: 0.3;          /* 버튼의 투명도를 낮춰서 비활성화처럼 보이게 합니다. */
+                pointer-events: none; /* 버튼 클릭을 막습니다. */
+            }
+
+
+            .read-more {
+                color: gray;
+                cursor: pointer;
+            }
+
+            a {
+            color: inherit;      /* 부모 요소의 글자 색상을 상속 */
+            text-decoration: none;  /* 밑줄 제거 */
+        }
+
+        a:hover, a:focus {
+            color: inherit;      /* 마우스 호버 또는 포커스 상태에서도 색상 상속 */
+        }
+
+        .list-main-image img {
+            cursor: pointer; /* hand cursor */
         }
         
-        .box {
-            width: 150px;
-            height: 150px;
-            border-radius: 70%;
-            overflow: hidden;
-        }
-
-        .profile {
+        /* 모달 창 스타일 */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            padding-top: 100px;
+            left: 0;
+            top: 0;
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
         }
 
-        .feed_box {
-            margin: 20px 0;
-            border: solid 1px gray;
-            background-color: white;
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 1000px;
+            height: 850px;
+            z-index: 1000; 
         }
-
-        #sidebar {
-            width: 520px;
-            margin-right:10px;
-            transition: width 0.5s ease-in-out;
-        }
-
-        #sidebar.collapsed {
-            width: 64px;
-        }
-
-
-        #post-list.expanded {
-        width: 1956px;
-        }
-
-        #bottomDiv {
-        opacity: 1;
-        transition: opacity 0.5s ease-in-out;
-        }
-
-        #bottomDiv.hidden {
-        opacity: 0;
-        }
-
-        #arrowImg{
-            margin: 0px 0px;
-            border-radius: 15%;
-            border-bottom: 1px solid #ddd;
-            border-top: 1px solid #ddd;
-            border-left:1px solid #ddd;
-            height: 64px;
-            width: 32px;
-        }
-        li{
-            list-style-type: none;
-        }
-        #ul-list{
-            width: 400px;
-            
-        }
-
-        .contents-list{
-            padding-top:20px;
-            padding-bottom: 20px;
-            padding-left:20px;
-            background-color: #ffffff;  /* 기본 배경색 */
-        }
-        .contents-list:hover {
-            background-color: #f5f5f5;  /* 마우스를 올려놓았을 때의 배경색 */
-        }
-        .contents-list > img{
-            width: 25px;
-            height: 25px;
-            margin-right:10px;
-        }
-        .contents-list > span,
-        .contents-list > a{
-            width: 30px;
-            height: 30px;
-            font-weight: bold;
-        }
-
-        .slideShow{
-            width: 100%;
-            height: 400px;
-            position: relative;
-            overflow: hidden;   
-            /*리스트 형식으로 이미지를 일렬로 
-            정렬할 것이기 때문에, 500px 밖으로 튀어 나간 이미지들은
-            hidden으로 숨겨줘야됨*/
-        }
-
-        .controller span{
-        position:absolute;
-        background-color: transparent;
-        color: black;
-        text-align: center;
-        border-radius: 50%;
-        padding: 10px 20px;
-        top: 50%;
-        font-size: 1.3em;
-        cursor: pointer;
-        }
-
-        /* 이전, 다음 화살표에 마우스 커서가 올라가 있을때 */
-        .controller span:hover{
-        background-color: rgba(128, 128, 128, 0.11);
-        }
-
-        #heart, #chat, #share, #bookmark {
-        transition: 0.5s;
-        }
-        #heart:hover, #chat:hover, #share:hover, #bookmark:hover {
-            transform: translateY(-10px);
-        }
-        
 
         .close {
-        position: absolute;
-        top: 15px;
-        right: 35px;
-        color: #f1f1f1;
-        font-size: 40px;
-        font-weight: bold;
-        transition: 0.3s;
+            color: #aaaaaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
         }
 
         .close:hover,
         .close:focus {
-        color: #bbb;
-        text-decoration: none;
-        cursor: pointer;
-        }
-
-
-
-        .slide {
-            display: none;
-            position: relative;  /* 슬라이드에 상대 위치를 설정합니다. */
-        }
-
-    
-        .post-imgs {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-
-        .prev, .next {
+            color: #000;
+            text-decoration: none;
             cursor: pointer;
-            position: absolute;  /* 화살표에 절대 위치를 설정합니다. */
-            top: 50%;
-            transform: translateY(-50%);  /* 화살표를 수직으로 중앙에 위치시킵니다. */
-            padding: 8px 12px;
-            color: white;
+        }
+
+        #modal-content-head{
+            display: flex;
+            justify-content: space-between; /* 가운데와 오른쪽 사이에 최대한의 공간을 둡니다. */
+            align-items: center;
+            border-bottom: 1px solid #DDD;
+            padding-bottom : 15px;
+        }
+
+        #modal-name{
+            width: 200px;
+            flex: 1; /* 이를 통해 modal-name 요소가 가능한 많은 공간을 차지하게 되어, 실질적으로 중앙에 위치하게 됩니다. */
+            text-align: center; /* 텍스트를 중앙으로 정렬 */
             font-weight: bold;
             font-size: 18px;
-            background-color: rgba(0,0,0,0.5);
-            border-radius: 3px;
-            transition: 0.6s ease;
-            z-index: 1;  /* 화살표가 이미지 위에 나타나도록 합니다. */
         }
 
-        .prev {
-            left: 0;  /* 왼쪽 화살표를 왼쪽으로 정렬합니다. */
+        #modal-content-body{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
         }
 
-        .next {
-            right: 0;  /* 오른쪽 화살표를 오른쪽으로 정렬합니다. */
+        #modal-content-body > * {
+            margin-top:20px;
+        }
+        #nextButtonContainer{
+            display:flex;
+        }
+        .close-top-right {
+            position: fixed;
+            top: 5px;
+            right: 5px;
+            cursor: pointer; /* 선택 가능한 표시를 위한 스타일 */
         }
 
-        .prev:hover, .next:hover {
-            background-color: rgba(0,0,0,0.8);
-        }
-        .disabled-button {
-            opacity: 0.3;          /* 버튼의 투명도를 낮춰서 비활성화처럼 보이게 합니다. */
-            pointer-events: none; /* 버튼 클릭을 막습니다. */
-        }
-
-
-        .read-more {
-            color: gray;
-            cursor: pointer;
+        .post-upload {
+            display: none;
+            height: 80%;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            background-color: #ffffff;
+            margin-top:50px;
         }
 
-        a {
-        color: inherit;      /* 부모 요소의 글자 색상을 상속 */
-        text-decoration: none;  /* 밑줄 제거 */
-    }
+        /* 제목 입력 */
+        .post-upload-title input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            font-size: 16px;
+            outline: none;
+        }
 
-    a:hover, a:focus {
-        color: inherit;      /* 마우스 호버 또는 포커스 상태에서도 색상 상속 */
-    }
+        /* 본문 내용 입력 */
+        .post-upload-text textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            font-size: 14px;
+            outline: none;
+            resize: vertical; /* 사용자가 세로 크기만 조절할 수 있게 합니다. */
+        }
 
-    .list-main-image img {
-        cursor: pointer; /* hand cursor */
-    }
-    
-    /* 모달 창 스타일 */
-    .modal {
-        display: none; /* Hidden by default */
-        position: fixed; /* Stay in place */
-        z-index: 1; /* Sit on top */
-        padding-top: 100px;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        overflow: auto;
-        background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-    }
+        /* 해시태그 입력 */
+        .post-upload-hashtag input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            font-size: 14px;
+            outline: none;
+            color: #8e8e8e; /* 해시태그의 회색 텍스트 스타일 */
+        }
 
-    .modal-content {
-        background-color: #fefefe;
-        margin: auto;
-        padding: 20px;
-        border: 1px solid #888;
-        width: 1000px;
-        height: 850px;
-        z-index: 1000; 
-    }
+        #modeal-content-main{
+            display: flex;
+            flex-direction: row;
+            height: 100%;
+        }
+        #main-line{
+            width:1200px; display: flex;justify-content: flex-start;flex-direction:column;
+        }
 
-    .close {
-        color: #aaaaaa;
-        float: right;
-        font-size: 28px;
-        font-weight: bold;
-    }
+        #sidebar{
+            height:600px; transition: width 0.5s;display: flex; flex-direction: row; justify-content: flex-start; overflow: hidden;
+        }
+        }
 
-    .close:hover,
-    .close:focus {
-        color: #000;
-        text-decoration: none;
-        cursor: pointer;
-    }
 
-    #modal-content-head{
-        display: flex;
-        justify-content: space-between; /* 가운데와 오른쪽 사이에 최대한의 공간을 둡니다. */
-        align-items: center;
-        border-bottom: 1px solid #DDD;
-        padding-bottom : 15px;
-    }
-
-    #modal-name{
-        width: 200px;
-        flex: 1; /* 이를 통해 modal-name 요소가 가능한 많은 공간을 차지하게 되어, 실질적으로 중앙에 위치하게 됩니다. */
-        text-align: center; /* 텍스트를 중앙으로 정렬 */
-        font-weight: bold;
-        font-size: 18px;
-    }
-
-    #modal-content-body{
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        width: 100%;
-    }
-
-    #modal-content-body > * {
-        margin-top:20px;
-    }
-    #nextButtonContainer{
-        display:flex;
-    }
-    .close-top-right {
-        position: fixed;
-        top: 5px;
-        right: 5px;
-        cursor: pointer; /* 선택 가능한 표시를 위한 스타일 */
-    }
-
-    .post-upload {
-        display: none;
-        height: 80%;
-        border: 1px solid #e0e0e0;
-        border-radius: 10px;
-        padding: 20px;
-        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-        background-color: #ffffff;
-        margin-top:50px;
-    }
-
-    /* 제목 입력 */
-    .post-upload-title input {
-        width: 100%;
-        padding: 10px;
-        margin-bottom: 10px;
-        border: 1px solid #e0e0e0;
-        border-radius: 5px;
-        font-size: 16px;
-        outline: none;
-    }
-
-    /* 본문 내용 입력 */
-    .post-upload-text textarea {
-        width: 100%;
-        padding: 10px;
-        margin-bottom: 10px;
-        border: 1px solid #e0e0e0;
-        border-radius: 5px;
-        font-size: 14px;
-        outline: none;
-        resize: vertical; /* 사용자가 세로 크기만 조절할 수 있게 합니다. */
-    }
-
-    /* 해시태그 입력 */
-    .post-upload-hashtag input {
-        width: 100%;
-        padding: 10px;
-        border: 1px solid #e0e0e0;
-        border-radius: 5px;
-        font-size: 14px;
-        outline: none;
-        color: #8e8e8e; /* 해시태그의 회색 텍스트 스타일 */
-    }
-
-    #modeal-content-main{
-        display: flex;
-        flex-direction: row;
-        height: 100%;
-    }
     </style>
 </head>
 <body>
-    <div id='wrapper' style="margin-bottom: 0px;">    
-        <div style="width:1920px; display: flex;justify-content: flex-start;flex-direction:row;">
+    <div id='wrapper' style="margin-bottom: 0px;">
+        <div id="mobile-main-imageDiv">
+            <img id="mobile-main-logo" src="/media/logo.png"> 
+        </div>
+
+        <div id="main-template">
             <div id="ul-list" style="border-right:2px #0D8C7F solid;">
-                <ul style="padding-bottom: 20px;padding-left: 0px;">
+                <ul id="ul-list-ul">
                     <!-- 메인화면 로고 위치-->
-                    <li class="list-main-image" style="margin-bottom:40px;margin-top:30px;margin-left: 20px;" onclick="location.reload();"> 
-                        <img src="/media/logo.png" style="width:70px;">
+                    <li class="list-main-image" onclick="location.reload();"> 
+                        <img src="/media/logo.png">
                     </li>                    
                     <li class="contents-list">
                         <img src="/media/house-door-fill.svg">
@@ -561,7 +793,7 @@
             </div>
             
 
-            <div id="main-line" style="width:1200px; display: flex;justify-content: flex-start;flex-direction:column;">
+            <div id="main-line">
                 <!-- <div class="swiper-container" style="border-bottom: solid 1px #ddd; height: 130px;">
                     <div class="swiper-wrapper">
                         {% for item in user_example %}
@@ -636,7 +868,7 @@
                 </div>
             </div>             
             
-            <div id="sidebar" style="height:600px; transition: width 0.5s;display: flex; flex-direction: row; justify-content: flex-start; overflow: hidden;">
+            <div id="sidebar">
                 <button id="toggleButton" style="align-self: flex-end;background: none; border: none;height: 100%;margin:0px;margin-left:10px;">
                     <img id="arrowImg" src="/media/chevron-double-right.svg" alt="Toggle">
                 </button>

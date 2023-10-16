@@ -250,7 +250,6 @@ def upload_post(request):
         hashtag = request.POST.get('hashtag')
         data = json.loads(hashtag)
         hashtags = [f"#{item['value']}" for item in data]
-        print(hashtags)
 
         # Post 객체 생성 및 저장
         post = Post(user=user, text=text, hashtag=hashtags)
