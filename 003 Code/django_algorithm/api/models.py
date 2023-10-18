@@ -6,6 +6,16 @@ class Dog_Info(models.Model):
     def __str__(self):
         return self.dog_mer
     
+class Monthly_Food(models.Model):
+    food_1 = models.ForeignKey(Dog_Info, related_name='food_items1', on_delete=models.CASCADE, null=True)
+    food_2 = models.ForeignKey(Dog_Info, related_name='food_items2', on_delete=models.CASCADE, null=True)
+    food_3 = models.ForeignKey(Dog_Info, related_name='food_items3', on_delete=models.CASCADE, null=True)
+    food_4 = models.ForeignKey(Dog_Info, related_name='food_items4', on_delete=models.CASCADE, null=True)
+    dog_info = models.ForeignKey(Dog_Info, related_name='food_month', on_delete=models.CASCADE, null=True)
+    
+    def __str__(self):
+        return f'{self.food_1} - {self.food_2} - {self.food_3} - {self.food_4} - {self.dog_info}'
+    
 class Food_Item(models.Model):
     name = models.CharField(max_length=100)
     unit = models.IntegerField()
@@ -21,6 +31,16 @@ class Food_Result(models.Model):
 
     def __str__(self):
         return f"{self.name} - {self.unit}"
+    
+class Nut_some_save(models.Model):
+    dog_info = models.ForeignKey(Dog_Info, related_name='nut_some_save', on_delete=models.CASCADE, null=True)
+    B10100 = models.FloatField()
+    B10300 = models.FloatField()
+    B10700 = models.FloatField()
+    
+    def __str__(self):
+        return f"{self.dog_info} - {self.B10100} - {self.B10300} - {self.B10700}"
+    
 
 class Nut_7_save(models.Model):
     dog_info = models.ForeignKey(Dog_Info, related_name='nut_7_save', on_delete=models.CASCADE, null=True)
@@ -32,9 +52,15 @@ class Nut_7_save(models.Model):
     suffient = models.IntegerField()
     lack = models.IntegerField()
     
-    
     def __str__(self):
         return f"{self.dog_info} - {self.A10100} - {self.A10300} - {self.A10400} - {self.A10600} - {self.A10700} - {self.suffient} - {self.lack}"
+    
+class Nut_sufficient(models.Model):
+    dog_info = models.ForeignKey(Dog_Info, related_name='nut_sufficient_save', on_delete=models.CASCADE, null=True)
+    token_name = models.CharField(max_length=100)
+    
+    def __str__(self):
+        return f'{self.dog_info} - {self.token_name}'
     
 class Nut_report(models.Model):
     dog_info = models.ForeignKey(Dog_Info, related_name='nut_report', on_delete=models.CASCADE, null=True)

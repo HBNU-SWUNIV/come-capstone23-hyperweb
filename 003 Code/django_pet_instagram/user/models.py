@@ -121,6 +121,7 @@ class Dog_Food_Token(models.Model):
     user_id = models.ForeignKey(User, related_name='Dog_food_token', on_delete=models.CASCADE, null=True)
     dog_id = models.ForeignKey(Dog, related_name='Dog_food_token', on_delete=models.CASCADE, null=True)
     dog_token = models.IntegerField()
+    is_month = models.BooleanField()
     
     def __str__(self):
         return self.dog_token
