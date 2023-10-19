@@ -64,12 +64,17 @@ class DietOptimizer:
         select_list = ['A10100','A10300','A10400','A10600','D10201','D10202','D10203','D10204','D10205','D10206','D10207','D10208','D10209','D10210']
         
         adult_nutrient_max_list = [0.0] * 14
+        # 아래의 기준은 1000kcal 기준 -> dog_mer에 따라 변동되야함  // 영양소 최대값도 동일 
+        # ex) dog mer이 500kcal 일시 모든 기준에 나누기 2
         adult_nutrient_min_list = [0.0, 0.0, 0.0, 0.0, 950., 1700., 1580., 830., 1130., 1200., 400., 1230., 480., 1280.]
-        
+        # coefficient = self.dog_mer / 1000
+        # fixed_nutrient_list = [value * coefficient for value in adult_nutrient_min_list]
+
         adult_nutrient_min_list[0] = self.dog_mer
+        # 탄단지 비율 계산 쉽게 조정 
         adult_nutrient_min_list[1] = round(0.4 * self.dog_mer / 4,2)
-        adult_nutrient_min_list[2] = round(0.2 * self.dog_mer / 9,2)
-        adult_nutrient_min_list[3] = round(0.4 * self.dog_mer / 4,2)
+        adult_nutrient_min_list[2] = round(0.1 * self.dog_mer / 9,2)
+        adult_nutrient_min_list[3] = round(0.5 * self.dog_mer / 4,2)
         
         #aim_nut_list = [code, min, max] 구조 변화
         for i, code in enumerate(select_list):
@@ -117,8 +122,9 @@ class DietOptimizer:
         # Objective function
         objective = self.solver.Objective()
         for index, food in enumerate(self.foods):
-            coefficient = 50 if index < 2 else 100  # 첫 번째 음식의 계수를 100으로, 나머지는 1로 설정
-            objective.SetCoefficient(food, coefficient)
+            # 계수에 맞춰 읍식물 출력시 곱해줘야하는데 안해줘서 오류가 난것 같습니다.
+            # coefficient = 50 if index < 2 else 100  # 첫 번째 음식의 계수를 100으로, 나머지는 1로 설정
+            objective.SetCoefficient(food, 100)
         objective.SetMinimization()
 
         if not self.solver_check(): # problem check
