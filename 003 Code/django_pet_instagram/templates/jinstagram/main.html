@@ -235,16 +235,141 @@
                 margin-top: 10px;
                 text-align: center;
             }
+            .contents-list > a > img,
             .contents-list > img{
                 width: 30px;
+                height: 30px;
             }
-            .contents-list > span,
-            .contents-list > a {
+            .contents-list > span{
                 display: none;
+            }
+
+            .contents-list > a{
+                content: "";
+                margin: 0px;
+                padding: 0px;
+                font-size: 0;
+            }
+            
+            /* 모달 창 스타일 */
+            .modal {
+                display: none; /* Hidden by default */
+                position: fixed; /* Stay in place */
+                z-index: 1; /* Sit on top */
+                padding-top: 10px;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                overflow: auto;
+                background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+            }
+
+            .modal-content {
+                background-color: #fefefe;
+                margin: auto;
+                padding: 20px;
+                border: 1px solid #888;
+                width: 100%;
+                height: 750px;
+                z-index: 1000; 
+            }
+
+            #modal-image{
+                width: 100px;
+                height: 100px;
+            } 
+
+            .close {
+                color: #aaaaaa;
+                float: right;
+                font-size: 28px;
+                font-weight: bold;
+            }
+
+            .close:hover,
+            .close:focus {
+                color: #000;
+                text-decoration: none;
+                cursor: pointer;
+            }
+
+            #modal-content-head{
+                display: flex;
+                justify-content: space-between; /* 가운데와 오른쪽 사이에 최대한의 공간을 둡니다. */
+                align-items: center;
+                border-bottom: 1px solid #DDD;
+                padding-bottom : 15px;
+            }
+
+            #modal-name{
+                width: 200px;
+                flex: 1; /* 이를 통해 modal-name 요소가 가능한 많은 공간을 차지하게 되어, 실질적으로 중앙에 위치하게 됩니다. */
+                text-align: center; /* 텍스트를 중앙으로 정렬 */
+                font-weight: bold;
+                font-size: 18px;
+            }
+
+            #modal-content-body{
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                width: 100%;
+            }
+
+            #modal-content-body > * {
+                margin-top:20px;
+            }
+            #nextButtonContainer{
+                display:flex;
+            }
+            .close-top-right {
+                position: fixed;
+                top: 5px;
+                right: 5px;
+                cursor: pointer; /* 선택 가능한 표시를 위한 스타일 */
+            }
+
+            .post-upload {
+                display: none;
+                height: 80%;
+                border: 1px solid #e0e0e0;
+                border-radius: 10px;
+                padding: 20px;
+                box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+                background-color: #ffffff;
+                margin-top:50px;
+            }
+
+            /* 제목 입력 */
+            .post-upload-title input {
+                width: 100%;
+                padding: 10px;
+                margin-bottom: 10px;
+                border: 1px solid #e0e0e0;
+                border-radius: 5px;
+                font-size: 16px;
+                outline: none;
+            }
+
+            /* 본문 내용 입력 */
+            .post-upload-text textarea {
+                width: 100%;
+                padding: 10px;
+                margin-bottom: 10px;
+                border: 1px solid #e0e0e0;
+                border-radius: 5px;
+                font-size: 14px;
+                outline: none;
+                resize: vertical; /* 사용자가 세로 크기만 조절할 수 있게 합니다. */
             }
         }
 
-        @media (min-width: 801px) and (max-width: 2000px){  
+        @media (min-width: 801px) and (max-width: 2000px){ 
+            #modal-image{
+                width: 500px;
+                height: 500px;
+            } 
             #mobile-main-imageDiv{
                 display: none;
             }
@@ -728,7 +853,7 @@
                     <li class="list-main-image" onclick="location.reload();"> 
                         <img src="/media/logo.png">
                     </li>                    
-                    <li class="contents-list">
+                    <li class="contents-list" onclick="location.reload();">
                         <img src="/media/house-door-fill.svg">
                         <span>메인화면</span>
                     </li>
@@ -741,16 +866,22 @@
                         <span>알 림</span>
                     </li>
                     <li class="contents-list">
-                        <img  src="/media/plus-square.svg">
-                        <a href="#" class="btn" style="width: 90px; padding:0px; margin-left:-20px;">만들기</a>
+                        <a href="#" class="btn" id="upload-post-list">
+                            <img src="/media/plus-square.svg">
+                            만들기
+                        </a>
                     </li>                  
                     <li class="contents-list">
-                        <img  src="/media/journal-plus.svg">
-                        <a href="{% url 'Food_view' %}">보고서 작성</a>             
+                        <a href="{% url 'Food_view' %}">
+                            <img src="/media/journal-plus.svg">
+                            보고서 작성
+                        </a>             
                     </li>  
                     <li class="contents-list">
-                        <img  src="/media/gear-fill.svg">
-                        <a href="{% url 'profile' %}">옵션</a>             
+                        <a href="{% url 'profile' %}">
+                            <img src="/media/gear-fill.svg">
+                            옵션
+                        </a>             
                     </li>       
                 </ul>
             </div>
@@ -767,7 +898,7 @@
                     <div id="modeal-content-main">
                         <div id="modal-content-body">
                             <div id="imagePreviewContainer"></div> <!-- 이미지 미리보기가 표시될 영역 -->
-                            <img src="/media/images_removed.png" style="width: 500px; height: 500px;">
+                            <img src="/media/images_removed.png" id="modal-image">
                             <span id="uploadPrompt">사진을 선택하거나 올려주세요</span>
                             <input type="file" id="fileInput" multiple accept=".png, .jpg, .jpeg"> <!-- 여러 파일 선택 허용 -->                                                  
                         </div>
@@ -1008,19 +1139,29 @@
                 
 
                 nextButton.addEventListener('click', function(e) {
+                    var width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
                     const parentWidth = modalContentBody.parentElement.offsetWidth; // 부모 요소의 너비
                     const computedStyle = window.getComputedStyle(modalContentBody);
                     const widthPx = parseFloat(computedStyle.width); // 픽셀 단위의 너비 (단위 제거)
                     const widthPercent = (widthPx / parentWidth) * 100; // 퍼센트로 변환
-                    if (widthPercent >= 80) {
+                    if (widthPercent >= 80 && nextButton.textContent != '공유하기') {
                         nextButton.innerText = '공유하기';
-                        e.preventDefault();
-                        modalContentBody.style.width = '50%';
-                        postUpload.style.width = '50%';
+                        e.preventDefault();                        
+                        if (width <= 800) { // 800px 이하면 모바일로 간주
+                            // 모바일용 코드
+                            modalContentBody.style.width = '100%';
+                            postUpload.style.width = '100%';
+                            console.log("모바일 버전");
+                        } else {
+                            // PC용 코드
+                            modalContentBody.style.width = '50%';
+                            postUpload.style.width = '50%';
+                            console.log("PC 버전");
+                        }                      
                         postUpload.style.display = 'block';
-                    } else {
+                    } 
+                    else if(nextButton.textContent == '공유하기'){
                         const formData = new FormData();
-
                         const title = document.getElementById('postTitle').value;
                         const content = document.getElementById('postContent').value;
                         const hashtag = document.getElementById('postHashtag').value;
@@ -1120,7 +1261,7 @@
     var modal = document.getElementById("myModal");
 
     // "만들기" 항목을 가져옵니다.
-    var btn = document.querySelector(".contents-list");
+    var btn = document.querySelector("#upload-post-list");
 
     // 모달 창의 "X" 버튼을 가져옵니다.
     var span = document.querySelector(".close");
@@ -1212,51 +1353,88 @@
 
     fileInput.addEventListener('change', function() {
         const files = this.files;
+        var width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
 
         // 이미지 미리보기 컨테이너 내용 비우기
         imagePreviewContainer.innerHTML = '';
+        if (width <= 800) { // 800px 이하면 모바일로 간주
+            // 모바일용 코드
+            if (files.length > 0) {
+                // 메시지 숨기기
+                uploadPrompt.style.display = 'none';
+                // 기본 이미지 숨기기
+                defaultImage.style.display = 'none';
 
-        if (files.length > 0) {
-            // 메시지 숨기기
-            uploadPrompt.style.display = 'none';
-            // 기본 이미지 숨기기
-            defaultImage.style.display = 'none';
+                imagePreviewContainer.style.display = 'block';
+                // 이미지 크기를 장수에 따라 결정
+                let imgSize;
+                switch (files.length) {
+                    case 1: imgSize = '100px'; break;
+                    case 2: imgSize = '80px'; break;
+                    default: imgSize = '70px'; break;
+                }
 
-            imagePreviewContainer.style.display = 'block';
-            // 이미지 크기를 장수에 따라 결정
-            let imgSize;
-            switch (files.length) {
-                case 1: imgSize = '300px'; break;
-                case 2: imgSize = '250px'; break;
-                default: imgSize = '200px'; break;
+                for (let i = 0; i < Math.min(files.length, 5); i++) { // 최대 5장만 보여줌
+                    const reader = new FileReader();
+                    
+                    reader.addEventListener('load', function() {
+                        const img = document.createElement('img');
+                        img.setAttribute('src', this.result);
+                        img.style.width = imgSize;
+                        img.style.height = imgSize;
+                        img.style.margin = '10px';
+                        imagePreviewContainer.appendChild(img);
+                    });
+
+                    reader.readAsDataURL(files[i]);
+                }
+            } else {
+                // 파일 선택이 취소된 경우 메시지와 기본 이미지를 다시 표시
+                uploadPrompt.style.display = 'block';
+                defaultImage.style.display = 'block';
             }
-
-            for (let i = 0; i < Math.min(files.length, 5); i++) { // 최대 5장만 보여줌
-                const reader = new FileReader();
-                
-                reader.addEventListener('load', function() {
-                    const img = document.createElement('img');
-                    img.setAttribute('src', this.result);
-                    img.style.width = imgSize;
-                    img.style.height = imgSize;
-                    img.style.margin = '10px';
-                    imagePreviewContainer.appendChild(img);
-                });
-
-                reader.readAsDataURL(files[i]);
-            }
+            console.log("모바일 버전");
         } else {
-            // 파일 선택이 취소된 경우 메시지와 기본 이미지를 다시 표시
-            uploadPrompt.style.display = 'block';
-            defaultImage.style.display = 'block';
+            // PC용 코드
+            if (files.length > 0) {
+                // 메시지 숨기기
+                uploadPrompt.style.display = 'none';
+                // 기본 이미지 숨기기
+                defaultImage.style.display = 'none';
+
+                imagePreviewContainer.style.display = 'block';
+                // 이미지 크기를 장수에 따라 결정
+                let imgSize;
+                switch (files.length) {
+                    case 1: imgSize = '300px'; break;
+                    case 2: imgSize = '250px'; break;
+                    default: imgSize = '200px'; break;
+                }
+
+                for (let i = 0; i < Math.min(files.length, 5); i++) { // 최대 5장만 보여줌
+                    const reader = new FileReader();
+                    
+                    reader.addEventListener('load', function() {
+                        const img = document.createElement('img');
+                        img.setAttribute('src', this.result);
+                        img.style.width = imgSize;
+                        img.style.height = imgSize;
+                        img.style.margin = '10px';
+                        imagePreviewContainer.appendChild(img);
+                    });
+
+                    reader.readAsDataURL(files[i]);
+                }
+            } else {
+                // 파일 선택이 취소된 경우 메시지와 기본 이미지를 다시 표시
+                uploadPrompt.style.display = 'block';
+                defaultImage.style.display = 'block';
+            }
+            console.log("PC 버전");
         }
+        
     });
-
-    
-
-
 // 만약 다른 부분을 클릭하여 모달 창을 닫고 싶다면 추가적인 이벤트 리스너를 작성할 수 있습니다.
-
 
     // 더보기
     document.addEventListener("DOMContentLoaded", function() {
@@ -1339,9 +1517,6 @@
         showSlide(1, container.id);
     });
 
-
-
-
     $(document).ready(function(){
         $("#heart").click(function() {
             if ($(this).attr("src") == "/media/heart.svg") {
@@ -1375,8 +1550,6 @@
             }
         });
     });
-
-
 
     function isScrollBottom() {
         var scrollTop = $(window).scrollTop();
@@ -1417,7 +1590,6 @@
         });
         }
     });
-
 
     // 오른쪽 버튼 클릭 이벤트 리스너
     document.getElementById('toggleButton').addEventListener('click', function() {
