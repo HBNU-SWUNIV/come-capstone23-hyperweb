@@ -287,6 +287,7 @@
             width: 0;  /* Internet Explorer에서의 스크롤바 너비를 0으로 설정 */
         }
     </style>
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
 </head>
 <body>
 
@@ -341,6 +342,9 @@
     
 
 <script>
+    let namesArray = [];
+    let gramArray = [];
+
     document.addEventListener("DOMContentLoaded", function() {
         document.querySelectorAll('.image-label').forEach(function(el) {
             el.textContent = el.textContent.replace('.png', '');
@@ -417,6 +421,8 @@
     document.getElementById('submitBtn').addEventListener('click', function() {
         selectedImagesDiv.innerHTML = '';
         const selected = document.querySelectorAll('.selected img');
+        namesArray = [];
+
         let tableContent = `
             <table>
                 <thead>
@@ -431,12 +437,14 @@
         `;
         selected.forEach((img, index) => {
             let name = img.alt.replace(".png", "");
+            namesArray.push(name);
+
             tableContent += `
                 <tr>
                     <td>${index + 1}</td>
                     <td>${name}</td>
                     <td><img src="${img.src}" alt="${name}" /></td>
-                    <td><input type="text" class="gram-input" placeholder="그램수 입력"></td>
+                    <td><input type="text" class="gram-input" placeholder="그램수 입력" value="0"></td>
                 </tr>
             `;
         });
@@ -448,21 +456,66 @@
 
     document.getElementById('reportSubmitBtn').addEventListener('click', function() {
         const gramInputs = document.querySelectorAll('.gram-input');
+        const names = document.querySelectorAll('tbody tr td:nth-child(2)');
+    
         let allFilled = true;
-        gramInputs.forEach(input => {
+        
+        var result = new Array();
+        let count = 0;
+    
+        gramInputs.forEach((input, index) => {
             if(input.value.trim() === '') {
                 allFilled = false;
             }
         });
-
+    
         if(!allFilled) {
             alert('모든 그램수를 입력해주세요.');
         } else {
-            // 제출 관련 코드 (예: 폼 제출)를 여기에 추가합니다.
+            alert('processing');
+            
+            gramArray = [];
+            gramInputs.forEach(input => {
+                gramArray.push(input.value);
+            });
+    
+            for (let i = 0; i < gramArray.length; i++) {
+                const temp = { food: namesArray[i], weight: gramArray[i] };
+                result.push(temp);
+                console.log(`입력 ${i}: 음식 - ${namesArray[i]}, 무게 - ${gramArray[i]}`);
+            }
+            sendDataToServer(result, gramArray.length);
         }
     });
+    
+    function sendDataToServer(result, food_count) {
 
+        $.ajax({
+            url: "/algorithm_api/Food_view",
+            method: "POST",
+            data: JSON.stringify({ foods: result }),  // Convert the data into a JSON string
+            contentType: 'application/json',  // Set the data type to JSON
+            success: function (data, status, xhr) {
+                if (xhr.status === 205) {
+                    console.log("계산 실패");
+                    alert("입력 값을 변경하시요.");
+                } else {
+                    console.log("성공");
+                    alert("입력 성공");
+                    let redirectUrl = (food_count > 10) ? '/make_report/report_month_page' : '/make_report/report_page';
+                    location.replace(redirectUrl);
 
+                }
+            },
+            error: function (request, status, error) {
+                console.log("에러");
+            },
+            complete: function () {
+                console.log("완료");
+            }
+        });
+    }
+    
 
 </script>
 

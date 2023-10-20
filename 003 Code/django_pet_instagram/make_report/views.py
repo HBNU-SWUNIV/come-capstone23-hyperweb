@@ -12,7 +12,7 @@ from rest_framework.views import APIView
 import math
 from PIL import Image
 
-from algorithm_api.models import Food_Item, Nut_7_save, Nut_report
+from algorithm_api.models import Monthly_Food, Food_Item, Nut_7_save, Nut_report
 from user.models import User, Dog
 
 import base64
@@ -21,48 +21,48 @@ import os
 def report_month(request):
     # 예제 데이터 (실제 데이터로 교체하셔야 합니다.)
     weekly_meals = {
-        '1주차': {
+        'food_1': {
             'menu': ['돼지고기', '감자', '브로콜리','연두부'],
             'features': ['칼슘이 풍부한', '단백질이 풍부한', '나트륨이 풍부한'],
-             'color': 'rgba(255,0,0,0.3)',
-             'days': ['1', '22', '3', '4', '5', '23', '7'],
+            'color': 'rgba(255,0,0,0.3)',
+            'days': ['1', '22', '3', '4', '5', '23', '7'],
         },
-        '2주차': {
+        'food_2': {
             'menu': ['소고기', '고구마', '달걀'],
             'features': ['비타민C가 풍부한', '단백질이 풍부한', '지방이 풍부한'],
-             'color': 'rgba(0, 0, 255, 0.3)',  # 블루 색상의 투명도를 0.3으로 설정
-             'days': ['8', '16', '10', '11', '20', '21', '14','31'],
+            'color': 'rgba(0, 0, 255, 0.3)',  # 블루 색상의 투명도를 0.3으로 설정
+            'days': ['8', '16', '10', '11', '20', '21', '14','31'],
         },
-        '3주차': {
+        'food_3': {
             'menu': ['닭고기', '파프리카','감자', '고구마'],
             'features': ['지방이 풍부한', '탄수화물이 풍부한', '비타민B가 풍부한'],
-             'color': 'lightgreen',
-             'days': ['15', '9', '17', '18', '19', '25', '13','30'],
+            'color': 'lightgreen',
+            'days': ['15', '9', '17', '18', '19', '25', '13','30'],
         },
-        '4주차': {
+        'food_4': {
             'menu': ['소고기', '감자', '옥수수','귀리'],
             'features': ['단백질이 풍부한', '나트륨이 풍부한', '지방이 풍부한'],
             'color': 'lightyellow',
-             'days': ['2', '6', '24', '12', '26', '27', '28','29'],
+            'days': ['2', '6', '24', '12', '26', '27', '28','29'],
         },
     }
     calcium_data = {
-        'week1': 83,
-        'week2': 17,
-        'week3': 94,
-        'week4': 42
+        'food_1': 83,
+        'food_2': 17,
+        'food_3': 94,
+        'food_4': 42
     }
     magnesium_data = {
-        'week1': 28,
-        'week2': 55,
-        'week3': 74,
-        'week4': 9
+        'food_1': 28,
+        'food_2': 55,
+        'food_3': 74,
+        'food_4': 9
     }
     iron_data = {
-        'week1': 66,
-        'week2': 38,
-        'week3': 90,
-        'week4': 51
+        'food_1': 66,
+        'food_2': 38,
+        'food_3': 90,
+        'food_4': 51
     }
     month_days = [
         ['1', '2', '3', '4', '5', '6', '7'],
@@ -70,7 +70,6 @@ def report_month(request):
         ['15', '16', '17', '18', '19', '20', '21'],
         ['22', '23', '24', '25', '26', '27', '28'],
         ['29','30','31']
-        # ... (필요한 만큼 날짜를 추가)
     ]
 
     
@@ -99,8 +98,109 @@ def make_report(request):
     return render(request, 'report.html', context)
 
 
+class ReportMonthView(APIView):
+    def __init__(self):
+        super().__init__()
+        self.dog_info_id = None
+        self.dog_id = None
+    
+    def get(self, request):
+        self.dog_info_id = request.session.get('dog_info_id')
+        self.dog_id = request.session.get('dog_id')
+        print(self.dog_id)
+        dog_nickname = Dog.objects.get(id=self.dog_id)
+        print('report dog info: ', self.dog_info_id, 'dog_nickname', dog_nickname)
+        
+        foods_list = []
+        token_list = []
+        some_nut_list = []
+        db_month = Monthly_Food.objects.filter(dog_info=self.dog_info_id).values('food_1', 'food_2', 'food_3', 'food_4')
+        
+        first_record = db_month[0]
+        for idx in range(1, 5):
+            dog_id = first_record[f'food_{idx}']
+            
+            db_food = Food_Item.objects.filter(dog_info=dog_id).values('name')
+            foods_list.append(db_food[0])
+            
+            db_token = Food_Item.objects.filter(dog_info=dog_id).values('name')
+            print('db_token', db_token)
+            token_list.append(db_token[0])
+            
+            db_some_nut = Food_Item.objects.filter(dog_info=dog_id).values('name')
+            print('db_some_nut', db_some_nut)
+            token_list.append(db_some_nut[0])
+        
+        calcium_data = {
+            'food_1': 83,
+            'food_2': 17,
+            'food_3': 94,
+            'food_4': 42
+        }
+        magnesium_data = {
+            'food_1': 28,
+            'food_2': 55,
+            'food_3': 74,
+            'food_4': 9
+        }
+        iron_data = {
+            'food_1': 66,
+            'food_2': 38,
+            'food_3': 90,
+            'food_4': 51
+        }
+        
+        weekly_meals = {
+            'food_1': {
+                'menu': foods_list[0],
+                'features': ['칼슘이 풍부한', '단백질이 풍부한', '나트륨이 풍부한'],
+                'color': 'rgba(255,0,0,0.3)',
+                'days': ['1', '22', '3', '4', '5', '23', '7'],
+            },
+            'food_2': {
+                'menu': foods_list[1],
+                'features': ['비타민C가 풍부한', '단백질이 풍부한', '지방이 풍부한'],
+                'color': 'rgba(0, 0, 255, 0.3)',  # 블루 색상의 투명도를 0.3으로 설정
+                'days': ['8', '16', '10', '11', '20', '21', '14','31'],
+            },
+            'food_3': {
+                'menu': foods_list[2],
+                'features': ['지방이 풍부한', '탄수화물이 풍부한', '비타민B가 풍부한'],
+                'color': 'lightgreen',
+                'days': ['15', '9', '17', '18', '19', '25', '13','30'],
+            },
+            'food_4': {
+                'menu': foods_list[3],
+                'features': ['단백질이 풍부한', '나트륨이 풍부한', '지방이 풍부한'],
+                'color': 'lightyellow',
+                'days': ['2', '6', '24', '12', '26', '27', '28','29'],
+            },
+        }
+        
+        month_days = [
+            ['1', '2', '3', '4', '5', '6', '7'],
+            ['8', '9', '10', '11', '12', '13', '14'],
+            ['15', '16', '17', '18', '19', '20', '21'],
+            ['22', '23', '24', '25', '26', '27', '28'],
+            ['29','30','31']
+        ]
 
-class ReportView(APIView):
+        context = {
+            'weekly_meals': weekly_meals,
+            'calcium_data': calcium_data,
+            'magnesium_data': magnesium_data,
+            'iron_data': iron_data,
+            'month_days': month_days
+        }
+            
+        return render(request, "report/report_month.html", context)
+
+    def post(self, request):
+        
+        return render(request, "report/report_month.html")
+
+
+class ReportView2(APIView):
     def __init__(self):
         super().__init__()
         self.dog_info_id = None
@@ -134,9 +234,8 @@ class ReportView(APIView):
 
     def post(self, request):
         
-        
-        
         return render(request, "report/report2.html")
+    
 
 @csrf_exempt
 def report_to_post(request):

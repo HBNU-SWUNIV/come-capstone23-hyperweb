@@ -1,18 +1,32 @@
 from rest_framework import serializers
 
-from .models import Food_Item, Dog_Info, Get_Id, Nut_7_save, Nut_report
+from .models import Food_Item, Monthly_Food, Dog_Info, Get_Id, Nut_some_save, Nut_7_save, Nut_report, Nut_sufficient
 
 
 class FoodItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = Food_Item
         fields = ['name', 'unit', 'dog_info']
+        
+class MonthItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Monthly_Food
+        fields = ['food_1', 'food_2', 'food_3', 'food_4', 'dog_info']
 
+class NutSomeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Nut_some_save
+        fields = ['B10100', 'B10300', 'B10700', 'dog_info']
         
 class Nut7Serializer(serializers.ModelSerializer):
     class Meta:
         model = Nut_7_save
         fields = ['A10100', 'A10300', 'A10400', 'A10600', 'A10700', 'suffient', 'lack', 'dog_info']
+        
+class NutSufficientSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Nut_sufficient
+        fields = ['token_name', 'dog_info']
 
 class NutReportSerializer(serializers.ModelSerializer):
     class Meta:
