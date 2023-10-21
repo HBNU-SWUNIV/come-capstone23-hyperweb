@@ -26,185 +26,458 @@
     <title>Friend Meal Profile</title>
 
     <style>
-        th,td{
-            text-align:center;
-        }
-        .suggestions {
-            list-style-type: none;
-            margin-top: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            display: none;
-            background-color: white;
-            z-index: 1;
-            width: 97%;  /* 너비를 조정하세요. */
-            height: 200px; /* 높이를 조정하세요. */
-            overflow-y: scroll; /* 수직 스크롤을 활성화합니다. */
-        }
-        .suggestions li {
-            padding: 5px;
-        }
-        .suggestions li:hover {
-            background-color: #eee;
-            cursor: pointer;
-        }
-        .box {
-            width: 150px;
-            height: 150px;
-            border-radius: 70%;
-            overflow: hidden;
-        }
+        @media (max-width: 800px){
+            .upper-right-div > div{
+                width: 100px;
+            }
 
-        .profile {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+            #upper-img-div-box{
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+            }
+            
+            #button_profile_upload{
+                width: 100px;
+                height: 30px;
+            }
 
-        .feed_box {
-            margin: 20px 0;
-            border: solid 1px gray;
-            background-color: white
-        }
+            #upper-img-div{
+                padding: 10px 10px;
+            }
 
-        .modal_overlay {
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            left: 0;
-            top: 0;
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(1.5px);
-            -webkit-backdrop-filter: blur(1.5px);
-        }
+            #upperDiv{
+                display: flex; flex-direction: row;text-align: center; justify-content: center;padding-top: 10px; background-color:#FAFAFA
+            }
+            #profile-navbar{
+                display: none;
+            }
 
-        .modal_window {
-            background: white;
-            backdrop-filter: blur(13.5px);
-            -webkit-backdrop-filter: blur(13.5px);
-            border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            width: 800px;
-            height: 600px;
-            position: relative;
-            padding: 10px;
-        }
+            th,td{
+                text-align:center;
+            }
 
-        body, html {
-            margin: 0;
-            height: 100%;
-            overflow-x: hidden;
-        }
+            .suggestions {
+                list-style-type: none;
+                margin-top: 10px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                display: none;
+                background-color: white;
+                z-index: 1;
+                width: 97%;  /* 너비를 조정하세요. */
+                height: 200px; /* 높이를 조정하세요. */
+                overflow-y: scroll; /* 수직 스크롤을 활성화합니다. */
+            }
+            .suggestions li {
+                padding: 5px;
+            }
+            .suggestions li:hover {
+                background-color: #eee;
+                cursor: pointer;
+            }
+            .box {
+                width: 150px;
+                height: 150px;
+                border-radius: 70%;
+                overflow: hidden;
+            }
+
+            .profile {
+                margin-left: 100px;
+                margin-right: 50px;
+                width: 70px;
+                height: 70px;
+                object-fit: cover;
+                border-radius: 50%;
+            }
+
+            .upper-msg{
+                display: none;
+            }
+
+            .col-4{
+                display: none;
+            }
+            .feed_box {
+                margin: 20px 0;
+                border: solid 1px gray;
+                background-color: white
+            }
+
+            .modal_overlay {
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                left: 0;
+                top: 0;
+                display: none;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                background: rgba(0, 0, 0, 0.8);
+                backdrop-filter: blur(1.5px);
+                -webkit-backdrop-filter: blur(1.5px);
+            }
+
+            .modal_window {
+                background: white;
+                backdrop-filter: blur(13.5px);
+                -webkit-backdrop-filter: blur(13.5px);
+                border-radius: 10px;
+                border: 1px solid rgba(255, 255, 255, 0.18);
+                width: 800px;
+                height: 600px;
+                position: relative;
+                padding: 10px;
+            }
+
+            body, html {
+                margin: 0;
+                height: 100%;
+                overflow-x: hidden;
+            }
 
 
-        .list-container {
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-            position: static;
-            left: 0;
-            top: 0;
-            width: 300px;
-            text-align: center;
-            padding-top: 20px;
-            padding-bottom: 20px;
-            padding-right:20px;
-        }
+            .list-container {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                position: static;
+                left: 0;
+                top: 0;
+                width: 300px;
+                text-align: center;
+                padding-top: 20px;
+                padding-bottom: 20px;
+                padding-right:20px;
+            }
 
-        .feature-list {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-            margin-right: 140px;
-        }
+            .feature-list {
+                list-style: none;
+                margin: 0;
+                padding: 0;
+                margin-right: 140px;
+            }
 
-        .feature-item {
-            cursor: pointer;
-            background-color: #f5f5f5;
-            padding-left:100px;
-            padding-right: 100px;
-            padding-bottom: 30px;
-            padding-top: 30px;
-            margin-bottom: 5px;
-            border-radius: 10px;
-        }
+            .feature-item {
+                cursor: pointer;
+                background-color: #f5f5f5;
+                padding-left:100px;
+                padding-right: 100px;
+                padding-bottom: 30px;
+                padding-top: 30px;
+                margin-bottom: 5px;
+                border-radius: 10px;
+            }
 
-        .feature-item:last-child {
-            margin-bottom: 0;
-        }
+            .feature-item:last-child {
+                margin-bottom: 0;
+            }
 
-        .feature-item:hover {
-            background-color: #e0e0e0;
-        }
+            .feature-item:hover {
+                background-color: #e0e0e0;
+            }
 
-        #wrapper{
-            display: flex;
-            justify-content: space-between;
-        }
+            #wrapper{
+                display: flex;
+                justify-content: space-between;
+            }
 
-        footer{
-        height: 30px;
-        position : relative;
-        transform : translateY(-100%);
-        }
+            footer{
+                height: 30px;
+                position : relative;
+                transform : translateY(-100%);
+            }
 
-        #contentFrame{
-            width: 100%;
-        }
-        .navbar {
-            background-color: #1a3b5c;
-          }
+            #contentFrame{
+                width: 100%;
+            }
+            .navbar {
+                background-color: #1a3b5c;
+            }
 
-          .dog-check-list {
-            width: 100%;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-        }
+            #middle-page{
+                width: 100%;
+            }
 
-        .sub-dog-list {
-            transition: transform 0.3s ease-in-out;
-            border-radius: 4%;
-            border:1px solid black;
-            width: calc(50% - 10px); 
-            background-color: #f0f0f0;
-            margin-bottom: 20px;
-            height: 220px;
-            display: flex;
-        }
-        .dog-value-list{
-            display: flex;
-            flex-direction: column;
-        }
-        .dog-value{
-            display: flex;
-            flex-direction: row;
-            margin-top: 10px;
-            margin-left: 20px;
-        }
+            .dog-check-list {
+                width: 100%;
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-between;
+            }
 
-        .dog-value > label{
-            width: 70px;
-            height: 40px;
-            line-height: 40px;
+            .sub-dog-list {
+                transition: transform 0.3s ease-in-out;
+                border-radius: 4%;
+                border:1px solid black;
+                width: 95%;
+                margin-left: 2.5%;
+                background-color: #f0f0f0;
+                margin-bottom: 20px;
+                height: 220px;
+                display: flex;
+            }
+
+            .sub-dog-list > div > div > img{
+                width:100px;
+                height: 100px;
+                border-radius: 100%;
+                margin-left:10px;
+            }
+
+            .dog-value-list{
+                display: flex;
+                flex-direction: column;
+            }
+            .dog-value{
+                display: flex;
+                flex-direction: row;
+                margin-top: 10px;
+                margin-left: 20px;
+
+            }
+            
+            #dog-value-species > input{
+                width: 170px;
+            }
+
+            .dog-value > label{
+                width: 40px;
+                height: 40px;
+                line-height: 40px;
+                font-size: 12px;
+            }
+
+            .dog-value > input{
+                height: 40px;
+                width: 50px;
+                margin-right: 5px;
+                font-size: 12px;
+            }
+            .sub-dog-list:hover {
+                transform: translateY(-5px);
+            }
+            .feed-text{
+                display: none;
+            }
+
+            #main-image-div{
+                border-bottom: #0D8C7F 2px solid;
+                padding-bottom : 10px;
+                margin-top: 10px;
+            }
+
+            #main-image-div > a > img{
+                width: 50px;
+                height: 50px;
+            }
         }
-        .dog-value > input{
-            height: 40px;
-            width: 140px;
-            margin-right: 5px;
-        }
-        .sub-dog-list:hover {
-            transform: translateY(-5px);
+        @media (min-width: 801px) and (max-width: 2000px){
+            #dog-value-species > input{
+                width: 200px;
+            }
+            .sub-dog-list > div > div > img{
+                width:100px;
+                height: 100px;
+                border-radius: 100%;
+                margin-left:40px;
+            }
+            
+            #middle-page{
+                margin-left:300px
+            }
+            #upper-img-div-box{
+                width: 175px;
+                height: 175px;
+            }
+            #upper-img-div{
+                padding: 20px 60px;
+            }
+            #upperDiv{
+                display: flex; flex-direction: row;text-align: center; justify-content: center;padding-top: 60px; background-color:#FAFAFA
+            }
+            th,td{
+                text-align:center;
+            }
+            .suggestions {
+                list-style-type: none;
+                margin-top: 10px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                display: none;
+                background-color: white;
+                z-index: 1;
+                width: 97%;  /* 너비를 조정하세요. */
+                height: 200px; /* 높이를 조정하세요. */
+                overflow-y: scroll; /* 수직 스크롤을 활성화합니다. */
+            }
+            .suggestions li {
+                padding: 5px;
+            }
+            .suggestions li:hover {
+                background-color: #eee;
+                cursor: pointer;
+            }
+            .box {
+                width: 150px;
+                height: 150px;
+                border-radius: 70%;
+                overflow: hidden;
+            }
+
+            .profile {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            .feed_box {
+                margin: 20px 0;
+                border: solid 1px gray;
+                background-color: white
+            }
+
+            .modal_overlay {
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                left: 0;
+                top: 0;
+                display: none;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                background: rgba(0, 0, 0, 0.8);
+                backdrop-filter: blur(1.5px);
+                -webkit-backdrop-filter: blur(1.5px);
+            }
+
+            .modal_window {
+                background: white;
+                backdrop-filter: blur(13.5px);
+                -webkit-backdrop-filter: blur(13.5px);
+                border-radius: 10px;
+                border: 1px solid rgba(255, 255, 255, 0.18);
+                width: 800px;
+                height: 600px;
+                position: relative;
+                padding: 10px;
+            }
+
+            body, html {
+                margin: 0;
+                height: 100%;
+                overflow-x: hidden;
+            }
+
+
+            .list-container {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                position: static;
+                left: 0;
+                top: 0;
+                width: 300px;
+                text-align: center;
+                padding-top: 20px;
+                padding-bottom: 20px;
+                padding-right:20px;
+            }
+
+            .feature-list {
+                list-style: none;
+                margin: 0;
+                padding: 0;
+                margin-right: 140px;
+            }
+
+            .feature-item {
+                cursor: pointer;
+                background-color: #f5f5f5;
+                padding-left:100px;
+                padding-right: 100px;
+                padding-bottom: 30px;
+                padding-top: 30px;
+                margin-bottom: 5px;
+                border-radius: 10px;
+            }
+
+            .feature-item:last-child {
+                margin-bottom: 0;
+            }
+
+            .feature-item:hover {
+                background-color: #e0e0e0;
+            }
+
+            #wrapper{
+                display: flex;
+                justify-content: space-between;
+            }
+
+            footer{
+            height: 30px;
+            position : relative;
+            transform : translateY(-100%);
+            }
+
+            #contentFrame{
+                width: 100%;
+            }
+            .navbar {
+                background-color: #1a3b5c;
+            }
+
+            .dog-check-list {
+                width: 100%;
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-between;
+            }
+
+            .sub-dog-list {
+                transition: transform 0.3s ease-in-out;
+                border-radius: 4%;
+                border:1px solid black;
+                width: calc(50% - 10px); 
+                background-color: #f0f0f0;
+                margin-bottom: 20px;
+                height: 220px;
+                display: flex;
+            }
+            .dog-value-list{
+                display: flex;
+                flex-direction: column;
+            }
+            .dog-value{
+                display: flex;
+                flex-direction: row;
+                margin-top: 10px;
+                margin-left: 20px;
+            }
+
+            .dog-value > label{
+                width: 70px;
+                height: 40px;
+                line-height: 40px;
+            }
+            .dog-value > input{
+                height: 40px;
+                width: 140px;
+                margin-right: 5px;
+            }
+            .sub-dog-list:hover {
+                transform: translateY(-5px);
+            }
         }
 
     </style>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light" style="position: fixed;width: 100%;">
+<nav class="navbar navbar-expand-lg navbar-light bg-light" style="position: fixed;width: 100%;" id="profile-navbar">
     <div class="container-fluid" style="justify-content: space-between;flex-wrap: nowrap; min-width: 1000px">
         <a class="navbar-brand" href="main"><img style="width: 50px"
                                               src="/media/logo.png">
@@ -235,27 +508,30 @@
     </div>
 </nav>
 
+<div id="main-image-div">
+    <a href="main">
+        <img src="/media/logo.png"> 
+    </a>    
+</div>
 
-<div style="display: flex; flex-direction: row;text-align: center; justify-content: center;padding-top: 60px; background-color:#FAFAFA" id="upperDiv">
-    <div style="padding: 20px 60px">
-        <div class="box" style="width: 175px; height: 175px;">
-
+<div id="upperDiv">
+    <div id="upper-img-div">
+        <div class="upper-img-div-box">
             <img class="profile"
                  src="{% get_media_prefix %}{{ user.profile_image }}">
-
         </div>
     </div>
     <div style="text-align: left" >
-        <div style="display: flex; flex-direction: row; margin: 20px 0">
+        <div style="display: flex; flex-direction: row; margin: 20px 0" class="upper-right-div">
             <div style="font-size: 26px; margin-right: 40px">
-                {{ user.nickname }}
+                <span>{{ user.nickname }}</span>
             </div>
-            <button id="button_profile_upload" style="margin-right: 40px"> 프로필 사진 편집</button>
+            <button id="button_profile_upload" style="margin-right: 40px">사진변경</button>
             <input type="file" id="input_fileupload" onchange="profile_upload();" style="display: none" />
             <span class="material-icons-outlined" style="margin-right: 40px">settings</span>
         </div>
 
-        <div style="margin-bottom: 20px">
+        <div style="margin-bottom: 20px" class="upper-msg">
             유저에 대한 정보 기입
         </div>
         
@@ -271,7 +547,7 @@
       </div>
     </div>
 
-    <div class="col-8" style="margin-left:300px">
+    <div class="col-8" id="middle-page">
       <div data-bs-spy="scroll" data-bs-target="#list-example" data-bs-smooth-scroll="true" class="scrollspy-example" tabindex="0">
         <h4 id="list-item-1"></br></br></br>애완견 확인</br></br></br></h4>
         <div class="dog-check-list">
@@ -280,16 +556,16 @@
                 <div style="display: flex;flex-direction: row;">
                     <div style="display: flex;flex-direction: column;">
                         <span style="width: 30px;height: 30px;text-align: center;font-size: 20px;font-weight: bold;">{{ forloop.counter }}</span>
-                        <img src="/media/dog-images/{{ forloop.counter }}.jpg" style="width:100px;height: 100px;border-radius: 100%;margin-left:30px">
+                        <img src="/media/dog-images/{{ forloop.counter }}.jpg">
                     </div>
                     <div class="dog-value-list">               
                         <div class="dog-value">
                             <label>별 명</label>
                             <input type="text" class="form-control" value={{ dog.nickname }} disabled>
                         </div>
-                        <div class="dog-value">
+                        <div class="dog-value" id="dog-value-species">
                             <label>견 종</label>
-                            <input type="text" class="form-control" style="width: 280px;" value={{ dog.species }} disabled>
+                            <input type="text" class="form-control" value={{ dog.species }} disabled>
                         </div>
                         <div style="display: flex;flex-direction: row;">
                             <div class="dog-value">
@@ -476,13 +752,16 @@
 <footer>
     <div style="display: flex; flex-direction: row; justify-content: center; align-items: flex-end; margin: 20px; height: 10vh;">
         <div id="button_feed_list" style="cursor: pointer; margin: 0 30px; align-items: center">
-            <span class="material-icons-outlined">grid_on</span>내 게시물
+            <span class="material-icons-outlined">grid_on</span>
+            <span class="feed-text">내 게시물</span>
         </div>
         <div id="button_feed_like_list" style="cursor: pointer; margin: 0 30px; align-items: center">
-            <span class="material-icons-outlined">favorite_border</span>좋아요
+            <span class="material-icons-outlined">favorite_border</span>
+            <span class="feed-text">좋아요</span>
         </div>
         <div id="button_feed_bookmark_list" style="cursor: pointer; margin: 0 30px; align-items: center">
-            <span class="material-icons-outlined">bookmark_border</span>북마크
+            <span class="material-icons-outlined">bookmark_border</span>
+            <span class="feed-text">북마크</span>
         </div>
     </div>
 </footer>

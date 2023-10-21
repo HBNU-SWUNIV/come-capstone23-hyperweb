@@ -117,7 +117,6 @@ class Main(APIView):
 
         return render(request, "jinstagram/main.html", context=dict(user=user, posts=posts, range_5=range(5), user_example=user_example[30:59]))
 
-
 class UploadFeed(APIView):
     def post(self, request):
 
@@ -138,7 +137,6 @@ class UploadFeed(APIView):
         Feed.objects.create(image=asdf, content=content123, email=email)
 
         return Response(status=200)
-
 
 class Profile(APIView):
     def get(self, request):
@@ -167,7 +165,6 @@ class Profile(APIView):
                                                                     bookmark_feed_list=bookmark_feed_list,
                                                                     user=user, dogs=dogs))
 
-
 class UploadReply(APIView):
     def post(self, request):
         feed_id = request.data.get('feed_id', None)
@@ -177,7 +174,6 @@ class UploadReply(APIView):
         Reply.objects.create(feed_id=feed_id, reply_content=reply_content, email=email)
 
         return Response(status=200)
-
 
 class ToggleLike(APIView):
     def post(self, request):
@@ -199,7 +195,6 @@ class ToggleLike(APIView):
             Like.objects.create(feed_id=feed_id, is_like=is_like, email=email)
 
         return Response(status=200)
-
 
 class ToggleBookmark(APIView):
     def post(self, request):

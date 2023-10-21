@@ -6,7 +6,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Image Selection Modal</title>
     <style>
-        
+        #button-list{
+            display: flex;
+            justify-content: center;
+            gap: 10px;  /* 버튼 간의 간격 */
+            margin-top: 30px;
+            margin-bottom: 50px;
+        }
+
+        button {
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-right: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        /* 녹색 버튼 */
+        button.green {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        button.green:hover {
+            background-color: #45a049;
+        }
+
+        /* 파란색 버튼 */
+        button.blue {
+            background-color: #2196F3;
+            color: white;
+        }
+
+        button.blue:hover {
+            background-color: #0b7dda;
+        }
+
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4; /* 배경색 변경 */
@@ -290,8 +327,12 @@
     <script src="http://code.jquery.com/jquery-latest.min.js"></script>
 </head>
 <body>
-
     <div class="paper-like">
+        <div id="button-list">
+            <button class="green" onclick="showContent('monthly')">한 달 식단 만들기</button>
+            <button class="blue" onclick="showContent('daily')">일일 식단 만들기</button>
+        </div>
+        
         <div class="title">보고서 생성</div>
         <div class="description">음식재료를 선택해주세요</div>
         <!-- 선택한 이미지를 보여줄 영역 -->

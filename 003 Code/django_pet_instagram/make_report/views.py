@@ -89,14 +89,12 @@ class Report2(APIView):
         }
         return render(request, 'report/report2.html', context)
 
-
 def make_report(request):
     nutrients = Nutrient.objects.all()
     context = {
         'nutrients': nutrients
     }
     return render(request, 'report.html', context)
-
 
 class ReportMonthView(APIView):
     def __init__(self):
@@ -199,7 +197,6 @@ class ReportMonthView(APIView):
         
         return render(request, "report/report_month.html")
 
-
 class ReportView2(APIView):
     def __init__(self):
         super().__init__()
@@ -236,7 +233,6 @@ class ReportView2(APIView):
         
         return render(request, "report/report2.html")
     
-
 @csrf_exempt
 def report_to_post(request):
     if request.method == 'POST':
@@ -280,8 +276,6 @@ def report_to_post(request):
     else:
         return JsonResponse({'status': 'fail'}, status=400)
         
-
-
 @csrf_exempt
 def save_image(request):
     return

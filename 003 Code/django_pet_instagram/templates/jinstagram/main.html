@@ -577,13 +577,20 @@
             .contents-list:hover {
                 background-color: #f5f5f5;  /* 마우스를 올려놓았을 때의 배경색 */
             }
-            .contents-list > img{
+            .contents-list > img,
+            .contents-list > a > img{
                 width: 25px;
                 height: 25px;
                 margin-right:10px;
             }
-            .contents-list > span,
+
             .contents-list > a{
+                margin: 0px;
+                padding: 0px;
+                font-weight: bold;
+            }
+
+            .contents-list > span{
                 width: 30px;
                 height: 30px;
                 font-weight: bold;
