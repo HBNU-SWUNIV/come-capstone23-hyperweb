@@ -9,10 +9,10 @@ from rest_framework.views import APIView
 from rest_framework.decorators import api_view 
 from rest_framework.response import Response
 
-from .models import FoodList, Monthly_Food, Food_Item, Nut_7_save, Nut_report
+from .models import Monthly_Food, Food_Item, Nut_7_save, Nut_report
 from user.models import User, Dog, Dog_Food_Token
-from .serializer import MonthItemSerializer, FoodItemSerializer, NutSomeSerializer, Nut7Serializer
-from .serializer import Nut_sufficient, NutReportSerializer
+from .serializer import MonthItemSerializer, FoodItemSerializer, Nut7Serializer
+from .serializer import NutSufficientSerializer, NutReportSerializer
 
 import requests
 import json
@@ -85,14 +85,14 @@ class Food_view(APIView):
         dog_token.save()
         
     #result food month data
-    def get_result_month(self, dog_info_id):
+    def get_result_month(self, month_id):
         print('result food month info post')
         
         BASE_URL = "http://127.0.0.1:6000/result_month/"
-        send_json = {"dog_info_id": dog_info_id}
+        send_json = {"month_id": month_id}
         
         response = requests.post(BASE_URL, json=send_json)
-        serializer = MonthItemSerializer(data=response.json(), many=True)
+        serializer = MonthItemSerializer(data=response.json())
         
         if serializer.is_valid():
             # Serializer 내부의 create 메소드를 호출하여 저장합니다.
@@ -115,23 +115,6 @@ class Food_view(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-        #result nut some post
-    def get_result_nut_some(self, dog_info_id):
-        print('result nut some info post')
-        
-        BASE_URL = "http://127.0.0.1:6000/result_nutsome/"
-        send_json = {"dog_info_id": dog_info_id}
-        
-        response = requests.post(BASE_URL, json=send_json)
-        serializer = NutSomeSerializer(data=response.json())
-        
-        if serializer.is_valid():
-            # Serializer 내부의 create 메소드를 호출하여 저장합니다.
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
 
     #result nut7 post
     def get_result_nut7(self, dog_info_id):
@@ -157,7 +140,7 @@ class Food_view(APIView):
         send_json = {"dog_info_id": dog_info_id}
         
         response = requests.post(BASE_URL, json=send_json)
-        serializer = Nut_sufficient(data=response.json())
+        serializer = NutSufficientSerializer(data=response.json(), many=True)
         
         if serializer.is_valid():
             # Serializer 내부의 create 메소드를 호출하여 저장합니다.
@@ -223,33 +206,49 @@ class Food_view(APIView):
             if response.status_code == 205:
                 return Response(status=205, data=dict(message="음식을 다시 설정하시요."))
             else:
-                result_info = response.json()
-                print(result_info['dog_info_id'])
-                dog_info_id = result_info['dog_info_id']
-                self.save_dog_token(user, dogs, dog_info_id, is_month)
-                print('token saved')
-                print('end')
-                request.session['dog_info_id'] = dog_info_id
-                
+                #is month??
                 if is_month:
+                    result_info = response.json()
+                    print(f'result_info : {result_info}')
+                    print(result_info['month_id'])
+                    dog_info_id = result_info['month_id']
+                    self.save_dog_token(user, dogs, dog_info_id, is_month)
+                    print('token saved')
+                    print('end')
+                    request.session['month_id'] = dog_info_id
                     # get month result
                     response_month = self.get_result_month(dog_info_id)
-                    
+                    print(response_month)
                     # get daily instance result
-                    db_month = Monthly_Food.objects.filter(dog_info=self.dog_info_id).values('food_1', 'food_2', 'food_3', 'food_4')                    
+                    db_month = Monthly_Food.objects.filter(month_id=dog_info_id).values('food_1', 'food_2', 'food_3', 'food_4')
+                    print(db_month)
                     first_record = db_month[0]
                     for idx in range(1, 5):
                         instance_dog_id = first_record[f'food_{idx}']
                         # get daily food
                         response_food = self.get_result_food(instance_dog_id)
-                        # get daily some nut
-                        response_nut_some = self.get_result_nut_some(instance_dog_id)
-                        # get daily sufficient nut
+                        # print('log response_food', response_food)
+
+                        response_nut7 = self.get_result_nut7(instance_dog_id)
+                        # print('log response_nut7', response_nut7)
+                        
+                        response_nut_report = self.get_result_nut_report(instance_dog_id)
+                        # print('log response_nut_report', response_nut_report)
+                        
                         response_nut_sufficient = self.get_result_nut_sufficient(instance_dog_id)
+                        # print('log response_nut_sufficient', response_nut_sufficient)   
                     
                     return render(request, 'report/report_month.html')
                 
                 else:
+                    result_info = response.json()
+                    print(f'result_info : {result_info}')
+                    print(result_info['dog_info_id'])
+                    dog_info_id = result_info['dog_info_id']
+                    self.save_dog_token(user, dogs, dog_info_id, is_month)
+                    print('token saved')
+                    print('end')
+                    request.session['dog_info_id'] = dog_info_id
                     response_food = self.get_result_food(dog_info_id) 
                     # print('log response_food', response_food)
 
@@ -257,7 +256,10 @@ class Food_view(APIView):
                     # print('log response_nut7', response_nut7)
                     
                     response_nut_report = self.get_result_nut_report(dog_info_id)
-                    # print('log response_nut_report', response_nut_report)      
+                    # print('log response_nut_report', response_nut_report)
+                    
+                    response_nut_sufficient = self.get_result_nut_sufficient(dog_info_id)
+                    # print('log response_nut_sufficient', response_nut_sufficient)      
 
                     return render(request, 'report/report2.html')
             

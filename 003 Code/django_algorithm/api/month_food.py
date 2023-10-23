@@ -13,13 +13,15 @@ class MenuGenerator:
     @staticmethod
     def generate_calories(is_main):
         if is_main:
-            return random.randint(500, 800)
-        else:
             return random.randint(100, 200)
+        else:
+            return random.randint(10, 90)
 
     def generate(self, target_list_count=4):
         while len(self.food_list) < target_list_count:
-            if not self.main_work_list or len(self.sub_work_list) < 2:
+            print(f'main_food rest :{self.main_work_list}')
+            print(f'sub_food rest :{self.sub_work_list}')
+            if len(self.main_work_list) or len(self.sub_work_list) < 1:
                 # 작업 리스트를 원본 리스트로 다시 초기화합니다.
                 self.main_work_list = self.main_food.copy()
                 self.sub_work_list = self.sub_food.copy()
@@ -41,6 +43,55 @@ class MenuGenerator:
             if combo_set not in self.unique_set:
                 self.food_list.append(food_combo)
                 self.unique_set.add(combo_set)
-            print(self.food_list)
+            print(f'searching food : {self.food_list}')
+        print(f'searching end ~!~!~!~!~!~~!~!~!~!~!~!~!!~!~1-----------------------')
         return self.food_list
 
+
+# class MenuGenerator:
+#     def __init__(self, main_food, sub_food):
+#         self.main_food = main_food
+#         self.sub_food = sub_food
+#         self.food_list = []
+#         self.unique_set = set()
+
+#     @staticmethod
+#     def generate_calories(is_main):
+#         if is_main:
+#             return random.randint(100, 200)
+#         else:
+#             return random.randint(10, 90)
+
+#     def generate(self, target_list_count=4):
+#         main_food_copy = self.main_food.copy()
+
+#         while len(self.food_list) < target_list_count:
+#             # 메인 푸드를 모두 사용했을 경우 초기화
+#             if not main_food_copy:
+#                 main_food_copy = self.main_food.copy()
+
+#             main = random.choice(main_food_copy)
+#             main_food_copy.remove(main)
+            
+#             if len(self.sub_food) < 2:
+#                 sub_work_list = self.sub_food.copy()
+#             else:
+#                 sub_work_list = self.sub_food
+
+#             sub_count = min(len(sub_work_list), 5)
+#             chosen_subs = random.sample(sub_work_list, k=random.randint(2, sub_count))
+#             for sub in chosen_subs:
+#                 self.sub_food.remove(sub)
+#                 if not self.sub_food:
+#                     self.sub_food = self.sub_food.copy()
+
+#             food_combo = [(main, self.generate_calories(True))] + [(sub, self.generate_calories(False)) for sub in chosen_subs]
+#             combo_set = frozenset(food_combo)
+
+#             if combo_set not in self.unique_set:
+#                 self.food_list.append(food_combo)
+#                 self.unique_set.add(combo_set)
+#             print(f'searching food : {self.food_list}')
+
+#         print(f'searching end -----------------------')
+#         return self.food_list

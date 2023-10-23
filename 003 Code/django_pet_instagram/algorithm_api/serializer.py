@@ -1,11 +1,11 @@
 from rest_framework import serializers
 
-from .models import Monthly_Food, Food_Item, Nut_some_save, Nut_7_save, Nut_sufficient,  Nut_report
+from .models import Monthly_Food, Food_Item, Nut_7_save, Nut_sufficient,  Nut_report
 
 class MonthItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = Monthly_Food
-        fields = ['food_1', 'food_2', 'food_3', 'food_4', 'dog_info']
+        fields = ['food_1', 'food_2', 'food_3', 'food_4', 'month_id']
         
     def create(self, validated_data):
         return Monthly_Food.objects.create(**validated_data)
@@ -18,14 +18,6 @@ class FoodItemSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         return Food_Item.objects.create(**validated_data)
     
-class NutSomeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Nut_some_save
-        fields = ['B10100', 'B10300', 'B10700', 'dog_info']
-    def create(self, validated_data):
-        return Nut_some_save.objects.create(**validated_data)
-        
-        
 class Nut7Serializer(serializers.ModelSerializer):
     class Meta:
         model = Nut_7_save

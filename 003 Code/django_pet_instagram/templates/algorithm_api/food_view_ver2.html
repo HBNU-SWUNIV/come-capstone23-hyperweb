@@ -334,7 +334,7 @@
         </div>
         
         <div class="title">보고서 생성</div>
-        <div class="description">음식재료를 선택해주세요</div>
+        <div class="description">음식재료를 선택해주세요 (한달 식단의 경우 육류재료를 2개 이상 선택해주세요)</div>
         <!-- 선택한 이미지를 보여줄 영역 -->
         <div id="selectedImages">
             <table>
@@ -513,7 +513,7 @@
         if(!allFilled) {
             alert('모든 그램수를 입력해주세요.');
         } else {
-            alert('processing');
+            alert('Loading');
             
             gramArray = [];
             gramInputs.forEach(input => {
@@ -542,7 +542,7 @@
                     alert("입력 값을 변경하시요.");
                 } else {
                     console.log("성공");
-                    alert("입력 성공");
+                    alert("연산 결과 도출 완료");
                     let redirectUrl = (food_count > 10) ? '/make_report/report_month_page' : '/make_report/report_page';
                     location.replace(redirectUrl);
 

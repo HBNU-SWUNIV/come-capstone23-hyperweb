@@ -77,6 +77,10 @@
             font-size: 48px;
             color: #000000;
         }
+        .badge-custom {
+            margin-right: 5px; /* 오른쪽 여백 조정 */
+            padding: 5px 10px; /* 패딩 조정 */
+        }
     </style>
     <script>
         function printFunction() {
@@ -145,8 +149,11 @@
         </div>
     </div>
     <div class="container">
-        <h2>음식 유형: 탄수화물이 풍부한 식단</h2>           
-        </table>
+        <span>풍부한 영양소:   </span>
+        {% for nutrient in sufficient %}
+            <span class="badge badge-primary badge-custom">{{ nutrient }}</span>
+        {% endfor %}
+    </table>
         <div class="container mt-4">
             <div class="row no-gutters">
                 <div class="col-3">
@@ -241,11 +248,23 @@
                     <td>{{ nutrient.actual_num }}</td>
                     <td style="max-width: 100%;">
                         <div class="progress">
-                            <div class="progress-bar" role="progressbar"
-                                style="width: {{ nutrient.percent }}%;"
-                                aria-valuenow="{{ nutrient.actual_num  }}"
+                            <div class="progress-bar" 
+                                role="progressbar"
+                                style="width: {{ nutrient.percent }}%; 
+                                    position: relative; /* 추가된 코드 */
+                                    {% if nutrient.percent < 50 %}
+                                    background-color: red;
+                                    {% elif nutrient.percent < 100 %}
+                                    background-color: green;
+                                    {% else %}
+                                    background-color: blue;
+                                    {% endif %}"
+                                aria-valuenow="{{ nutrient.actual_num }}"
                                 aria-valuemin="0"
                                 aria-valuemax="{{ nutrient.min_num }}">
+                
+                                <!-- 50% 지점에 선 추가 -->
+                                <div style="position: absolute; left: 120px; top: 50%; height: 50%; width: 3px; background-color: #000;"></div>
                             </div>
                         </div>
                     </td>

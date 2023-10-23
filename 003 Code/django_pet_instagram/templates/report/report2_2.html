@@ -236,9 +236,17 @@
                     <td>{{ nutrient.actual_num }}</td>
                     <td style="max-width: 100%;">
                         <div class="progress">
-                            <div class="progress-bar" role="progressbar"
-                                style="width: {{ nutrient.percent }}%;"
-                                aria-valuenow="{{ nutrient.actual_num  }}"
+                            <div class="progress-bar" 
+                                role="progressbar"
+                                style="width: {{ nutrient.percent }}%; 
+                                        {% if nutrient.percent < 50 %}
+                                        background-color: red;
+                                        {% elif nutrient.percent < 100 %}
+                                        background-color: green;
+                                        {% else %}
+                                        background-color: blue;
+                                        {% endif %}"
+                                aria-valuenow="{{ nutrient.actual_num }}"
                                 aria-valuemin="0"
                                 aria-valuemax="{{ nutrient.min_num }}">
                             </div>

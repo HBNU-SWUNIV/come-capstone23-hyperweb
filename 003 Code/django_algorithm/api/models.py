@@ -23,20 +23,10 @@ class Food_Result(models.Model):
         return f"{self.name} - {self.unit}"
     
 class Monthly_Food(models.Model):
-    foods = models.ManyToManyField(Food_Result, related_name='monthly_foods')
-    dog_info = models.ForeignKey(Dog_Info, related_name='food_month', on_delete=models.CASCADE, null=True)
-    
+    foods = models.ManyToManyField(Dog_Info, related_name='food_month')
+
     def __str__(self):
-        return " - ".join([str(food) for food in self.foods.all()]) + " - " + str(self.dog_info)
-    
-class Nut_some_save(models.Model):
-    dog_info = models.ForeignKey(Dog_Info, related_name='nut_some_save', on_delete=models.CASCADE, null=True)
-    B10100 = models.FloatField()
-    B10300 = models.FloatField()
-    B10700 = models.FloatField()
-    
-    def __str__(self):
-        return f"{self.dog_info} - {self.B10100} - {self.B10300} - {self.B10700}"
+        return " - ".join([str(food) for food in self.foods.all()])
     
 class Nut_7_save(models.Model):
     dog_info = models.ForeignKey(Dog_Info, related_name='nut_7_save', on_delete=models.CASCADE, null=True)
@@ -53,7 +43,7 @@ class Nut_7_save(models.Model):
     
 class Nut_sufficient(models.Model):
     dog_info = models.ForeignKey(Dog_Info, related_name='nut_sufficient_save', on_delete=models.CASCADE, null=True)
-    token_name = models.CharField(max_length=100)
+    token_name = models.CharField(max_length=7)
     
     def __str__(self):
         return f'{self.dog_info} - {self.token_name}'
@@ -62,7 +52,7 @@ class Nut_report(models.Model):
     dog_info = models.ForeignKey(Dog_Info, related_name='nut_report', on_delete=models.CASCADE, null=True)
     nut_name = models.CharField(max_length=100)
     actual_num = models.FloatField()
-    percent = models.FloatField()
+    percent = models.IntegerField()
     min_num = models.FloatField()
     
     def __str__(self):

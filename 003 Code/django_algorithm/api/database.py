@@ -67,7 +67,8 @@ class FoodSearch:
         
         cursor = self.conn.cursor()
         input_list = []
-
+        print(f'input_data : {input_data}')
+        print(f'input_data : {len(input_data)}')
         for data in input_data:
             print(data[0])
             searching_food_db_template = f"SELECT category_group FROM food_national WHERE name = '{{}}'"
@@ -83,5 +84,7 @@ class FoodSearch:
             else:
                 print(result[0])
                 input_list.append(False)
+        print(f'input_list : {input_list}')
+        print(f'input_list : {len(input_list)}')
         cursor.close()
         return input_list
