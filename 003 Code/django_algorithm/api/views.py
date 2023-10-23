@@ -31,11 +31,14 @@ class DietHandler:
         return True
 
     # DB transaction error appear !!  self.dog_info_instance not need
-    def load_dog_info(self):
-        # Dog info id load
-        self.dog_info_id = Dog_Info.objects.latest('id').id
-        self.dog_info_instance = Dog_Info.objects.get(id=self.dog_info_id)
-        return self.dog_info_id
+    # def get_dog_info_id(self, dog_info_id):
+    #     self.dog_info_id = dog_info_id
+        
+    # def load_dog_info(self):
+    #     # Dog info id load
+    #     self.dog_info_id = Dog_Info.objects.latest('id').id
+    #     self.dog_info_instance = Dog_Info.objects.get(id=self.dog_info_id)
+    #     return self.dog_info_id
     
     def save_food_result(self):
         # 항목 저장 calculated_recipe
@@ -158,18 +161,22 @@ class FoodViewSet(viewsets.ModelViewSet):
     queryset = Dog_Info.objects.all()
     serializer_class = DogInfoSerializer
     
-    def create_dog_info(self, mer):
-        dog_info = Dog_Info(dog_mer=mer)  # 예시 이름
+    def __init__(self, *args, **kwargs):
+        super(FoodViewSet, self).__init__(*args, **kwargs)
+        self.dog_mer = None
+    
+    def create_dog_info(self):
+        dog_info = Dog_Info(dog_mer=self.dog_mer)  # 예시 이름
         dog_info.save()
-    # dog_info_id = Dog_Info.objects.latest('id').id
+        return dog_info.id
     
     def create_month_food(self, month_data):
-        Monthly_Food.objects.create(
-            food_1 = month_data[0],
-            food_2 = month_data[1],
-            food_3 = month_data[2],
-            food_4 = month_data[3]
-        )
+        month_food = Monthly_Food.objects.create(dog_info=0)
+        for food_item in month_data:
+            month_food.foods.add(food_item)
+        month_food.save()
+        return month_food.id
+
 
     def create(self, request):
         Food_db = 'db2.sqlite3'
@@ -182,12 +189,13 @@ class FoodViewSet(viewsets.ModelViewSet):
         data_list = []
         for item in serializer.data:
             data = {'dog_mer': item['dog_mer'], 'food_items': item['food_items']}
-            dog_mer = data['dog_mer']
+            #추후에는 Dog id 를 갖고 와야함 현재는 dog_mer 로 instance의 개체를 찾기 때문임
+            self.dog_mer = data['dog_mer']
             for food in data['food_items']:
                 temp = [food['name'], food['unit']]
                 data_list.append(temp)
         
-        print('dog_mer', dog_mer)
+        print('dog_mer', self.dog_mer)
         # Monthly food Generator
         if len(data_list) > 10:
             print('monthlyfood')
@@ -211,26 +219,29 @@ class FoodViewSet(viewsets.ModelViewSet):
                 for (idx, weight) in menu_num:
                     menu.append(data_list[idx])
                 print(menu)
-                handler = DietHandler(dog_mer, menu, Food_db)
-                self.create_dog_info(dog_mer)
-                dog_info = handler.load_dog_info()
+                # dog unique id generate
+                dog_unique_id = self.create_dog_info()
+                handler = DietHandler(self.dog_mer, menu, Food_db, dog_unique_id)
+                
+                dog_info = handler.load_dog_info(self.create_dog_info())
                 if handler.calculate_recipe():
                     handler.macro_save()
                     dog_info_ids.append(dog_info)
                     print('create food end')
                 else:
                     return Response({'message': 'The solver could not solve the problem.'}, status=205)
-            print(dog_info_ids)
-            self.create_month_food(dog_info_ids)
-            month_id = Monthly_Food.objects.latest('id').id
-            result = {'month_id': month_id}
+            # print(dog_info_ids)
+            # self.create_month_food(dog_info_ids)
+            # month_id = Monthly_Food.objects.latest('id').id
+            result = {'month_id': self.create_month_food(dog_info_ids)}
             print(dog_info_ids)
             return Response(result, status=status.HTTP_201_CREATED)
             
             
         else: # daily food generator
-            handler = DietHandler(dog_mer, data_list, Food_db)
-            dog_info = handler.load_dog_info()
+            # dog unique id generate
+            dog_unique_id = self.create_dog_info()
+            handler = DietHandler(self.dog_mer, menu, Food_db, dog_unique_id)
             if handler.calculate_recipe():
                 handler.macro_save()
                 result = {'dog_info_id': dog_info}

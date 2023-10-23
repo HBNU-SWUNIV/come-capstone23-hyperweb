@@ -9,7 +9,7 @@ gpt_key.txt
 
 # C extensions
 *.so
-
+.DS_Store
 # Distribution / packaging
 .Python
 build/

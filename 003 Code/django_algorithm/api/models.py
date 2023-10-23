@@ -4,17 +4,7 @@ class Dog_Info(models.Model):
     dog_mer = models.FloatField(default=0)
 
     def __str__(self):
-        return self.dog_mer
-    
-class Monthly_Food(models.Model):
-    food_1 = models.ForeignKey(Dog_Info, related_name='food_items1', on_delete=models.CASCADE, null=True)
-    food_2 = models.ForeignKey(Dog_Info, related_name='food_items2', on_delete=models.CASCADE, null=True)
-    food_3 = models.ForeignKey(Dog_Info, related_name='food_items3', on_delete=models.CASCADE, null=True)
-    food_4 = models.ForeignKey(Dog_Info, related_name='food_items4', on_delete=models.CASCADE, null=True)
-    dog_info = models.ForeignKey(Dog_Info, related_name='food_month', on_delete=models.CASCADE, null=True)
-    
-    def __str__(self):
-        return f'{self.food_1} - {self.food_2} - {self.food_3} - {self.food_4} - {self.dog_info}'
+        return str(self.dog_mer)
     
 class Food_Item(models.Model):
     name = models.CharField(max_length=100)
@@ -32,6 +22,13 @@ class Food_Result(models.Model):
     def __str__(self):
         return f"{self.name} - {self.unit}"
     
+class Monthly_Food(models.Model):
+    foods = models.ManyToManyField(Food_Result, related_name='monthly_foods')
+    dog_info = models.ForeignKey(Dog_Info, related_name='food_month', on_delete=models.CASCADE, null=True)
+    
+    def __str__(self):
+        return " - ".join([str(food) for food in self.foods.all()]) + " - " + str(self.dog_info)
+    
 class Nut_some_save(models.Model):
     dog_info = models.ForeignKey(Dog_Info, related_name='nut_some_save', on_delete=models.CASCADE, null=True)
     B10100 = models.FloatField()
@@ -41,7 +38,6 @@ class Nut_some_save(models.Model):
     def __str__(self):
         return f"{self.dog_info} - {self.B10100} - {self.B10300} - {self.B10700}"
     
-
 class Nut_7_save(models.Model):
     dog_info = models.ForeignKey(Dog_Info, related_name='nut_7_save', on_delete=models.CASCADE, null=True)
     A10100 = models.FloatField()

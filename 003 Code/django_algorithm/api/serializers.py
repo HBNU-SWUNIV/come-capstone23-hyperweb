@@ -11,7 +11,7 @@ class FoodItemSerializer(serializers.ModelSerializer):
 class MonthItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = Monthly_Food
-        fields = ['food_1', 'food_2', 'food_3', 'food_4', 'dog_info']
+        fields = ['foods', 'dog_info']
 
 class NutSomeSerializer(serializers.ModelSerializer):
     class Meta:
