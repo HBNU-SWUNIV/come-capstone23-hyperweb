@@ -323,10 +323,43 @@
         #selectedImages::-ms-scrollbar {
             width: 0;  /* Internet Explorer에서의 스크롤바 너비를 0으로 설정 */
         }
+
+
+        .table_num, .table_remove{
+            width: 12.5%;
+        }
+
+        .table_values{
+            width: 25%;
+        }
+
+        .gram-input{
+            width: 80%;
+        }
+
+        .table_remove > button{
+            background-color: #2196F3;
+            color: white;
+        }
+
+        #main-image-div{
+            width: 100%;
+            border-bottom: 2px solid #0D8C7F;
+        }
+        #main-image-div > a > img{
+            width: 70px;
+            margin-left: 10px;
+            margin-top: 10px;
+        }
     </style>
     <script src="http://code.jquery.com/jquery-latest.min.js"></script>
 </head>
 <body>
+    <div id="main-image-div">
+        <a href="/main/">
+            <img src="/media/logo.png"> 
+        </a>    
+    </div>
     <div class="paper-like">
         <div id="button-list">
             <button class="green" onclick="showContent('monthly')">한 달 식단 만들기</button>
@@ -340,10 +373,11 @@
             <table>
                 <thead>
                     <tr>
-                        <th>번호</th>
-                        <th>음식 이름</th>
-                        <th>사진</th>
-                        <th>그램수</th>
+                        <th class="table_num">번호</th>
+                        <th class="table_values">음식 이름</th>
+                        <th class="table_values">사진</th>
+                        <th class="table_values">그램수</th>
+                        <th class="table_remove">액션</th> 
                     </tr>
                 </thead>
                 <tbody id="selectedTbody">
@@ -412,9 +446,29 @@
                 }
             });
         });
+    
     });
 
+  
+    function removeFood(buttonElement) {
+        // 선택된 행을 삭제
+        const row = buttonElement.closest('tr');
+        row.parentNode.removeChild(row);
+        // 번호를 다시 설정
+        resetRowNumbers();
+    }
 
+    function resetRowNumbers() {
+        const tbody = document.getElementById('selectedTbody');
+        const rows = tbody.querySelectorAll('tr');
+        console.log(rows);
+        for (let i = 0; i < rows.length; i++) {
+            rows[i].querySelector('td').textContent = i + 1; // 번호 업데이트
+        }
+    }
+
+
+    
 
     const modal = document.getElementById('modal');
     const imageList = document.getElementById('imageList');
@@ -468,13 +522,14 @@
             <table>
                 <thead>
                     <tr>
-                        <th>번호</th>
-                        <th>음식 이름</th>
-                        <th>사진</th>
-                        <th>그램수</th>
+                        <th class="table_num">번호</th>
+                        <th class="table_values">음식 이름</th>
+                        <th class="table_values">사진</th>
+                        <th class="table_values">그램수</th>
+                        <th class="table_remove">액션</th> 
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="selectedTbody">
         `;
         selected.forEach((img, index) => {
             let name = img.alt.replace(".png", "");
@@ -482,10 +537,11 @@
 
             tableContent += `
                 <tr>
-                    <td>${index + 1}</td>
-                    <td>${name}</td>
-                    <td><img src="${img.src}" alt="${name}" /></td>
-                    <td><input type="text" class="gram-input" placeholder="그램수 입력" value="0"></td>
+                    <td class="table_num">${index + 1}</td>
+                    <td class="table_values">${name}</td>
+                    <td class="table_values"><img src="${img.src}" alt="${name}" /></td>
+                    <td class="table_values"><input type="text" class="gram-input" placeholder="그램수 입력" value="0"></td>
+                    <td class="table_remove"><button onclick="removeFood(this)">제거</button></td>
                 </tr>
             `;
         });
