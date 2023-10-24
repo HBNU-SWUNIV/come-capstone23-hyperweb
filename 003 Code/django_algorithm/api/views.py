@@ -203,33 +203,32 @@ class FoodViewSet(viewsets.ModelViewSet):
             false_indices = [index for index, value in enumerate(is_cat8) if not value]
             print(f'true {true_indices}')
             print(f'false {false_indices}')
-            # menu_gerator = MenuGenerator(true_indices, false_indices)
-            # monthly_food_list = menu_gerator.generate()
+            menu_gerator = MenuGenerator(true_indices, false_indices)
+            monthly_food_list = menu_gerator.generate()
             dog_info_ids = []
-            dog_info_ids = [71, 72, 73, 74]
+            # dog_info_ids = [71, 72, 73, 74]
             
-            # for idx, menu_num in enumerate(monthly_food_list):
-            #     input_food_sep = []
-            #     for (idx, weight) in menu_num:
-            #         input_food_sep.append(input_food[idx])
-            #     print(input_food_sep)
-            #     # dog unique id generate
-            #     dog_unique_id = self.create_dog_info()
-            #     handler = DietHandler(self.dog_mer, input_food_sep, Food_db, dog_unique_id)
-            #     if handler.calculate_recipe():
-            #         handler.macro_save()
-            #         dog_info_ids.append(dog_unique_id)
-            #         print('create food end')
-            #     else:
-            #         return Response({'message': 'The solver could not solve the problem.'}, status=205)
-            # print(dog_info_ids)
-            # self.create_month_food(dog_info_ids)
-            # month_id = Monthly_Food.objects.latest('id').id
+            for idx, menu_num in enumerate(monthly_food_list):
+                input_food_sep = []
+                for (idx, weight) in menu_num:
+                    input_food_sep.append(input_food[idx])
+                print(input_food_sep)
+                # dog unique id generate
+                dog_unique_id = self.create_dog_info()
+                handler = DietHandler(self.dog_mer, input_food_sep, Food_db, dog_unique_id)
+                if handler.calculate_recipe():
+                    handler.macro_save()
+                    dog_info_ids.append(dog_unique_id)
+                    print('create food end')
+                else:
+                    return Response({'message': 'The solver could not solve the problem.'}, status=205)
+            print(dog_info_ids)
             
             #test
-            # month_id_key = self.create_month_food(dog_info_ids)
-            # result = {'month_id': month_id_key}
-            result = {'month_id': 2}
+            month_id_key = self.create_month_food(dog_info_ids)
+            result = {'month_id': month_id_key}
+            #test
+            # result = {'month_id': 2}
             # print(8)
             return Response(result, status=status.HTTP_201_CREATED)
             

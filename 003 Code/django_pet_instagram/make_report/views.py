@@ -101,94 +101,67 @@ class ReportMonthView(APIView):
         super().__init__()
         self.dog_info_id = None
         self.dog_id = None
+        self.month_id = None
+        
+        self.foods_list = []
+        self.token_list = []
+        self.some_nut_list = []
+        
+    def fetch_data(self):
+        dog_nickname = Dog.objects.get(id=self.dog_id)
+        print('report dog info: ', self.dog_info_id, 'dog_nickname', dog_nickname)
+        
+        db_month = Monthly_Food.objects.filter(month_id=self.month_id).values('food_1', 'food_2', 'food_3', 'food_4')
+        first_record = db_month[0]
+
+        for idx in range(1, 5):
+            food_id = first_record[f'food_{idx}']
+            
+            # get food_name
+            self.foods_list.append([food['name'] for food in Food_Item.objects.filter(dog_info=food_id).values('name')])
+            # get sufficient nut
+            self.token_list.append([token['token_name'] for token in Nut_sufficient.objects.filter(dog_info=food_id).values('token_name')])
+            # get specific nut
+            db_some_nut = Nut_7_save.objects.filter(dog_info=food_id).values('A10300', 'A10400', 'A10600')
+            self.some_nut_list.append([db_some_nut[0]['A10300'], db_some_nut[0]['A10400'], db_some_nut[0]['A10600']])
+            
+    def proccess_weekly_month(self):
+        colors = ['rgba(255,0,0,0.3)', 'rgba(0, 0, 255, 0.3)', 'lightgreen', 'lightyellow']
+        days_data = [
+            ['1', '22', '3', '4', '5', '23', '7'],
+            ['8', '16', '10', '11', '20', '21', '14','31'],
+            ['15', '9', '17', '18', '19', '25', '13','30'],
+            ['2', '6', '24', '12', '26', '27', '28','29']
+        ]
+
+        weekly_meals = {
+            f'food_{i+1}': {
+                'menu': self.foods_list[i],
+                'features': self.token_list[i],
+                'color': colors[i],
+                'days': days_data[i]
+            } for i in range(4)
+        }
+        return weekly_meals
+    
+    def process_nut(self):
+        calcium_data, magnesium_data, iron_data = {}, {}, {}
+        for i in range(4):
+            calcium_data[f'food_{i+1}'] = self.some_nut_list[i][0]
+            magnesium_data[f'food_{i+1}'] = self.some_nut_list[i][1]
+            iron_data[f'food_{i+1}'] = self.some_nut_list[i][2]
+        return calcium_data, magnesium_data, iron_data
+
     
     def get(self, request):
         self.dog_info_id = request.session.get('dog_info_id')
         self.dog_id = request.session.get('dog_id')
-        month_id = request.session.get('month_id')
+        self.month_id = request.session.get('month_id')
         print(self.dog_id)
-        dog_nickname = Dog.objects.get(id=self.dog_id)
-        print('report dog info: ', self.dog_info_id, 'dog_nickname', dog_nickname)
         
-        foods_list = []
-        token_list = []
-        some_nut_list = []
-        db_month = Monthly_Food.objects.filter(month_id=month_id).values('food_1', 'food_2', 'food_3', 'food_4')
-        print(db_month)
-        first_record = db_month[0]
-        
-        # 음식 재료, 음식에 대한 특징, nut7, 
-        
-        
-        for idx in range(1, 5):
-            dog_id = first_record[f'food_{idx}']
-            
-            db_food = Food_Item.objects.filter(dog_info=dog_id).values('name')
-            print(db_food)
-            foods = []
-            for food in db_food:
-                foods.append(food)
-            foods_list.append(foods)
-            
-            db_token = Nut_sufficient.objects.filter(dog_info=dog_id).values('token_name')
-            tokens = []
-            for token in db_token:
-                tokens.append(token)
-            token_list.append(tokens)
-            
-            db_some_nut = Nut_7_save.objects.filter(dog_info=dog_id).values('A10300', 'A10400', 'A10600')
-            print(db_some_nut)
-            somes = []
-            for some in db_some_nut:
-                somes.append(some)
-            some_nut_list.append(somes)
-
-        
-        calcium_data = {
-            'food_1': db_some_nut[0][0],
-            'food_2': db_some_nut[1][0],
-            'food_3': db_some_nut[2][0],
-            'food_4': db_some_nut[3][0]
-        }
-        magnesium_data = {
-            'food_1': db_some_nut[0][1],
-            'food_2': db_some_nut[1][1],
-            'food_3': db_some_nut[2][1],
-            'food_4': db_some_nut[3][1]
-        }
-        iron_data = {
-            'food_1': db_some_nut[0][2],
-            'food_2': db_some_nut[1][2],
-            'food_3': db_some_nut[2][2],
-            'food_4': db_some_nut[3][2]
-        }
-        
-        weekly_meals = {
-            'food_1': {
-                'menu': foods_list[0],
-                'features': token_list[0],
-                'color': 'rgba(255,0,0,0.3)',
-                'days': ['1', '22', '3', '4', '5', '23', '7'],
-            },
-            'food_2': {
-                'menu': foods_list[1],
-                'features': token_list[1],
-                'color': 'rgba(0, 0, 255, 0.3)',  # 블루 색상의 투명도를 0.3으로 설정
-                'days': ['8', '16', '10', '11', '20', '21', '14','31'],
-            },
-            'food_3': {
-                'menu': foods_list[2],
-                'features': token_list[2],
-                'color': 'lightgreen',
-                'days': ['15', '9', '17', '18', '19', '25', '13','30'],
-            },
-            'food_4': {
-                'menu': foods_list[3],
-                'features': token_list[3],
-                'color': 'lightyellow',
-                'days': ['2', '6', '24', '12', '26', '27', '28','29'],
-            },
-        }
+        self.fetch_data()
+        weekly_meals = self.proccess_weekly_month()
+        calcium_data, magnesium_data, iron_data = self.process_nut()
         
         month_days = [
             ['1', '2', '3', '4', '5', '6', '7'],
