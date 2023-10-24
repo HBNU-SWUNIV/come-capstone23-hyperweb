@@ -6,22 +6,191 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Image Selection Modal</title>
     <style>
+
+        @media (max-width: 800px){
+            #remove-button{
+                padding: 5px;
+                margin: 0px;
+            }
+
+            /* 배경에 페이퍼 느낌 추가 */
+            .paper-like {
+                background: #fff;
+                border-radius: 8px;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+                margin: 20px auto;
+                width: 100%;
+                height: 700px;
+            }
+
+            #selectedImages {
+                width: 90%; 
+                table-layout: fixed; 
+                border-collapse: collapse;
+                margin-left: 5%;
+            }
+            #selectedImages table {
+                
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 20px;
+            }
+
+            #createBtn,
+            #reportSubmitBtn {
+                display: block;
+                padding: 10px 20px;
+                background-color: #3897f0;
+                color: #fff;
+                border: none;
+                border-radius: 4px;
+                font-size: 16px;
+                margin-right: 0px;
+            }
+
+            button {
+                border: none;
+                padding: 5px 10px;
+                font-size: 16px;
+                cursor: pointer;
+                border-radius: 5px;
+                margin-right: 10px;
+                margin-left: 10px;
+                margin-top: 10px;
+                transition: background-color 0.3s ease;
+            }
+
+            /* 모달 내부 박스 스타일 */
+            .modal-content {
+                background-color: white;
+                width: 85%;
+                height: 80%;
+                position: absolute;
+                top: 10%; /* 상단에 위치하도록 변경 */
+                left: 50%;
+                transform: translate(-50%, 0); /* Y축 변환값 삭제 */
+                padding: 20px;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+                border-radius: 10px;
+                overflow-y: auto;
+                overflow-x: hidden;
+            }
+
+            /* 이미지 리스트 컨테이너: 높이 제한 및 세로 스크롤 설정 */
+            #imageList { 
+                overflow-y: auto;
+                overflow-x: hidden;
+                display: grid;
+                height: 550px;  /* 예시로 500px을 사용. 필요에 따라 조정 */
+                grid-template-columns: repeat(5, 1fr);
+                gap: 5px;
+            }
+            .table_values > img{
+                width: 50px;
+            }
+
+            #selectedImages tbody {
+                display: block;
+                max-height: 350px;
+                overflow-y: auto;
+                position: relative;
+                z-index: 1;
+                scrollbar-width: none; 
+                -ms-overflow-style: none;
+            }
+        }
+
+        @media (min-width: 801px) and (max-width: 4000px){
+            /* 배경에 페이퍼 느낌 추가 */
+            .paper-like {
+                background: #fff;
+                border-radius: 8px;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+                padding: 20px;
+                margin: 20px auto;
+                max-width: 800px;
+                height: 910px;
+            }
+
+            #createBtn,
+            #reportSubmitBtn {
+                display: block;
+                margin: 20px auto;
+                padding: 10px 20px;
+                background-color: #3897f0;
+                color: #fff;
+                border: none;
+                border-radius: 4px;
+                font-size: 16px;
+                margin-left : 200px;
+                margin-right: 0px;
+            }
+
+            #selectedImages table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 20px;
+            }
+
+            #selectedImages {
+                width: 100%; 
+                table-layout: fixed; 
+                border-collapse: collapse;
+            }
+            button {
+                border: none;
+                padding: 10px 20px;
+                font-size: 16px;
+                cursor: pointer;
+                border-radius: 5px;
+                margin-right: 10px;
+                margin-left: 10px;
+                transition: background-color 0.3s ease;
+            }
+
+            /* 모달 내부 박스 스타일 */
+            .modal-content {
+                background-color: white;
+                width: 70%;
+                height: 80%;
+                position: absolute;
+                top: 10%; /* 상단에 위치하도록 변경 */
+                left: 50%;
+                transform: translate(-50%, 0); /* Y축 변환값 삭제 */
+                padding: 20px;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+                border-radius: 10px;
+                overflow-y: auto;
+                overflow-x: hidden;
+            }
+
+            /* 이미지 리스트 컨테이너: 높이 제한 및 세로 스크롤 설정 */
+            #imageList { 
+                overflow-y: auto;
+                overflow-x: hidden;
+                display: grid;
+                height: 650px;  /* 예시로 500px을 사용. 필요에 따라 조정 */
+                grid-template-columns: repeat(5, 1fr);
+                gap: 5px;
+            }
+
+            #selectedImages tbody {
+                display: block;
+                max-height: 600px;
+                overflow-y: auto;
+                position: relative;
+                z-index: 1;
+                scrollbar-width: none; 
+                -ms-overflow-style: none;
+            }
+        }
+
         #button-list{
             display: flex;
             justify-content: center;
             gap: 10px;  /* 버튼 간의 간격 */
             margin-top: 30px;
             margin-bottom: 50px;
-        }
-
-        button {
-            border: none;
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            border-radius: 5px;
-            margin-right: 10px;
-            transition: background-color 0.3s ease;
         }
 
         /* 녹색 버튼 */
@@ -51,16 +220,7 @@
             padding: 0;
         }
 
-        /* 배경에 페이퍼 느낌 추가 */
-        .paper-like {
-            background: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            padding: 20px;
-            margin: 20px auto;
-            max-width: 800px;
-            height: 910px;
-        }
+        
 
         .title {
             text-align: center;
@@ -78,19 +238,7 @@
             margin-bottom: 30px;
         }
 
-        #createBtn,
-        #reportSubmitBtn {
-            display: block;
-            margin: 20px auto;
-            padding: 10px 20px;
-            background-color: #3897f0;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            font-size: 16px;
-            margin-left : 200px;
-            margin-right: 0px;
-        }
+        
 
 
         /* 전체 화면의 다크 레이어 스타일 */
@@ -105,21 +253,7 @@
             z-index: 1000;
         }
 
-        /* 모달 내부 박스 스타일 */
-        .modal-content {
-            background-color: white;
-            width: 70%;
-            height: 80%;
-            position: absolute;
-            top: 10%; /* 상단에 위치하도록 변경 */
-            left: 50%;
-            transform: translate(-50%, 0); /* Y축 변환값 삭제 */
-            padding: 20px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            border-radius: 10px;
-            overflow-y: auto;
-            overflow-x: hidden;
-        }
+        
 
         /* 검색창 스타일 */
         #searchInput {
@@ -132,15 +266,7 @@
             font-size: 14px;
         }
 
-        /* 이미지 리스트 컨테이너: 높이 제한 및 세로 스크롤 설정 */
-        #imageList { 
-            overflow-y: auto;
-            overflow-x: hidden;
-            display: grid;
-            height: 650px;  /* 예시로 500px을 사용. 필요에 따라 조정 */
-            grid-template-columns: repeat(5, 1fr);
-            gap: 5px;
-        }
+        
 
         /* 이미지 컨테이너 스타일 변경 */
         .image-container {
@@ -212,11 +338,7 @@
             cursor: pointer; /* 선택 가능한 표시를 위한 스타일 */
         }
 
-        #selectedImages table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
+        
 
         #selectedImages th, #selectedImages td {
             border: 1px solid #d1d1d1;
@@ -244,11 +366,7 @@
             height: auto;
         }
 
-        #selectedImages {
-            width: 100%; 
-            table-layout: fixed; 
-            border-collapse: collapse;
-        }
+        
 
         #selectedImages thead {
             background-color: #4CAF50; /* 헤더의 배경색을 초록색으로 설정 */
@@ -256,15 +374,7 @@
             z-index: 2;
         }
 
-        #selectedImages tbody {
-            display: block;
-            max-height: 600px;
-            overflow-y: auto;
-            position: relative;
-            z-index: 1;
-            scrollbar-width: none; 
-            -ms-overflow-style: none;
-        }
+        
 
         #selectedImages tbody::-webkit-scrollbar {
             display: none;
@@ -387,7 +497,7 @@
             <!-- 제출 버튼 -->
             
         </div>
-        <div style="display: flex;flex-direction: row;">
+        <div style="display: flex;flex-direction: row;justify-content:center">
             <button id="createBtn">생성</button>
             <button id="reportSubmitBtn">보고서 제출</button>
         </div>
@@ -449,10 +559,18 @@
     
     });
 
-  
-    function removeFood(buttonElement) {
-        // 선택된 행을 삭제
+    function removeFood(buttonElement, currentFoodName) {
         const row = buttonElement.closest('tr');
+        const matchingContainers = document.querySelectorAll(`.image-container.selected[data-name="${currentFoodName}"]`);
+
+        console.log(matchingContainers);
+        // 일치하는 모든 컨테이너의 클래스를 변경
+        matchingContainers.forEach(container => {
+            container.classList.remove('selected');
+            container.classList.add('not-selected');
+        });
+
+        // 선택된 행을 삭제
         row.parentNode.removeChild(row);
         // 번호를 다시 설정
         resetRowNumbers();
@@ -536,13 +654,13 @@
             namesArray.push(name);
 
             tableContent += `
-                <tr>
-                    <td class="table_num">${index + 1}</td>
-                    <td class="table_values">${name}</td>
-                    <td class="table_values"><img src="${img.src}" alt="${name}" /></td>
-                    <td class="table_values"><input type="text" class="gram-input" placeholder="그램수 입력" value="0"></td>
-                    <td class="table_remove"><button onclick="removeFood(this)">제거</button></td>
-                </tr>
+            <tr>
+                <td class="table_num">${index + 1}</td>
+                <td class="table_values">${name}</td>
+                <td class="table_values"><img src="${img.src}" alt="${name}" /></td>
+                <td class="table_values"><input type="text" class="gram-input" placeholder="그램수 입력" value="0"></td>
+                <td class="table_remove"><button id="remove-button" onclick="removeFood(this, '${name}'+'.png')">제거</button></td>
+            </tr>
             `;
         });
         tableContent += `</tbody></table>`;
