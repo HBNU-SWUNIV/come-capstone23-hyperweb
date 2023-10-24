@@ -9,7 +9,7 @@ from django.http import JsonResponse
 from django.core.files.base import ContentFile
 from django.core.management.base import BaseCommand
 
-from user.models import User, Post
+from user.models import User, Post, PostImage
 
 import openai
 from faker import Faker
@@ -19,33 +19,46 @@ from PIL import Image, PngImagePlugin
 person_habit_provider = DynamicProvider(
     provider_name="person_habit",
     elements=[
-        "독서", "요리", "등산", "서핑", "사진찍기", "그림그리기", "공예", "노래하기",
-        "음악감상", "정원가꾸기", "여행", "언어학습", "코딩", "요가", "체스", "수집활동",
-        "캠프파이어만들기", "별관측", "글쓰기", "댄스", "낚시", "자전거타기", "조깅", "영화감상",
-        "무용", "골프", "스케이트보드", "수영", "마술", "뜨개질", "원예", "유리공예",
-        "동물 관찰", "새 관찰", "요리", "도자기", "바둑", "체스", "게임하기", "스노우보드",
-        "스케이팅", "복권그리기", "인라인스케이트", "조각하기", "역사 연구", "비행기 조립",
-        "로봇 만들기", "드론 조종하기", "양육", "댄스", "비디오 제작", "패션 디자인"
+        "reading", "cooking", "hiking", "surfing", "photography", "drawing",
+        "crafts", "singing",    "listening to music", "gardening", "traveling", 
+        "language learning", "coding", "yoga", "chess", "collecting",    
+        "making campfires", "stargazing", "writing", "dancing", "fishing", 
+        "cycling", "jogging", "watching movies",    
+        "dance", "golf", "skateboarding", "swimming", "magic", "knitting", 
+        "horticulture", "glass art","animal watching", "bird watching", 
+        "cooking", "pottery", "Go (game)", "chess", "gaming", "snowboarding",    
+        "skating", "drawing lottery", "inline skating", "sculpting", 
+        "historical research", "airplane assembly",    
+        "robot making", "drone piloting", "parenting", "dancing", 
+        "video production", "fashion design"
     ]
+
 )
 
 person_profit_provider = DynamicProvider(
     provider_name="person_profit",
-    elements=[
-        "친절함", "창의성", "정직함", "결단력", "리더십", "배려심", "책임감", "용기", "자기관리",
-        "열정", "인내력", "호기심", "긍정성", "적응성", "독립성", "협력심", "타협성", "사려깊음", "신뢰성",
-        "상황판단력", "공감능력", "통찰력", "자기통제", "명확한 의사소통", "자기반성", "도전정신", "성실함",
-        "팀워크", "지속가능한 발전", "고객 중심", "프로젝트 관리", "문제해결 능력", "전략적 사고"
+    elements = [
+        "Kindness", "Creativity", "Honesty", "Decisiveness", "Leadership",
+        "Consideration", "Responsibility", "Courage", "Self-management",
+        "Passion", "Patience", "Curiosity", "Positivity", "Adaptability",
+        "Independence", "Cooperation", "Compromise", "Thoughtfulness", 
+        "Reliability", "Judgment", "Empathy", "Insight", "Self-control",
+        "Clear communication", "Self-reflection", "Adventurous spirit",
+        "Diligence", "Teamwork", "Sustainable development", "Customer-centric",
+        "Project management", "Problem-solving ability", "Strategic thinking"
     ]
+
 )
 
 person_personal_place_provider = DynamicProvider(
     provider_name="person_personal_place",
-    elements=[
-        "해변", "산", "도서관", "카페", "공원", "박물관", "갤러리", "영화관", "콘서트홀", 
-        "스포츠경기장", "요가스튜디오", "쇼핑몰", "정원", "호수", "맛집", "테마파크", "헬스클럽", 
-        "휴양지", "사우나", "캠프장", "동물원", "놀이공원", "물놀이공원", "스키장", "게스트하우스",
-        "밤시장", "문화센터", "아쿠아리움", "마을", "체험농장", "책방", "클럽", "바", "공연장", "극장"
+    elements = [
+        "Beach", "Mountain", "Library", "Cafe", "Park", "Museum", "Gallery",
+        "Cinema", "Concert hall", "Sports stadium", "Yoga studio", "Shopping mall",
+        "Garden", "Lake", "Restaurant", "Theme park", "Health club", "Resort",
+        "Sauna", "Campsite", "Zoo", "Amusement park", "Water park", "Ski resort",
+        "Guesthouse", "Night market", "Cultural center", "Aquarium", "Village",
+        "Experience farm", "Bookstore", "Club", "Bar", "Performance venue", "Theater"
     ]
 )
 
@@ -159,9 +172,9 @@ class Command(BaseCommand):
         payload = {
             "prompt": prompt_format,
             "negative_prompt" : negative_prompt_format,
-            "steps": 20,
+            "steps": 4,
             "sampler_index": "Euler a",
-            "cfg_scale" : 4.5,
+            "cfg_scale" : 5,
             "sampler_name" : "DPM++ SDE Karras",
             "n_iter" : 2
         }
@@ -177,7 +190,7 @@ class Command(BaseCommand):
         response = requests.post(url=dif_url, json=option_payload)
         print(response)
     
-    def set_stable_diffusion(self, post):
+    def set_stable_diffusion(self, post_model):
         dif_url = f"{self.diffusion_url}/sdapi/v1/txt2img"
         print("Log get_diffusion : ",self.get_diffusion_quary())
         response = requests.post(url=dif_url, json=self.get_diffusion_quary())
@@ -192,10 +205,11 @@ class Command(BaseCommand):
             image_io = io.BytesIO()
             image.save(image_io, format='PNG')
             image_file = ContentFile(image_io.getvalue(), name=img_name)
-
-            post.image.save(img_name, image_file)
             
-        return post
+            post_image = PostImage(post=post_model, image=image_file)
+            post_image.save()
+
+            # post.image.save(img_name, image_file)
             
     def handle(self, *args, **kwargs):
         fake = Faker()
@@ -223,15 +237,19 @@ class Command(BaseCommand):
             user.save()
             
             self.user = user
-            post = Post()
-            post.user = user
+            # post = Post()
+            # post.user = user
             # gpt quary set
             self.set_gpt_result()
-            post.text = self.gpt_first_response
-            post.hashtag = re.findall(r'#\w+', self.gpt_first_response)
-            
-            post = self.set_stable_diffusion(post)
-            post.save()
+            # post.text = self.gpt_first_response
+            # post.hashtag = re.findall(r'#\w+', self.gpt_first_response)
+            post_model = Post(
+                user = user,
+                text = self.gpt_first_response,
+                hashtag = re.findall(r'#\w+', self.gpt_first_response)
+            )
+            post_model.save()
+            post = self.set_stable_diffusion(post_model)
 
             # image_content = ContentFile(fake.binary(length=(1 * 1)))  # 1MB 이미지 파일 생성
             # image_content.name = 'profile.png'
