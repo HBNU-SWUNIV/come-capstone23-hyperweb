@@ -6,8 +6,8 @@ from rest_framework.decorators import api_view
 from itertools import zip_longest
 import time
 
-from .models import Dog_Info, Monthly_Food, Food_Result, Nut_7_save, Nut_sufficient, Nut_report
-from .serializers import DogInfoSerializer, MonthItemSerializer, FoodItemSerializer,Nut7Serializer, NutReportSerializer, NutSufficientSerializer
+from .models import Dog_Info, Monthly_Food, Food_Result, Nut_7_save, Nut_sufficient, Nut_report, Food_Result_En
+from .serializers import DogInfoSerializer, MonthItemSerializer, FoodItemSerializer,Nut7Serializer, NutReportSerializer, NutSufficientSerializer, FoodFoodEnSerializer
 from .database import FoodSearch
 from .daily_food import DietOptimizer
 from .month_food import MenuGenerator
@@ -48,6 +48,23 @@ class DietHandler:
                 name=i[0],  # String
                 unit=i[1],  # Float
             )
+            
+    def save_food_en(self):
+        # 항목 저장 calculated_recipe
+        Food_db = 'db2.sqlite3'
+        searching_food = FoodSearch()
+        searching_food.connect_db(Food_db)
+        
+        for i in self.calculated_recipe:
+            en_food = searching_food.get_en_name(i[0])
+            print('en_food', en_food)
+            
+            Food_Result_En.objects.create(
+                dog_info=self.dog_info,  # ForeignKey
+                name=en_food,  # String
+            )
+            
+        searching_food.close_db()
         
     def save_nut_7(self):
         #필수 7 요소 저장
@@ -96,6 +113,7 @@ class DietHandler:
         
         report_index, report_minimum, report_percent, report_actual = self.diet_optimizer.process_nutrients()
         print('mid')
+        print(report_index, report_minimum, report_percent, report_actual)
         for i, (a, b, c) in enumerate(zip_longest(report_actual, report_percent, report_minimum)):
             Nut_report.objects.create(
                 dog_info=self.dog_info,  # ForeignKey
@@ -149,6 +167,7 @@ class DietHandler:
         self.save_food_result()
         self.save_nut_report()
         self.save_nut_7()
+        self.save_food_en()
         
 class FoodViewSet(viewsets.ModelViewSet):
     queryset = Dog_Info.objects.all()
@@ -291,6 +310,22 @@ def result_food(request):
     # Dog 정보 불러오기
     food_result = Food_Result.objects.filter(dog_info_id=dog_info_id)
     food_serialized = FoodItemSerializer(food_result, many=True)
+    
+    print('result food info end')
+    return Response(food_serialized.data)
+
+@api_view(['POST'])
+def result_food_en(request):
+    print('result food info en start')
+    input_data = request.data
+    print(f'input_data {input_data}')
+    # 요청으로부터 dog_info_id 가져오기
+    dog_info_id = input_data.get('dog_info_id')
+    print(dog_info_id)
+    
+    # Dog 정보 불러오기
+    food_result = Food_Result_En.objects.filter(dog_info_id=dog_info_id)
+    food_serialized = FoodFoodEnSerializer(food_result, many=True)
     
     print('result food info end')
     return Response(food_serialized.data)

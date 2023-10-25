@@ -11,6 +11,21 @@ class FoodSearch:
     def close_db(self):
         if self.conn:
             self.conn.close()
+            
+    def get_en_name(self, input_data):
+        if not self.conn:
+            print("Database connection is not established.")
+            return
+        
+        cursor = self.conn.cursor()
+        
+        searching_food_db_template = f"SELECT food_name_en FROM food_name WHERE food_name_kr = '{input_data}'"
+        # searching_food_db = searching_food_db_template.format(input_data)
+        cursor.execute(searching_food_db_template)
+        result = cursor.fetchone()
+
+        cursor.close()
+        return result
 
     def get_input_list(self, input_data):
         if not self.conn:
@@ -67,6 +82,7 @@ class FoodSearch:
         
         cursor = self.conn.cursor()
         input_list = []
+        
         print(f'input_data : {input_data}')
         print(f'input_data : {len(input_data)}')
         for data in input_data:

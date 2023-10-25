@@ -24,6 +24,20 @@ class Food_Item(models.Model):
     def __str__(self):
         return self.name
     
+class Food_Item_En(models.Model):
+    name = models.CharField(max_length=100)
+    dog_info = models.IntegerField()
+
+    def __str__(self):
+        return self.name
+    
+class Food_image(models.Model):
+    dog_info = models.IntegerField()
+    image = models.ImageField(upload_to='media/foods/images', blank=True, null=True)
+    
+    def __str__(self):
+        return " Image"
+    
 class Nut_7_save(models.Model):
     dog_info = models.IntegerField()
     A10100 = models.FloatField()

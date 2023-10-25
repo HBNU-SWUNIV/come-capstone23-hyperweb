@@ -3,19 +3,26 @@ from django.http import HttpResponseBadRequest
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.backends import ModelBackend
+from django.core.files.base import ContentFile
 
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view 
 from rest_framework.response import Response
 
-from .models import Monthly_Food, Food_Item, Nut_7_save, Nut_report
+from .models import Monthly_Food, Food_Item, Nut_7_save, Nut_report, Food_image, Food_Item_En
 from user.models import User, Dog, Dog_Food_Token
 from .serializer import MonthItemSerializer, FoodItemSerializer, Nut7Serializer
-from .serializer import NutSufficientSerializer, NutReportSerializer
+from .serializer import NutSufficientSerializer, NutReportSerializer, FoodItemEnSerializer
 
 import requests
 import json
+import time, random
+
+import base64
+import io
+
+from PIL import Image, PngImagePlugin
 
 import os
 from django.conf import settings
@@ -25,6 +32,7 @@ from rest_framework.views import APIView
 class Food_view(APIView):
     def __init__(self):
         super().__init__()
+        self.diffusion_url = "http://127.0.0.1:7860"
         
     def mer_generator(self, age, weight, activate, bcs, sex):
         age, weight, activate, bcs, sex = int(age), int(weight), int(activate), int(bcs), int(sex)
@@ -84,6 +92,40 @@ class Food_view(APIView):
         dog_token.is_month = is_month
         dog_token.save()
         
+    def get_diffusion_quary(self, en_food):
+        # age, sex, habit, profit, place
+        prompt_format = (            
+            f"RAW photo, (dog food made with {' and '.join(en_food)})"
+            f"<lora:foodphoto:0.8> foodphoto, dslr, soft lighting, high quality, film grain, Fujifilm XT"
+
+        )
+        
+        negative_prompt_format = (
+            f"(deformed iris, deformed pupils, semi-realistic, cgi, 3d, render, sketch, cartoon, drawing, anime, mutated hands and fingers:1.4),"
+            f"(deformed, distorted, disfigured:1.3), poorly drawn, bad anatomy, wrong anatomy, extra limb, missing limb, floating limbs, disconnected limbs, "
+            f"mutation, mutated, ugly, disgusting, amputation "
+        )
+        
+        payload = {
+            "prompt": prompt_format,
+            "negative_prompt" : negative_prompt_format,
+            "steps": 20,
+            "cfg_scale" : 7,
+            "sampler_name" : "Euler a",
+            "n_iter" : 1
+        }
+        
+        return payload
+    
+    def set_diffusion_model(self):
+        dif_url = f'{self.diffusion_url}/sdapi/v1/options'
+        option_payload = {
+            "sd_model_checkpoint": "realisticVisionV51_v51VAE.safetensors",
+            "CLIP_stop_at_last_layers": 2
+        }
+        response = requests.post(url=dif_url, json=option_payload)
+        print(response)
+        
     #result food month data
     def get_result_month(self, month_id):
         print('result food month info post')
@@ -109,6 +151,46 @@ class Food_view(APIView):
         
         response = requests.post(BASE_URL, json=send_json)
         serializer = FoodItemSerializer(data=response.json(), many=True)
+        
+        if serializer.is_valid():
+            # Serializer 내부의 create 메소드를 호출하여 저장합니다.
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    #result food en version
+    def get_result_food_en(self, dog_info_id):
+        print('result food info post en')
+        
+        BASE_URL = "http://127.0.0.1:6000/result_food_en/"
+        send_json = {"dog_info_id": dog_info_id}
+        
+        response = requests.post(BASE_URL, json=send_json)
+        serializer = FoodItemEnSerializer(data=response.json(), many=True)
+        # db_Food_en = Food_Item_En.objects.filter(dog_info=dog_info_id).values('name')
+        food_en_list = [item['name'].replace("(", "").replace(")", "").replace("'", "").strip() for item in response.json()]
+
+        print('db_Food_en', food_en_list)
+            
+        self.set_diffusion_model()
+        print("Log get_diffusion : ",self.get_diffusion_quary(food_en_list))
+        
+        dif_url = f"{self.diffusion_url}/sdapi/v1/txt2img"
+        response = requests.post(url=dif_url, json=self.get_diffusion_quary(food_en_list))
+        img_json = response.json()
+        
+        for idx, img in enumerate(img_json['images']):
+            # image = Image.open(io.BytesIO(base64.b64decode(i.split(",",1)[0])))
+            # image.save('output.png')
+            img_name = f'{int(time.time())}_{random.randint(1000, 9999)}_{idx}.png'
+            
+            image = Image.open(io.BytesIO(base64.b64decode(img.split(",", 1)[0])))
+            image_io = io.BytesIO()
+            image.save(image_io, format='PNG')
+            image_file = ContentFile(image_io.getvalue(), name=img_name)
+            
+            post_image = Food_image(dog_info=dog_info_id, image=image_file)
+            post_image.save()
         
         if serializer.is_valid():
             # Serializer 내부의 create 메소드를 호출하여 저장합니다.
@@ -228,6 +310,9 @@ class Food_view(APIView):
                         # get daily food
                         response_food = self.get_result_food(instance_dog_id)
                         # print('log response_food', response_food)
+                        
+                        response_nut7 = self.get_result_food_en(instance_dog_id)
+                        # print('log response_nut7', response_nut7)
 
                         response_nut7 = self.get_result_nut7(instance_dog_id)
                         # print('log response_nut7', response_nut7)
@@ -254,6 +339,9 @@ class Food_view(APIView):
 
                     response_nut7 = self.get_result_nut7(dog_info_id)
                     # print('log response_nut7', response_nut7)
+                    
+                    response_nut7 = self.get_result_food_en(dog_info_id)
+                        # print('log response_nut7', response_nut7)
                     
                     response_nut_report = self.get_result_nut_report(dog_info_id)
                     # print('log response_nut_report', response_nut_report)

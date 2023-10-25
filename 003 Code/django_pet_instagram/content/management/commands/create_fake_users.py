@@ -174,7 +174,7 @@ class Command(BaseCommand):
             "negative_prompt" : negative_prompt_format,
             "steps": 4,
             "sampler_index": "Euler a",
-            "cfg_scale" : 5,
+            "cfg_scale" : 4.5,
             "sampler_name" : "DPM++ SDE Karras",
             "n_iter" : 2
         }
@@ -191,6 +191,26 @@ class Command(BaseCommand):
         print(response)
     
     def set_stable_diffusion(self, post_model):
+        dif_url = f"{self.diffusion_url}/sdapi/v1/txt2img"
+        print("Log get_diffusion : ",self.get_diffusion_quary())
+        response = requests.post(url=dif_url, json=self.get_diffusion_quary())
+        img_json = response.json()
+
+        for idx, img in enumerate(img_json['images']):
+            # image = Image.open(io.BytesIO(base64.b64decode(i.split(",",1)[0])))
+            # image.save('output.png')
+            img_name = f'{int(time.time())}_{random.randint(1000, 9999)}_{idx}.png'
+            
+            image = Image.open(io.BytesIO(base64.b64decode(img.split(",", 1)[0])))
+            image_io = io.BytesIO()
+            image.save(image_io, format='PNG')
+            image_file = ContentFile(image_io.getvalue(), name=img_name)
+            
+            post_image = PostImage(post=post_model, image=image_file)
+            post_image.save()
+
+            # post.image.save(img_name, image_file)
+    def test(self, post_model):
         dif_url = f"{self.diffusion_url}/sdapi/v1/txt2img"
         print("Log get_diffusion : ",self.get_diffusion_quary())
         response = requests.post(url=dif_url, json=self.get_diffusion_quary())

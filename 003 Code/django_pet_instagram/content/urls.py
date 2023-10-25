@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import UploadFeed, Profile, Main, UploadReply, ToggleLike, ToggleBookmark
+from .views import UploadFeed, Profile, Main, UploadReply, ToggleLike, ToggleBookmark, GetMorePosts
 from . import views
 from algorithm_api.views import Food_view
 
@@ -16,5 +16,6 @@ urlpatterns = [
     path('upload_image/', views.upload_image, name='upload_image'),
     path('upload/', views.upload_post, name='upload_post'),
     path('logout/', views.user_logout, name='user_logout'),
+    path('get_more_posts/', GetMorePosts.as_view(), name='get_more_posts'),
 ]
 

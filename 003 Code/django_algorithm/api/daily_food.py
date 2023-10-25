@@ -185,7 +185,6 @@ class DietOptimizer:
             # A10100 -> 전체 열량 
             #/ 100. * 음식의 영양성분을 모두 곱하면 됨            
             nut_div = float(result_food_weight[1]) / 100.
-            print(result_food_weight, nut_div)
             for idx, input_nut in enumerate(self.user_food_nut_all):
                 if input_nut[0] == result_food_weight[0]: # 음식명 찾아주는 코드
                     print(idx, input_nut)
@@ -230,6 +229,8 @@ class DietOptimizer:
                     self.sufficient = self.sufficient + 1
                 else:
                     percent = round((act_val / min_val) * 50) 
+                    if percent == 50:
+                        percent = 49
             else:
                 self.sufficient = self.sufficient + 1
                 if min_val == 0 or max_val == 0 or min_val == max_val:

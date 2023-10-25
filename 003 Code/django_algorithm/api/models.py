@@ -13,6 +13,13 @@ class Food_Item(models.Model):
 
     def __str__(self):
         return self.name
+    
+class Food_Result_En(models.Model):
+    name = models.CharField(max_length=100)
+    dog_info = models.ForeignKey(Dog_Info, related_name='food_items_en', on_delete=models.CASCADE, null=True)
+
+    def __str__(self):
+        return self.name
 
 class Food_Result(models.Model):
     name = models.CharField(max_length=100)

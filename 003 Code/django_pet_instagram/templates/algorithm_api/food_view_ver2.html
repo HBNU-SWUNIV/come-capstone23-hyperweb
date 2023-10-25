@@ -64,9 +64,9 @@
             .modal-content {
                 background-color: white;
                 width: 85%;
-                height: 80%;
+                height: 90%;
                 position: absolute;
-                top: 10%; /* 상단에 위치하도록 변경 */
+                top: 5%; /* 상단에 위치하도록 변경 */
                 left: 50%;
                 transform: translate(-50%, 0); /* Y축 변환값 삭제 */
                 padding: 20px;
@@ -85,7 +85,7 @@
                 grid-template-columns: repeat(5, 1fr);
                 gap: 5px;
             }
-            .table_values > img{
+            .table_values > img, .table_food > img{
                 width: 50px;
             }
 
@@ -115,15 +115,12 @@
             #createBtn,
             #reportSubmitBtn {
                 display: block;
-                margin: 20px auto;
                 padding: 10px 20px;
                 background-color: #3897f0;
                 color: #fff;
                 border: none;
                 border-radius: 4px;
                 font-size: 16px;
-                margin-left : 200px;
-                margin-right: 0px;
             }
 
             #selectedImages table {
@@ -152,9 +149,9 @@
             .modal-content {
                 background-color: white;
                 width: 70%;
-                height: 80%;
+                height: 90%;
                 position: absolute;
-                top: 10%; /* 상단에 위치하도록 변경 */
+                top: 3%; /* 상단에 위치하도록 변경 */
                 left: 50%;
                 transform: translate(-50%, 0); /* Y축 변환값 삭제 */
                 padding: 20px;
@@ -169,7 +166,7 @@
                 overflow-y: auto;
                 overflow-x: hidden;
                 display: grid;
-                height: 650px;  /* 예시로 500px을 사용. 필요에 따라 조정 */
+                height: 75%;  /* 예시로 500px을 사용. 필요에 따라 조정 */
                 grid-template-columns: repeat(5, 1fr);
                 gap: 5px;
             }
@@ -183,34 +180,6 @@
                 scrollbar-width: none; 
                 -ms-overflow-style: none;
             }
-        }
-
-        #button-list{
-            display: flex;
-            justify-content: center;
-            gap: 10px;  /* 버튼 간의 간격 */
-            margin-top: 30px;
-            margin-bottom: 50px;
-        }
-
-        /* 녹색 버튼 */
-        button.green {
-            background-color: #4CAF50;
-            color: white;
-        }
-
-        button.green:hover {
-            background-color: #45a049;
-        }
-
-        /* 파란색 버튼 */
-        button.blue {
-            background-color: #2196F3;
-            color: white;
-        }
-
-        button.blue:hover {
-            background-color: #0b7dda;
         }
 
         body {
@@ -439,7 +408,7 @@
             width: 12.5%;
         }
 
-        .table_values{
+        .table_values, .table_food{
             width: 25%;
         }
 
@@ -461,6 +430,87 @@
             margin-left: 10px;
             margin-top: 10px;
         }
+        /* 버튼을 중앙으로 정렬하는 부모 요소 스타일 */
+        .centered-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 70px;
+        }
+
+        /* 버튼 그룹 스타일 */
+        .btn-group {
+            display: inline-flex;
+            flex-direction: row;
+            justify-content : center;
+            border: 2px solid black;
+            overflow: hidden;
+            margin-top:40px;
+        }
+
+        /* 기본 버튼 스타일 */
+        .btn {
+            width:150px;
+            padding: 10px 20px;
+            margin:0px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            background-color: white;
+            color: black;
+            border-right: 2px solid black;
+            text-align: center;
+            border-radius: 0;
+        }
+        
+        /* 마지막 버튼에는 오른쪽 경계 스타일 제거 */
+        .btn:last-child {
+            border-right: none;
+        }
+
+        /* 버튼이 선택됐을 때의 스타일 */
+        .btn-selected {
+            background-color: #007BFF; /* 원하는 색상으로 변경 가능 */
+            color: white;
+        }
+
+        /* 비활성화된 버튼 스타일 */
+        .btn-disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .loading {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.8);
+            z-index: 9999;
+        }
+
+        .spinner {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 50px;
+            height: 50px;
+            margin: -25px 0 0 -25px;
+            border: 5px solid transparent;
+            border-top-color: #333;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+
     </style>
     <script src="http://code.jquery.com/jquery-latest.min.js"></script>
 </head>
@@ -471,11 +521,6 @@
         </a>    
     </div>
     <div class="paper-like">
-        <div id="button-list">
-            <button class="green" onclick="showContent('monthly')">한 달 식단 만들기</button>
-            <button class="blue" onclick="showContent('daily')">일일 식단 만들기</button>
-        </div>
-        
         <div class="title">보고서 생성</div>
         <div class="description">음식재료를 선택해주세요 (한달 식단의 경우 육류재료를 2개 이상 선택해주세요)</div>
         <!-- 선택한 이미지를 보여줄 영역 -->
@@ -484,7 +529,7 @@
                 <thead>
                     <tr>
                         <th class="table_num">번호</th>
-                        <th class="table_values">음식 이름</th>
+                        <th class="table_food">음식 이름</th>
                         <th class="table_values">사진</th>
                         <th class="table_values">그램수</th>
                         <th class="table_remove">액션</th> 
@@ -497,9 +542,12 @@
             <!-- 제출 버튼 -->
             
         </div>
-        <div style="display: flex;flex-direction: row;justify-content:center">
-            <button id="createBtn">생성</button>
-            <button id="reportSubmitBtn">보고서 제출</button>
+        
+        <div class="centered-container">
+            <div style="display: inline-flex;flex-direction: row;justify-content:center">
+                <button id="createBtn">생성</button>
+                <button id="reportSubmitBtn">보고서 제출</button>
+            </div>
         </div>
         
 
@@ -517,15 +565,21 @@
                     </div>
                 {% endfor %}
             </div>
+            <div class="centered-container">
+                <div class="btn-group">
+                    <button class="btn" onclick="selectButton('left')">한달 식단</button>
+                    <button class="btn" onclick="selectButton('right')">일일 식단</button>
+                </div>
+            </div>
             <button id="submitBtn">제출</button>         
         </div>
         <span class="close close-top-right">&times;</span>
     </div>
 
-
-
+    <div id="loading" class="loading">
+        <div class="spinner"></div>
+    </div>
     
-
 <script>
     let namesArray = [];
     let gramArray = [];
@@ -558,6 +612,19 @@
         });
     
     });
+
+    function selectButton(position) {
+        const leftBtn = document.querySelector('.btn-group .btn:nth-child(1)');
+        const rightBtn = document.querySelector('.btn-group .btn:nth-child(2)');
+
+        if (position === 'left') {
+            leftBtn.classList.add('btn-selected');
+            rightBtn.classList.remove('btn-selected');
+        } else {
+            rightBtn.classList.add('btn-selected');
+            leftBtn.classList.remove('btn-selected');
+        }
+    }
 
     function removeFood(buttonElement, currentFoodName) {
         const row = buttonElement.closest('tr');
@@ -641,7 +708,7 @@
                 <thead>
                     <tr>
                         <th class="table_num">번호</th>
-                        <th class="table_values">음식 이름</th>
+                        <th class="table_food">음식 이름</th>
                         <th class="table_values">사진</th>
                         <th class="table_values">그램수</th>
                         <th class="table_remove">액션</th> 
@@ -656,7 +723,7 @@
             tableContent += `
             <tr>
                 <td class="table_num">${index + 1}</td>
-                <td class="table_values">${name}</td>
+                <td class="table_food">${name}</td>
                 <td class="table_values"><img src="${img.src}" alt="${name}" /></td>
                 <td class="table_values"><input type="text" class="gram-input" placeholder="그램수 입력" value="0"></td>
                 <td class="table_remove"><button id="remove-button" onclick="removeFood(this, '${name}'+'.png')">제거</button></td>
@@ -670,15 +737,17 @@
     });
 
     document.getElementById('reportSubmitBtn').addEventListener('click', function() {
-        const gramInputs = document.querySelectorAll('.gram-input');
-        const names = document.querySelectorAll('tbody tr td:nth-child(2)');
-    
-        let allFilled = true;
+        showLoading();
+        const gramInputsArray = Array.from(document.querySelectorAll('.gram-input'));
+        const namesArray = Array.from(document.querySelectorAll('.table_food'));
+        const namesValues = namesArray.map(cell => cell.textContent);
         
+        
+        let allFilled = true;
         var result = new Array();
         let count = 0;
-    
-        gramInputs.forEach((input, index) => {
+
+        gramInputsArray.forEach((input, index) => {
             if(input.value.trim() === '') {
                 allFilled = false;
             }
@@ -687,17 +756,16 @@
         if(!allFilled) {
             alert('모든 그램수를 입력해주세요.');
         } else {
-            alert('Loading');
-            
             gramArray = [];
-            gramInputs.forEach(input => {
+            gramInputsArray.forEach(input => {
                 gramArray.push(input.value);
             });
     
             for (let i = 0; i < gramArray.length; i++) {
-                const temp = { food: namesArray[i], weight: gramArray[i] };
+                const temp = { food: namesValues[i+1], weight: gramArray[i] };
+                console.log(temp);
                 result.push(temp);
-                console.log(`입력 ${i}: 음식 - ${namesArray[i]}, 무게 - ${gramArray[i]}`);
+                console.log(`입력 ${i}: 음식 - ${namesValues[i+1]}, 무게 - ${gramArray[i]}`);
             }
             sendDataToServer(result, gramArray.length);
         }
@@ -716,22 +784,30 @@
                     alert("입력 값을 변경하시요.");
                 } else {
                     console.log("성공");
-                    alert("연산 결과 도출 완료");
                     let redirectUrl = (food_count > 10) ? '/make_report/report_month_page' : '/make_report/report_page';
                     location.replace(redirectUrl);
 
                 }
             },
             error: function (request, status, error) {
+                hideLoading();
                 console.log("에러");
             },
             complete: function () {
+                hideLoading();
                 console.log("완료");
             }
         });
+        
     }
     
+    function showLoading() {
+        document.getElementById('loading').style.display = 'block';
+    }
 
+    function hideLoading() {
+        document.getElementById('loading').style.display = 'none';
+    }
 </script>
 
 </body>

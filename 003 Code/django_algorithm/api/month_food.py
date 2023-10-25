@@ -13,9 +13,9 @@ class MenuGenerator:
     @staticmethod
     def generate_calories(is_main):
         if is_main:
-            return random.randint(100, 200)
+            return random.randint(50, 200)
         else:
-            return random.randint(10, 90)
+            return random.randint(10, 50)
 
     def generate(self, target_list_count=4):
         while len(self.food_list) < target_list_count:

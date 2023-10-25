@@ -9,6 +9,17 @@
 
 
     <style>
+        .thead-dark{
+            text-align:center;
+        }
+        td{
+            text-align:center;
+            
+        }
+        .table td, .table th {
+            vertical-align: middle;
+        }
+
         .overlay {
             position: absolute; 
             top: 0; 
@@ -16,8 +27,9 @@
             left: 0; 
             right: 0;
             text-align: center;
+            margin-top:100px;
             height: 50vh; /* overlay의 높이도 같게 조절 */
-            border-bottom: 2px solid rgba(128, 128, 128, 0.7);
+            /* border-bottom: 2px solid rgba(128, 128, 128, 0.7); */
         }
 
         .profile-image {
@@ -77,9 +89,29 @@
             font-size: 48px;
             color: #000000;
         }
+        .nutrient-title {
+            font-size: 24px; /* 원하는 크기로 조정 */
+        }
+
         .badge-custom {
+            font-size : 18px;
             margin-right: 5px; /* 오른쪽 여백 조정 */
             padding: 5px 10px; /* 패딩 조정 */
+        }
+        .table-profile-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* 이미지의 비율을 유지하면서 셀에 맞게 이미지를 잘라내거나 확장합니다. */
+        }
+        #main-image-div{
+                border-bottom: #0D8C7F 2px solid;
+                padding-bottom : 10px;
+                margin-top: 10px;
+            }
+
+        #main-image-div > a > img{
+            width: 50px;
+            height: 50px;
         }
     </style>
     <script>
@@ -121,6 +153,11 @@
     </script>
 </head>
 <body>
+    <div id="main-image-div">
+        <a href="/main" style="z-index:100;">
+            <img src="/media/logo.png"> 
+        </a>    
+    </div>
     <!-- nutrition-image 클래스 추가 -->
     <img class="nutrition-image" src="/media/recipe_image2.jpg" alt="Nutrition image">
     <img src="/media/default_profile.png" alt="Profile image" class="profile-image">    
@@ -149,10 +186,21 @@
         </div>
     </div>
     <div class="container">
-        <span>풍부한 영양소:   </span>
+        <span class="nutrient-title">풍부한 영양소: </span>
         {% for nutrient in sufficient %}
-            <span class="badge badge-primary badge-custom">{{ nutrient }}</span>
-        {% endfor %}
+        <span class="badge badge-custom 
+                {% if nutrient.1 == 'C' %}
+                    badge-danger
+                {% elif nutrient.1 == 'B' %}
+                    badge-primary
+                {% elif nutrient.1 == 'D' %}
+                    badge-success
+                {% elif nutrient.1 == 'A' %}
+                    badge-warning
+                {% endif %}
+            ">{{ nutrient.0 }}</span>
+    {% endfor %}
+    
     </table>
         <div class="container mt-4">
             <div class="row no-gutters">
@@ -217,35 +265,44 @@
                 </div>
                 <div class="col-1"></div> <!-- 이 부분을 추가하여 박스들을 중앙으로 이동 -->
         
-         <table class="table">
-            <thead class="thead-dark">
-                <tr>
-                    <th>식재료명</th>
-                    <th>무게</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for food in foods %}
-                <tr>
-                    <td>{{ food.name }}</td>
-                    <td>{{ food.unit }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>       
+                <table class="table">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>예상되는 식단 이미지</th> <!-- 헤더에 새로운 열 추가 -->
+                            <th>식재료명</th>
+                            <th>무게</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for food in foods %}
+                        <tr>
+                            {% if forloop.first %}
+                            <!-- 첫 번째 행에서만 이미지를 추가합니다. -->
+                            <td rowspan="{{ foods|length }}">
+                                <img src="{{ food_image.0.image.url }}" alt="{{ food_image.0.info_id }}" class="table-profile-image">
+                            </td>
+                            {% endif %}
+                            <td>{{ food.name }}</td>
+                            <td>{{ food.unit }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                      
         <table class="table">
             <thead class="thead-dark">
                 <tr>
                     <th>Nutrient</th>
-                    <th>Actual Value</th>
+                    <th>Minimum Weight</th>
                     <th>Percentage</th>
-                    <th>Minimum Value</th>
+                    <th>Actual Weight</th>
                 </tr>
             </thead>
             <tbody>
                 {% for nutrient in nutrients %}
                 <tr>
                     <td>{{ nutrient.nut_name }}</td>
-                    <td>{{ nutrient.actual_num }}</td>
+                    <td>{{ nutrient.min_num }}</td>
                     <td style="max-width: 100%;">
                         <div class="progress">
                             <div class="progress-bar" 
@@ -264,11 +321,11 @@
                                 aria-valuemax="{{ nutrient.min_num }}">
                 
                                 <!-- 50% 지점에 선 추가 -->
-                                <div style="position: absolute; left: 120px; top: 50%; height: 50%; width: 3px; background-color: #000;"></div>
+                                <div style="position: absolute; left:108px; top: 0; height: 100%; width: 3px; background-color: rgba(255, 255, 255, 0.5);"></div>
                             </div>
                         </div>
                     </td>
-                    <td>{{ nutrient.min_num }}</td>
+                    <td>{{ nutrient.actual_num }}</td>
                 </tr>
                 {% endfor %}
             </tbody>

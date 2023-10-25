@@ -10,9 +10,10 @@ from django.http import JsonResponse
 from rest_framework.views import APIView
 
 import math
+import requests
 from PIL import Image
 
-from algorithm_api.models import Monthly_Food, Food_Item, Nut_7_save, Nut_report, Nut_sufficient
+from algorithm_api.models import Monthly_Food, Food_Item, Nut_7_save, Nut_report, Nut_sufficient, Food_image
 from user.models import User, Dog
 
 import base64
@@ -99,6 +100,8 @@ def make_report(request):
 class ReportMonthView(APIView):
     def __init__(self):
         super().__init__()
+        self.diffusion_url = "http://127.0.0.1:7860"
+        
         self.dog_info_id = None
         self.dog_id = None
         self.month_id = None
@@ -106,6 +109,7 @@ class ReportMonthView(APIView):
         self.foods_list = []
         self.token_list = []
         self.some_nut_list = []
+        self.db_images_list = []
         
     def fetch_data(self):
         dog_nickname = Dog.objects.get(id=self.dog_id)
@@ -125,6 +129,9 @@ class ReportMonthView(APIView):
             db_some_nut = Nut_7_save.objects.filter(dog_info=food_id).values('A10300', 'A10400', 'A10600')
             self.some_nut_list.append([db_some_nut[0]['A10300'], db_some_nut[0]['A10400'], db_some_nut[0]['A10600']])
             
+            self.db_images_list.append(Food_image.objects.filter(dog_info=food_id))
+            
+            
     def proccess_weekly_month(self):
         colors = ['rgba(255,0,0,0.3)', 'rgba(0, 0, 255, 0.3)', 'lightgreen', 'lightyellow']
         days_data = [
@@ -133,13 +140,34 @@ class ReportMonthView(APIView):
             ['15', '9', '17', '18', '19', '25', '13','30'],
             ['2', '6', '24', '12', '26', '27', '28','29']
         ]
+        nutrients = [
+            "에너지", "수분", "단백질", "지방", "탄수화물", "칼슘", "철", "마그네슘", "인", "칼륨",
+            "나트륨", "아연", "구리", "망간", "셀레늄", "요오드", "비타민 A", "티아민", "리보플라빈", "니아신",
+            "판토텐산", "피리독신", "엽산_엽산당량", "비타민 B12", "비타민 D", "비타민 E", "비타민 K", "이소류신",
+            "류신", "라이신", "메티오닌", "페닐알라닌", "트레오닌", "트립토판", "발린", "히스티딘", "아르기닌",
+            "리놀레산", "알파 리놀렌산"
+        ]
+        
+        unit_df = [
+            "A10100", "A10200", "A10300", "A10400", "A10600",
+            "B10100", "B10200", "B10300", "B10400", "B10500",
+            "B10600", "B10700", "B10800", "B10900", "B11000",
+            "B11200", "C10100", "C20100", "C20200", "C20300",
+            "C20500", "C20601", "C20900", "C21200", "C10200",
+            "C10300", "C10400", "D10201", "D10202", "D10203",
+            "D10204", "D10205", "D10206", "D10207", "D10208",
+            "D10209", "D10210", "E10601", "E10602"
+        ]
 
+        code_to_nutreints = dict(zip(unit_df,nutrients))
+        translated_features = [[code_to_nutreints[token] for token in feature_list if token in code_to_nutreints] for feature_list in self.token_list]
         weekly_meals = {
             f'food_{i+1}': {
                 'menu': self.foods_list[i],
-                'features': self.token_list[i],
+                'features': translated_features[i],
                 'color': colors[i],
-                'days': days_data[i]
+                'days': days_data[i],
+                'food_image': self.db_images_list[i-1]
             } for i in range(4)
         }
         return weekly_meals
@@ -147,9 +175,9 @@ class ReportMonthView(APIView):
     def process_nut(self):
         calcium_data, magnesium_data, iron_data = {}, {}, {}
         for i in range(4):
-            calcium_data[f'food_{i+1}'] = self.some_nut_list[i][0]
-            magnesium_data[f'food_{i+1}'] = self.some_nut_list[i][1]
-            iron_data[f'food_{i+1}'] = self.some_nut_list[i][2]
+            calcium_data[f'food_{i+1}'] = self.some_nut_list[i][0] # 단백질
+            magnesium_data[f'food_{i+1}'] = self.some_nut_list[i][1] # 지방
+            iron_data[f'food_{i+1}'] = self.some_nut_list[i][2] # 탄수화물
         return calcium_data, magnesium_data, iron_data
 
     
@@ -170,7 +198,7 @@ class ReportMonthView(APIView):
             ['22', '23', '24', '25', '26', '27', '28'],
             ['29','30','31']
         ]
-
+        print(weekly_meals['food_1'])
         context = {
             'weekly_meals': weekly_meals,
             'calcium_data': calcium_data,
@@ -188,6 +216,8 @@ class ReportMonthView(APIView):
 class ReportView2(APIView):
     def __init__(self):
         super().__init__()
+        self.diffusion_url = "http://127.0.0.1:7860"
+        
         self.dog_info_id = None
         self.dog_id = None
     
@@ -207,6 +237,8 @@ class ReportView2(APIView):
         
         db_nut_sufficient = Nut_sufficient.objects.filter(dog_info=self.dog_info_id).values('token_name')
         # fields_nut_report = ['nut_name', 'actual_num', 'percent', 'min_num']
+        
+        db_image = Food_image.objects.filter(dog_info=self.dog_info_id)
         print(db_nut_sufficient)
         
         
@@ -230,8 +262,13 @@ class ReportView2(APIView):
         ]
 
         code_to_nutreints = dict(zip(unit_df,nutrients))
-        db_nut_sufficient_code_to_nut = [code_to_nutreints[item['token_name']] for item in db_nut_sufficient]
+        
+        db_sufficient = [(code_to_nutreints[item['token_name']], item['token_name'][0]) for item in db_nut_sufficient]
+        for item in db_nut_report:
+            item['nut_name'] = code_to_nutreints.get(item['nut_name'], item['nut_name'])
 
+        print('db_nut_report', db_nut_report)
+        print(db_nut_report)
 
         # print('data_food', db_food)
         # print('data_nut7', db_nut7)
@@ -241,7 +278,8 @@ class ReportView2(APIView):
             'foods': db_food,
             'nut7' : db_nut7,
             'nutrients': db_nut_report,
-            'sufficient': db_nut_sufficient_code_to_nut
+            'sufficient': db_sufficient,
+            'food_image': db_image
         }
             
         return render(request, "report/report2.html", context)

@@ -1,12 +1,17 @@
 from rest_framework import serializers
 
-from .models import Food_Item, Monthly_Food, Dog_Info, Get_Id, Nut_7_save, Nut_report, Nut_sufficient
+from .models import Food_Item, Monthly_Food, Dog_Info, Get_Id, Nut_7_save, Nut_report, Nut_sufficient, Food_Result_En
 
 
 class FoodItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = Food_Item
         fields = ['name', 'unit', 'dog_info']
+
+class FoodFoodEnSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Food_Result_En
+        fields = ['name', 'dog_info']
         
 class MonthItemSerializer(serializers.ModelSerializer):
     foods = serializers.PrimaryKeyRelatedField(many=True, queryset=Dog_Info.objects.all())
