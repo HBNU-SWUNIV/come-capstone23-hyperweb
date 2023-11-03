@@ -169,6 +169,13 @@ class Main(APIView):
         for post in posts:
             post.hashtag_list = parse_string_list(post.hashtag)
 
+        for post in posts:
+            # Splitting the text at "Hashtags" and keeping only the part before it
+            post.text = post.text.split('Hashtags')[0]
+
+            post.hashtag_list = parse_string_list(post.hashtag)
+
+
         return render(request, "jinstagram/main.html", context=dict(user=user, posts=posts, range_5=range(5), user_example=user_example[30:59]))
 
 class UploadFeed(APIView):
@@ -273,11 +280,11 @@ class ToggleBookmark(APIView):
 
 
 # 미 구현 => Post 데이터 DB가 아직 없어서 나중에
-def post_api(request):
-    # data = list(YourModel.objects.values())
-    data = [0,1,2,3,4]
-    time.sleep(2)
-    return JsonResponse(data, safe=False)  # JSON 응답을 반환
+# def post_api(request):
+#     # data = list(YourModel.objects.values())
+#     data = [0,1,2,3,4]
+#     time.sleep(2)
+#     return JsonResponse(data, safe=False)  # JSON 응답을 반환
 
 def upload_image(request):
     if request.method == 'POST':

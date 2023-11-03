@@ -233,10 +233,6 @@
                 width:50px;
             }
 
-            #ul-list{
-                width: 100%;
-            }
-
             #ul-list-ul{
                 padding-left: 30px;
             }
@@ -403,7 +399,13 @@
             }
         }
 
-        @media (min-width: 801px) and (max-width: 4000px){ 
+        @media (min-width: 801px) and (max-width: 4000px){
+            #mainclick{
+                margin-top:30px;
+            }
+            .post.expanded {
+                width: 800px;
+            } 
             #modal-image{
                 width: 500px;
                 height: 500px;
@@ -414,8 +416,11 @@
             #mobile-main-logo{
                 display: none;
             }
+
             .list-main-image > img{
                 width:70px;
+                margin-top: 10px;
+                margin-left: 10px;
             }
             #ul-list-ul{
                 padding-bottom: 20px;padding-left: 0px;
@@ -445,8 +450,9 @@
                 margin-top:30px;
             }
             .post {
+                transition: width 0.3s ease;
                 width: 600px;
-                margin-left: 350px;
+                margin-left: 550px;
                 font-family: Arial, sans-serif;
                 padding-bottom: 25px;
                 border-bottom: 1px #ddd  solid;
@@ -575,11 +581,6 @@
                 width: 64px;
             }
 
-
-            #post-list.expanded {
-            width: 1956px;
-            }
-
             #bottomDiv {
             opacity: 1;
             transition: opacity 0.5s ease-in-out;
@@ -603,7 +604,8 @@
             }
             #ul-list{
                 width: 400px;
-                
+                height: 100vh;
+                position: fixed;
             }
 
             .contents-list{
@@ -661,10 +663,10 @@
             background-color: rgba(128, 128, 128, 0.11);
             }
 
-            #heart, #chat, #share, #bookmark {
+            .heart, .chat, .share, .bookmark {
             transition: 0.5s;
             }
-            #heart:hover, #chat:hover, #share:hover, #bookmark:hover {
+            .heart:hover, .chat:hover, .share:hover, .bookmark:hover {
                 transform: translateY(-10px);
             }
             
@@ -878,7 +880,15 @@
         }
 
         #sidebar{
-            height:600px; transition: width 0.5s;display: flex; flex-direction: row; justify-content: flex-start; overflow: hidden;
+            height:600px;
+            transition: width 0.5s;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            overflow: hidden;
+            position: fixed;
+            top: 0; /* 맨 위로 부터 0px 떨어져 위치 */
+            right: 0;
         }
         }
 
@@ -898,17 +908,9 @@
                     <li class="list-main-image" onclick="location.reload();"> 
                         <img src="/media/logo.png">
                     </li>                    
-                    <li class="contents-list" onclick="location.reload();">
+                    <li class="contents-list" onclick="location.reload();" id="mainclick">
                         <img src="/media/house-door-fill.svg">
                         <span>메인화면</span>
-                    </li>
-                    <li class="contents-list">
-                        <img  src="/media/search.svg">
-                        <span>검 색</span>
-                    </li>
-                    <li class="contents-list">
-                        <img  src="/media/envelope.svg">
-                        <span>알 림</span>
                     </li>
                     <li class="contents-list">
                         <a href="#" class="btn" id="upload-post-list">
@@ -976,23 +978,6 @@
             
 
             <div id="main-line">
-                <!-- <div class="swiper-container" style="border-bottom: solid 1px #ddd; height: 130px;">
-                    <div class="swiper-wrapper">
-                        {% for item in user_example %}
-                        <div class="swiper-slide" style="display: flex;justify-content: center;padding: 0px;">
-                            <div class="swiper-slide_image_list_value" style="height:100px;padding:0px;">
-                                <div>
-                                    <img class="profile" style="border-radius: 100%; border: 3px solid #f2befc;padding:2px;height: 80px; width: 80px;" src="/media/example/{{forloop.counter}}.jpg">
-                                    <label style="width: 80px; height:50px;text-align: center;">{{ item|slice:":5" }}</label>
-                                </div>
-                            </div>
-                        </div>
-                        {% endfor %}
-                    </div>
-                    <div class="swiper-pagination"></div>
-                    <div class="swiper-button-next" style="margin-left:20px"></div>
-                    <div class="swiper-button-prev"></div>
-                </div> -->
                 <div id="post-list">
                     {% for post in posts %}
                     <div class="post">
@@ -1015,10 +1000,10 @@
                         </div>
 
                         <div class="post-caption">
-                            <img id = "heart" src="/media/heart.svg">
-                            <img id = "chat" src="/media/chat.svg">
-                            <img id = "share" src="/media/share.svg">
-                            <img id = "bookmark" src="/media/bookmark.svg">
+                            <img class = "heart" src="/media/heart.svg">
+                            <img class = "chat" src="/media/chat.svg">
+                            <img class = "share" src="/media/share.svg">
+                            <img class = "bookmark" src="/media/bookmark.svg">
                         </div>
 
                         <div class="post-text">
@@ -1129,7 +1114,7 @@
   
 <!-- Optional JavaScript; choose one of the two! -->
 <script>
-    let page = 1; // 초기 페이지 번호
+    let page = 2; // 초기 페이지 번호
 
     // 해시태그
     const input = document.getElementById("postHashtag");
@@ -1570,7 +1555,7 @@
     });
 
     $(document).ready(function(){
-        $("#heart").click(function() {
+        $(document).on('click', '.heart', function() {
             if ($(this).attr("src") == "/media/heart.svg") {
                 $(this).attr("src", "/media/heart-fill.svg");
             } else {
@@ -1578,7 +1563,7 @@
             }
         });
 
-        $("#chat").click(function() {
+        $(document).on('click', '.chat', function() {
             if ($(this).attr("src") == "/media/chat.svg") {
                 $(this).attr("src", "/media/chat-fill.svg");
             } else {
@@ -1586,7 +1571,7 @@
             }
         });
 
-        $("#share").click(function() {
+        $(document).on('click', '.share', function() {
             if ($(this).attr("src") == "/media/share.svg") {
                 $(this).attr("src", "/media/share-fill.svg");
             } else {
@@ -1594,7 +1579,7 @@
             }
         });
 
-        $("#bookmark").click(function() {
+        $(document).on('click', '.bookmark', function() {
             if ($(this).attr("src") == "/media/bookmark.svg") {
                 $(this).attr("src", "/media/bookmark-fill.svg");
             } else {
@@ -1602,6 +1587,7 @@
             }
         });
     });
+
 
     function isScrollBottom() {
         var scrollTop = $(window).scrollTop();
@@ -1667,10 +1653,10 @@
 
             let postCaption = `
                 <div class="post-caption">
-                    <img id="heart" src="/media/heart.svg">
-                    <img id="chat" src="/media/chat.svg">
-                    <img id="share" src="/media/share.svg">
-                    <img id="bookmark" src="/media/bookmark.svg">
+                    <img class="heart" src="/media/heart.svg">
+                    <img class="chat" src="/media/chat.svg">
+                    <img class="share" src="/media/share.svg">
+                    <img class="bookmark" src="/media/bookmark.svg">
                 </div>
             `;
 
@@ -1704,14 +1690,16 @@
     // 오른쪽 버튼 클릭 이벤트 리스너
     document.getElementById('toggleButton').addEventListener('click', function() {
     var sidebar = document.getElementById('sidebar');
-    var postList = document.getElementById('post-list');
+    var posts = document.querySelectorAll('.post');
     var bottomDiv = document.getElementById('bottomDiv');
     var arrowImg = document.getElementById('arrowImg');
 
     if (sidebar.offsetWidth >= 400) {
         arrowImg.src = '/media/chevron-double-left.svg';
         sidebar.classList.add('collapsed');
-        postList.classList.add('expanded');
+        posts.forEach(function(post) {
+            post.classList.add('expanded');
+        });
         bottomDiv.classList.add('hidden');
         setTimeout(function() {
             bottomDiv.style.display = 'none';
@@ -1719,7 +1707,9 @@
     } else {
         arrowImg.src = '/media/chevron-double-right.svg';
         sidebar.classList.remove('collapsed');
-        postList.classList.remove('expanded');
+        posts.forEach(function(post) {
+            post.classList.remove('expanded');
+        });
         bottomDiv.style.display = 'block';
         setTimeout(function() {
             bottomDiv.classList.remove('hidden');
