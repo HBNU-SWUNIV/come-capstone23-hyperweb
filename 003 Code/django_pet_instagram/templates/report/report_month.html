@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Nutrient Analysis</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-beta4/html2canvas.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        .thead-dark {
+            text-align: center;
+        }
+        td {
+            text-align: center;    
+        }
+        th {
+            text-align: center;
+            vertical-align: middle;
+        }
+        .overlay {
+            position: absolute; 
+            top: 0; 
+            bottom: 0; 
+            left: 0; 
+            right: 0;
+            text-align: center;
+            margin-top:100px;
+            height: 50vh; /* overlay의 높이도 같게 조절 */
+            /* border-bottom: 2px solid rgba(128, 128, 128, 0.7); */
+        }
+
+        .profile-image {
+            border-radius: 50%;
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            position: absolute;
+            top: 20%; /* top 값을 50%로 변경 */
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .overlay-text {
+            position: absolute;
+            top: 60%; /* top 값을 50%로 변경 */
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: black;
+            font-size: 2em;
+        }
+
+        .nutrition-image {
+            width: 100%;
+            height: 50vh;
+            object-fit: cover;
+        }
+
+        .container {
+            margin-top: 50px; /* 공간 추가 */
+        }
+
+        .like-button {
+            color: #000000;
+        }
+
+        .like-button.clicked {
+            color: #ff0000;
+        }
+        .button-container {
+            position: absolute;
+            top: 65%; /* 버튼을 아래에 위치시키기 위해 top 값 조정 */
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            justify-content: center;
+        }
+
+        .button-container button {
+            margin-right: 10px;
+            background-color: #FEFAE0;
+            border: none;
+            border-radius: 50%;
+        }
+
+        .button-container i {
+            font-size: 48px;
+            color: #000000;
+        }
+        #nutrientChart {
+            background-color: rgba(240, 240, 240, 0.8); /* 캔버스 배경색 */
+        }
+
+        
+        .week {
+            width: 22%; /* 캘린더의 각 주 차를 나타내는 박스의 크기 */
+            padding: 10px;
+            box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
+            list-style: none;
+        }
+        
+        .week ul {
+            padding: 0;
+            list-style: none;
+        }
+        
+        .week p {
+            margin: 0;
+            font-weight: bold;
+        }
+
+
+        .grid-calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr); /* 7개의 동일한 fraction 단위로 나눕니다 */
+            max-width: 100%; /* 최대 가로 폭을 100%로 설정하여 부모 요소의 폭을 가득 채우게 합니다 */
+            margin: 0 auto; /* 좌우 중앙 정렬 */
+            padding-top: 10px 0; /* 상하 패딩 */
+            padding-bottom : 50px;
+
+            grid-gap: 1px; /* 셀 사이의 간격 */
+        }
+        
+    
+            .grid-calendar div {
+                border: 1px solid #ddd;
+                border-collapse: collapse;
+                padding: 25px;
+                text-align: center;
+            }
+    
+            .grid-calendar .header {
+                background-color: #f5f5f5;
+                font-weight: bold;
+            }
+            #main-image-div{
+                border-bottom: #0D8C7F 2px solid;
+                padding-bottom : 10px;
+                margin-top: 10px;
+            }
+
+            #main-image-div > a > img{
+                width: 50px;
+                height: 50px;
+            }
+    </style>
+    <script>
+        function printFunction() {
+            // 프린트 버튼 동작 정의
+            console.log("프린트 버튼이 클릭되었습니다.");
+            window.print();
+        }
+
+        function downloadFunction() {
+            console.log("프린트 버튼이 클릭되었습니다.");
+            window.print();
+        }
+
+        function likeFunction() {
+            // 좋아요 버튼 동작 정의
+            console.log("좋아요 버튼이 클릭되었습니다.");
+            var likeButton = document.querySelector('.like-button');
+            likeButton.classList.toggle('clicked');
+        }
+        function captureFunction() {
+            html2canvas(document.body).then(function(canvas) {
+                var dataURL = canvas.toDataURL();
+                $.ajax({
+                    type: "POST",
+                    url: '{% url "report_post" %}',
+                    data: {
+                        images: dataURL
+                    },
+                    success: function() {
+                        location.replace('/main');
+                    }
+                });
+            });
+        }
+        
+    </script>
+</head>
+<body>
+    <div id="main-image-div">
+        <a href="/main">
+            <img src="/media/logo.png"> 
+        </a>    
+    </div>
+    <!-- nutrition-image 클래스 추가 -->
+    <img class="nutrition-image" src="/media/recipe_image2.jpg" alt="Nutrition image">
+    <img src="/media/default_profile.png" alt="Profile image" class="profile-image">    
+    <div class="container">
+        
+        <div class="overlay">
+            <div class="overlay-text">"{{dog_nickname}}"을 위한 식단 보고서</div>
+            <div class="button-container">
+                <button class="btn btn-primary mr-2" onclick="printFunction()">
+                    <i class="material-icons">print</i>
+                </button>
+                <button class="btn btn-primary mr-2" onclick="downloadFunction()">
+                    <i class="material-icons">download</i>
+                </button>
+                <button class="btn btn-primary" onclick="likeFunction()">
+                    <i class="material-icons like-button">favorite</i>
+                </button>
+                <button class="btn btn-primary" onclick="captureFunction()">
+                    <i class="material-icons like-button">share</i>
+                </button>
+
+            </div>
+        </div>
+    </div>
+
+
+    
+
+    <div class="container mt-5">
+        <h2 class="text-center">주간 식단</h2>
+
+        <div class="grid-calendar">
+            <div class="header">일</div>
+            <div class="header">월</div>
+            <div class="header">화</div>
+            <div class="header">수</div>
+            <div class="header">목</div>
+            <div class="header">금</div>
+            <div class="header">토</div>
+
+            {% for week in month_days %}
+            {% for day in week %}
+            <div 
+                {% for week_key, detail in weekly_meals.items %}
+                {% if day in detail.days %}
+                style="background-color: {{ detail.color }}"
+                {% endif %}
+                {% endfor %}
+            >
+                {{ day }}<br>
+                {% for week_key, detail in weekly_meals.items %}
+                {% if day in detail.days %}
+                {{ week_key }}
+                {% endif %}
+                {% endfor %}
+            </div>
+            {% endfor %}
+            {% endfor %}
+        </div>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>사진</th>
+                <th>식단명</th>
+                <th>식재료 목록</th>
+                <th>풍부한 영양소</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for day, detail in weekly_meals.items %}
+            <tr>
+                <td>
+                    <img src="{{detail.food_image.0.image.url }}" alt="{{ detail.food_image.0.info_id }}" class="table-profile-image" style="width: 100%; height: 100%;">
+                </td>
+                <td>{{ day }}</td>
+                <td>
+                    {% for ingredient in detail.menu %}
+                    {{ ingredient }}
+                    {% if not forloop.last %} | {% endif %}
+                    {% endfor %}                    
+                </td>
+                <td>
+                    {% for feature in detail.features %}
+                    {{ feature }}
+                    {% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+
+    <canvas id="nutrientChart"></canvas>
+
+</div>
+</body>
+
+</html>
+<script>
+    var ctx = document.getElementById('nutrientChart').getContext('2d');
+    var nutrientChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['식단 1', '식단 2', '식단 3', '식단 4'],
+            datasets: [
+                {
+                    label: '단백질 수치',
+                    data: [{{ calcium_data.food_1 }}, {{ calcium_data.food_2 }}, {{ calcium_data.food_3 }}, {{ calcium_data.food_4 }}],
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    fill: false
+                },
+                {
+                    label: '지방 수치',
+                    data: [{{ magnesium_data.food_1 }}, {{ magnesium_data.food_2 }}, {{ magnesium_data.food_3 }}, {{ magnesium_data.food_4 }}],
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    fill: false
+                },
+                {
+                    label: '탄수화물 수치',
+                    data: [{{ iron_data.food_1 }}, {{ iron_data.food_2 }}, {{ iron_data.food_3 }}, {{ iron_data.food_4 }}],
+                    backgroundColor: 'rgba(255, 206, 86, 0.2)',
+                    borderColor: 'rgba(255, 206, 86, 1)',
+                    fill: false
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true, // 비율 유지 안함으로 설정하여 캔버스 크기에 맞게 조정
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: 'rgba(0, 0, 0, 0.1)', // 격자 색상 변경
+                        drawBorder: true,
+                        drawOnChartArea: true // 차트 영역에 격자 그리기
+                    }
+                },
+                x: {
+                    grid: {
+                        color: 'rgba(0, 0, 0, 0.1)', // 격자 색상 변경
+                        drawBorder: true,
+                        drawOnChartArea: true // 차트 영역에 격자 그리기
+                    }
+                }
+            },
+            elements: {
+                line: {
+                    tension: 0.4 // 선의 곡률을 조정 (0은 직선, 1은 매우 곡선)
+                },
+                point: {
+                    radius: 5, // 포인트의 반지름
+                    hoverRadius: 8, // 호버 시 포인트 반지름
+                    hitRadius: 10 // 호버 감지 범위
+                }
+            },
+            plugins: {
+                legend: {
+                    position: 'top', // 범례의 위치
+                },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false,
+                    bodySpacing: 5, // 툴팁 내부의 공간
+                    titleSpacing: 15, // 툴팁 타이틀의 공간
+                    cornerRadius: 3, // 툴팁 모서리의 곡률
+                    multiKeyBackground: '#fff' // 여러 키가 있는 툴팁의 배경색
+                }
+            }
+        }
+    });
+</script>
