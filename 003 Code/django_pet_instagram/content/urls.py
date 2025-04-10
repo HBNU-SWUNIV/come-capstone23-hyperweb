@@ -4,6 +4,7 @@ from . import views
 from algorithm_api.views import Food_view
 
 urlpatterns = [
+    path('user/login', views.user_login, name='login'),
     path('reply', UploadReply.as_view()),
     path('like', ToggleLike.as_view()),
     path('bookmark', ToggleBookmark.as_view()),

@@ -18,6 +18,31 @@ from django.http import JsonResponse
 from django.contrib.auth import logout
 from django.shortcuts import redirect
 from django.http import JsonResponse
+from django.contrib.auth import authenticate, login
+from django.http import JsonResponse
+from django.shortcuts import render, redirect
+
+def user_login(request):
+    if request.method == 'POST':
+        print("요청 들어옴")
+        print("POST 데이터:", request.POST)
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+
+        if not email or not password:
+            return JsonResponse({'result': 'fail', 'message': '요청 데이터가 없습니다.'}, status=400)
+
+        user = authenticate(request, username=email, password=password)
+        if user is not None:
+            login(request, user)
+            request.session['email'] = email
+            return JsonResponse({'result': 'success'})
+        else:
+            return JsonResponse({'result': 'fail', 'message': '아이디 또는 비밀번호가 틀렸습니다.'}, status=400)
+
+    return JsonResponse({'result': 'fail', 'message': '잘못된 요청'}, status=400)
+
+
 
 class GetMorePosts(APIView):
     def get(self, request):
