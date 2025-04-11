@@ -52,40 +52,41 @@
 ![썼던 언어 및 인프라](https://github.com/user-attachments/assets/4f7ecafd-18b3-447d-94fc-ddfd693ca7df)
 
 🖥️ Frontend
-HTML5
 
-CSS
-
-Bootstrap
-
-JS
-
-jQuery
+  HTML5
+  
+  CSS
+  
+  Bootstrap
+  
+  JS
+  
+  jQuery
 
 🛠️ Backend
-Django (Python Web Framework)
-
-Apache HTTP Server (웹서버)
-
-REST API 설계
-
-데이터베이스:
-
-초기: SQLite, MySQL + MongoDB →  AmazonRDS
+  Django (Python Web Framework)
+  
+  Apache HTTP Server (웹서버)
+  
+  REST API 설계
+  
+  데이터베이스:
+  
+  초기: SQLite, MySQL + MongoDB →  AmazonRDS
 
 🧠 Algorithm
-Google Optimization Tools
-
-식단 최적화 알고리즘 구현에 활용
-
-ChatGPT / OpenAI API
+  Google Optimization Tools
+  
+  식단 최적화 알고리즘 구현에 활용
+  
+  ChatGPT / OpenAI API
 
 ☁️ Infra
-Docker (컨테이너 환경)
-
-Amazon EC2 (서버 배포)
-
-Amazon RDS (MySQL DB 관리)
+  Docker (컨테이너 환경)
+  
+  Amazon EC2 (서버 배포)
+  
+  Amazon RDS (MySQL DB 관리)
 
 ## 작동 화면
 <회원 가입>
