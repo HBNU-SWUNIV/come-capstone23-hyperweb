@@ -54,9 +54,11 @@
 🖥️ Frontend
 HTML5
 
+CSS
+
 Bootstrap
 
-Swiper.js (슬라이더 기능)
+JS
 
 jQuery
 
