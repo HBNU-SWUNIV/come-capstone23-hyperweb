@@ -21,7 +21,6 @@ from django.http import JsonResponse
 from django.contrib.auth import authenticate, login
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
-
 def user_login(request):
     if request.method == 'POST':
         print("요청 들어옴")
