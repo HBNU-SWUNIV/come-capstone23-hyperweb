@@ -103,29 +103,19 @@
         progressBar.animate({ width: progress + '%' }, 1000);
      });
 
-    function updateProgressBar() {
-        let progress = 0;
-        let totalFields = 12;
-        let completedFields = 0;
+     function updateProgressBar() {
+    let totalFields = 12;  // 전체 12칸 기준
+    let completedFields = 0;
 
-        if ($('#input_email').val() !== "") {
-            completedFields++;
-        }
-        if ($('#input_name').val() !== "") {
-            completedFields++;
-        }
-        if ($('#input_nickname').val() !== "") {
-            completedFields++;
-        }
-        if ($('#input_password').val() !== "") {
-            completedFields++;
-        }
+    if ($('#input_email').val() !== "") completedFields++;
+    if ($('#input_name').val() !== "") completedFields++;
+    if ($('#input_nickname').val() !== "") completedFields++;
+    if ($('#input_password').val() !== "") completedFields++;
 
-        progress = (completedFields / totalFields) * 100;
-        const progressBar = $('.progress');
-        progressBar.animate({ width: progress + '%' }, 1000);
-        // $('#progress_bar').css('width', progress + '%').attr('aria-valuenow', progress);
-    }
+    let progress = (completedFields / totalFields) * 100;
+
+    $('#progress_bar').css('width', progress + '%').attr('aria-valuenow', progress);
+}
 
     $('input').on('input', updateProgressBar);
 
