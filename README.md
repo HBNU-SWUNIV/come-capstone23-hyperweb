@@ -120,6 +120,9 @@ https://github.com/user-attachments/assets/55700da9-3364-4fc2-9faf-8cd755d8033d
 
 
 <설정>
-https://github.com/user-attachments/assets/ee100282-6e1c-4d23-bc99-216672633272
+
+
+https://github.com/user-attachments/assets/487300be-4a25-4b4d-9400-7ccc20be4108
+
 
 
