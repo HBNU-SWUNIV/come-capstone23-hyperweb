@@ -2,8 +2,8 @@
 
 ## 팀원 소개 및 담당
 - 20181592 박태현(Infra 담당)
-- 20181192 구연호(알고리즘 및 ChatGpt 담당)
-- 20207127 우승민(프론트엔드 / 백엔드 담당 및 리더)
+- 20181192 구연호(Algorithm 및 ChatGpt API 담당)
+- 20207127 우승민(FrontEnd / BackEnd  Leader)
 
 ## <u>프로젝트 소개(Project Overview)</u>
   ### 제목(Title)
