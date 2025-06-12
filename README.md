@@ -33,19 +33,22 @@ This has led many pet owners to turn their attention to natural food, and this p
 | 📊 **영양소 분석 및 시각화** | 영양 균형을 시각적으로 확인<br>부족한 영양소를 파악하여 개선 | Visualize the nutritional balance of each recipe<br>Identify and improve nutrient deficiencies |
 | 💬 **직관적인 UI/UX** | 접고 펼 수 있는 반응형 사이드바<br>간결하고 쉬운 인터페이스 제공 | Responsive sidebar with toggle<br>Clean and easy-to-use interface |
 
-
+<br/>
 
 
 ## 한눈에 보기 ( At a Glance)
   ![작동원리](https://github.com/user-attachments/assets/31c616d7-e913-4362-9b9a-8fb0b23ad856)
+  
+  <br/>
+  
   <img width="1220" alt="전체정리" src="https://github.com/user-attachments/assets/b00d2a27-eb31-4c99-833a-288cb5e9bb68" />
 
-
+<br/>
 
   
 ## ⚙️ 사용 기술 스택 (Tech Stack)
 ![썼던 언어 및 인프라](https://github.com/user-attachments/assets/4f7ecafd-18b3-447d-94fc-ddfd693ca7df)
 
-
+<br/>
 
 
